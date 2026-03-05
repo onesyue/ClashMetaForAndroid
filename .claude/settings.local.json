@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd.exe:*)",
+      "Bash(where java:*)",
+      "Bash(where go:*)"
+    ]
+  }
+}
