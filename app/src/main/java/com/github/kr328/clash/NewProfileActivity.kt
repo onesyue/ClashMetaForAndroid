@@ -79,6 +79,8 @@ class NewProfileActivity : BaseActivity<NewProfileDesign>() {
                                             null
                                         }
                                     }
+
+                                    else -> null
                                 }
 
                                 if (uuid != null)
@@ -92,6 +94,14 @@ class NewProfileActivity : BaseActivity<NewProfileDesign>() {
 
                         is NewProfileDesign.Request.LaunchScanner -> {
                             scanLauncher.launch(null)
+                        }
+
+                        is NewProfileDesign.Request.LaunchXBoard -> {
+                            val r = startActivityForResult(
+                                ActivityResultContracts.StartActivityForResult(),
+                                XBoardLoginActivity::class.intent
+                            )
+                            if (r.resultCode == android.app.Activity.RESULT_OK) finish()
                         }
                     }
                 }
@@ -161,6 +171,7 @@ class NewProfileActivity : BaseActivity<NewProfileDesign>() {
             }
 
             listOf(
+                ProfileProvider.XBoard(self),
                 ProfileProvider.File(self),
                 ProfileProvider.Url(self),
                 ProfileProvider.QR(self)

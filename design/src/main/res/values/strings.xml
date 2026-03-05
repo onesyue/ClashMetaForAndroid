@@ -350,4 +350,12 @@
     <string name="hide_from_recents_desc">Hide app from the Recent apps screen</string>
     <string name="import_from_qr_no_permission">Camera access is restricted. Please enable it in Settings.</string>
     <string name="import_from_qr_exception">An unhandled system exception occurred.</string>
+
+    <string name="xboard_login">XBoard Login</string>
+    <string name="xboard_login_summary">Login to your service panel and auto-import subscription</string>
+    <string name="xboard_site_url">Website URL</string>
+    <string name="xboard_email">Email</string>
+    <string name="xboard_password">Password</string>
+    <string name="xboard_login_failed">Login failed</string>
+    <string name="xboard_default_url" translatable="false">https://my.yue.to</string>
 </resources>

@@ -9,6 +9,7 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission
@@ -177,6 +178,12 @@
             android:configChanges="uiMode"
             android:exported="false"
             android:label="@string/files" />
+
+        <activity
+            android:name=".XBoardLoginActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/xboard_login" />
 
         <service
             android:name=".LogcatService"

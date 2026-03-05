@@ -35,6 +35,15 @@ sealed class ProfileProvider {
         override val icon: Drawable?
             get() = context.getDrawableCompat(R.drawable.baseline_qr_code_scanner)
     }
+    class XBoard(private val context: Context) : ProfileProvider() {
+        override val name: String
+            get() = context.getString(R.string.xboard_login)
+        override val summary: String
+            get() = context.getString(R.string.xboard_login_summary)
+        override val icon: Drawable?
+            get() = context.getDrawableCompat(R.drawable.ic_baseline_get_app)
+    }
+
     class External(
         override val name: String,
         override val summary: String,
