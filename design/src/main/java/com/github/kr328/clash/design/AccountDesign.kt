@@ -61,6 +61,7 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
         binding.activityBarLayout.applyFrom(context)
 
         binding.webView.apply {
+            @SuppressLint("SetJavaScriptEnabled")
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
