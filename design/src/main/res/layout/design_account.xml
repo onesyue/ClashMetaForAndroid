@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_gravity="top"
-            android:layout_marginTop="@{(float) self.surface.insets.top + @dimen/toolbar_height}"
+            android:layout_marginTop="@{self.surface.insets.top + (int)@dimen/toolbar_height}"
             android:indeterminate="true"
             android:visibility="@{loading ? View.VISIBLE : View.GONE}" />
 
