@@ -8,11 +8,39 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object XBoardApi {
-    data class LoginResult(val subscribeUrl: String)
+    data class AuthResult(val subscribeUrl: String)
 
-    suspend fun login(baseUrl: String, email: String, password: String): LoginResult {
+    suspend fun login(baseUrl: String, email: String, password: String): AuthResult {
+        return request(
+            baseUrl = baseUrl,
+            path = "/api/v1/passport/auth/login",
+            body = JSONObject().apply {
+                put("email", email)
+                put("password", password)
+            }
+        )
+    }
+
+    suspend fun register(
+        baseUrl: String,
+        email: String,
+        password: String,
+        inviteCode: String
+    ): AuthResult {
+        return request(
+            baseUrl = baseUrl,
+            path = "/api/v1/passport/auth/register",
+            body = JSONObject().apply {
+                put("email", email)
+                put("password", password)
+                if (inviteCode.isNotBlank()) put("invite_code", inviteCode)
+            }
+        )
+    }
+
+    private suspend fun request(baseUrl: String, path: String, body: JSONObject): AuthResult {
         return withContext(Dispatchers.IO) {
-            val url = URL("${baseUrl.trimEnd('/')}/api/v1/passport/auth/login")
+            val url = URL("${baseUrl.trimEnd('/')}$path")
             val conn = url.openConnection() as HttpURLConnection
             try {
                 conn.requestMethod = "POST"
@@ -23,12 +51,7 @@ object XBoardApi {
                 conn.readTimeout = 15_000
 
                 OutputStreamWriter(conn.outputStream).use {
-                    it.write(
-                        JSONObject().apply {
-                            put("email", email)
-                            put("password", password)
-                        }.toString()
-                    )
+                    it.write(body.toString())
                 }
 
                 val responseCode = conn.responseCode
@@ -37,11 +60,11 @@ object XBoardApi {
 
                 val root = JSONObject(responseText)
                 if (responseCode != 200) {
-                    throw Exception(root.optString("message", "Login failed ($responseCode)"))
+                    throw Exception(root.optString("message", "Request failed ($responseCode)"))
                 }
 
                 val token = root.getJSONObject("data").getString("auth_data")
-                LoginResult("${baseUrl.trimEnd('/')}/api/v1/client/subscribe?token=$token")
+                AuthResult("${baseUrl.trimEnd('/')}/api/v1/client/subscribe?token=$token")
             } finally {
                 conn.disconnect()
             }

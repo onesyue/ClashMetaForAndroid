@@ -183,6 +183,7 @@
             android:name=".XBoardLoginActivity"
             android:configChanges="uiMode"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/xboard_login" />
 
         <service

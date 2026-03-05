@@ -29,14 +29,42 @@
                 android:orientation="vertical"
                 android:paddingTop="@{(float) self.surface.insets.top + @dimen/toolbar_height}"
                 android:paddingBottom="@{self.surface.insets.bottom}"
-                android:paddingHorizontal="24dp">
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
+                <!-- 机场品牌标题区域 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/xboard_brand_name"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/xboard_brand_subtitle"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                </LinearLayout>
+
+                <!-- 网站地址（登录/注册共用） -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/url_layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/xboard_site_url"
                     app:errorEnabled="true">
 
@@ -49,57 +77,154 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/email_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                <!-- Tab 切换：登录 / 注册 -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/xboard_email"
-                    app:errorEnabled="true">
+                    android:layout_marginTop="16dp"
+                    app:tabGravity="fill"
+                    app:tabMode="fixed" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email_field"
+                <!-- 登录表单 -->
+                <LinearLayout
+                    android:id="@+id/login_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/login_email_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLines="1" />
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/xboard_email"
+                        app:errorEnabled="true">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/login_email_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/password_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/xboard_password"
-                    app:endIconMode="password_toggle"
-                    app:errorEnabled="true">
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password_field"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/login_password_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:maxLines="1" />
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/xboard_password"
+                        app:endIconMode="password_toggle"
+                        app:errorEnabled="true">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/login_password_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:maxLines="1" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/login_button"
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:enabled="@{!processing}"
+                        android:onClick="@{() -> self.requestLogin()}"
+                        android:text="@string/xboard_do_login" />
+
+                </LinearLayout>
+
+                <!-- 注册表单 -->
+                <LinearLayout
+                    android:id="@+id/register_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:enabled="@{!processing}"
-                    android:onClick="@{() -> self.requestLogin()}"
-                    android:text="@string/xboard_login" />
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/register_email_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/xboard_email"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/register_email_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/register_password_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/xboard_password"
+                        app:endIconMode="password_toggle"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/register_password_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/register_invite_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/xboard_invite_code"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/register_invite_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/register_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:enabled="@{!processing}"
+                        android:onClick="@{() -> self.requestRegister()}"
+                        android:text="@string/xboard_do_register" />
+
+                </LinearLayout>
+
+                <!-- 加载进度 -->
                 <ProgressBar
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
                     android:indeterminate="true"
                     android:visibility="@{processing ? View.VISIBLE : View.GONE}" />
 

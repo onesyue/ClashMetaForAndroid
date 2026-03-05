@@ -351,11 +351,18 @@
     <string name="import_from_qr_no_permission">Camera access is restricted. Please enable it in Settings.</string>
     <string name="import_from_qr_exception">An unhandled system exception occurred.</string>
 
-    <string name="xboard_login">XBoard Login</string>
-    <string name="xboard_login_summary">Login to your service panel and auto-import subscription</string>
-    <string name="xboard_site_url">Website URL</string>
-    <string name="xboard_email">Email</string>
-    <string name="xboard_password">Password</string>
-    <string name="xboard_login_failed">Login failed</string>
+    <string name="xboard_login">悦通登录</string>
+    <string name="xboard_login_summary">登录悦通机场，自动导入订阅</string>
+    <string name="xboard_brand_name">悦通</string>
+    <string name="xboard_brand_subtitle">专属机场订阅服务</string>
+    <string name="xboard_site_url">网站地址</string>
+    <string name="xboard_email">邮箱</string>
+    <string name="xboard_password">密码</string>
+    <string name="xboard_invite_code">邀请码（选填）</string>
+    <string name="xboard_tab_login">登录</string>
+    <string name="xboard_tab_register">注册</string>
+    <string name="xboard_do_login">登录</string>
+    <string name="xboard_do_register">注册</string>
+    <string name="xboard_request_failed">请求失败</string>
     <string name="xboard_default_url" translatable="false">https://my.yue.to</string>
 </resources>

@@ -23,32 +23,46 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
         while (isActive) {
             select<Unit> {
                 events.onReceive {}
-                design.requests.onReceive {
-                    when (it) {
-                        is XBoardLoginDesign.Request.Login ->
-                            performLogin(design, it.url, it.email, it.password)
+                design.requests.onReceive { request ->
+                    when (request) {
+                        is XBoardLoginDesign.Request.Login -> {
+                            performAuth(design, request.url, request.email, request.password) {
+                                XBoardApi.login(request.url, request.email, request.password)
+                            }
+                        }
+                        is XBoardLoginDesign.Request.Register -> {
+                            performAuth(design, request.url, request.email, request.password) {
+                                XBoardApi.register(
+                                    request.url,
+                                    request.email,
+                                    request.password,
+                                    request.inviteCode
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    private suspend fun performLogin(
+    private suspend fun performAuth(
         design: XBoardLoginDesign,
         url: String,
         email: String,
-        password: String
+        password: String,
+        action: suspend () -> XBoardApi.AuthResult
     ) {
         design.processing = true
         try {
-            val result = XBoardApi.login(url, email, password)
+            val result = action()
             val uuid = withProfile {
                 create(Profile.Type.Url, email, result.subscribeUrl)
             }
             launchProperties(uuid)
         } catch (e: Exception) {
             design.showToast(
-                e.message ?: getString(R.string.xboard_login_failed),
+                e.message ?: getString(R.string.xboard_request_failed),
                 ToastDuration.Long
             )
         } finally {
