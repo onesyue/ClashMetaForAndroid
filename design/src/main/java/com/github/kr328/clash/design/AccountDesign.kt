@@ -3,7 +3,6 @@ package com.github.kr328.clash.design
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -90,8 +89,7 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
                     ) { result ->
                         val hasAuth = result?.trim('"')?.isNotBlank() == true &&
                             result.trim('"') != "null"
-                        binding.syncButton.visibility = if (hasAuth) View.VISIBLE else View.VISIBLE
-                        // Always show the FAB — let server response tell if it works
+                        binding.syncButton.visibility = View.VISIBLE
                     }
                 }
 
