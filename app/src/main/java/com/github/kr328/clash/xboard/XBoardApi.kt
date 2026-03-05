@@ -83,20 +83,12 @@ object XBoardApi {
 
                 val data = root.getJSONObject("data")
 
-                // 优先使用服务端直接给的 subscribe_url
-                val subscribeUrl = data.optString("subscribe_url", "").takeIf { it.isNotBlank() }
-                if (subscribeUrl != null) {
-                    return@withContext subscribeUrl
+                // 只使用服务端返回的 subscribe_url，不自行拼接
+                val subscribeUrl = data.optString("subscribe_url", "").trim()
+                if (subscribeUrl.isEmpty()) {
+                    throw Exception("服务器未返回订阅地址，请联系管理员")
                 }
-
-                // 降级：用 token 字段手动拼接，去掉可能存在的 "Bearer " 前缀
-                val rawToken = data.optString("token", "").ifBlank {
-                    // 最后兜底：从 auth_data 中提取原始 token
-                    authData
-                }
-                val token = rawToken.removePrefix("Bearer ").trim()
-                if (token.isEmpty()) throw Exception("No subscribe token available")
-                "${baseUrl.trimEnd('/')}/api/v1/client/subscribe?token=$token"
+                subscribeUrl
             } finally {
                 conn.disconnect()
             }
