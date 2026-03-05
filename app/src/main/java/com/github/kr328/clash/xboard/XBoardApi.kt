@@ -59,6 +59,13 @@ object XBoardApi {
     }
 
     /**
+     * WebView 登录后，用页面存储的 auth_data 直接同步订阅
+     */
+    suspend fun syncFromSession(baseUrl: String, authData: String): AuthResult {
+        return AuthResult(fetchSubscribeUrl(baseUrl, authData))
+    }
+
+    /**
      * 用 auth_data 调用 getSubscribe，返回服务端生成的 subscribe_url
      */
     private suspend fun fetchSubscribeUrl(baseUrl: String, authData: String): String {

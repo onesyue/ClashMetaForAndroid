@@ -3,14 +3,13 @@ package com.github.kr328.clash
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.design.MainDesign
+import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
@@ -22,7 +21,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
-import com.github.kr328.clash.design.R
 
 class MainActivity : BaseActivity<MainDesign>() {
     override suspend fun main() {
@@ -31,6 +29,16 @@ class MainActivity : BaseActivity<MainDesign>() {
         setContentDesign(design)
 
         design.fetch()
+
+        // 首次启动无订阅 → 直接打开账号中心
+        val hasProfile = withProfile { queryAll().isNotEmpty() }
+        if (!hasProfile) {
+            startActivityForResult(
+                ActivityResultContracts.StartActivityForResult(),
+                AccountActivity::class.intent
+            )
+            design.fetch()
+        }
 
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
 
@@ -48,17 +56,21 @@ class MainActivity : BaseActivity<MainDesign>() {
                 design.requests.onReceive {
                     when (it) {
                         MainDesign.Request.ToggleStatus -> {
-                            if (clashRunning)
+                            if (clashRunning) {
                                 stopClashService()
-                            else
+                            } else {
                                 design.startClash()
+                            }
                         }
                         MainDesign.Request.OpenProxy ->
                             startActivity(ProxyActivity::class.intent)
-                        MainDesign.Request.OpenProfiles ->
-                            startActivity(ProfilesActivity::class.intent)
-                        MainDesign.Request.OpenProviders ->
-                            startActivity(ProvidersActivity::class.intent)
+                        MainDesign.Request.OpenAccount -> {
+                            startActivityForResult(
+                                ActivityResultContracts.StartActivityForResult(),
+                                AccountActivity::class.intent
+                            )
+                            design.fetch()
+                        }
                         MainDesign.Request.OpenLogs -> {
                             if (LogcatService.running) {
                                 startActivity(LogcatActivity::class.intent)
@@ -68,8 +80,6 @@ class MainActivity : BaseActivity<MainDesign>() {
                         }
                         MainDesign.Request.OpenSettings ->
                             startActivity(SettingsActivity::class.intent)
-                        MainDesign.Request.OpenHelp ->
-                            startActivity(HelpActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
                     }
@@ -89,12 +99,8 @@ class MainActivity : BaseActivity<MainDesign>() {
         val state = withClash {
             queryTunnelState()
         }
-        val providers = withClash {
-            queryProviders()
-        }
 
         setMode(state.mode)
-        setHasProviders(providers.isNotEmpty())
 
         withProfile {
             setProfileName(queryActive()?.name)
@@ -111,12 +117,12 @@ class MainActivity : BaseActivity<MainDesign>() {
         val active = withProfile { queryActive() }
 
         if (active == null || !active.imported) {
-            showToast(R.string.no_profile_selected, ToastDuration.Long) {
-                setAction(R.string.profiles) {
-                    startActivity(ProfilesActivity::class.intent)
-                }
-            }
-
+            // 无有效订阅 → 引导至账号中心
+            startActivityForResult(
+                ActivityResultContracts.StartActivityForResult(),
+                AccountActivity::class.intent
+            )
+            fetch()
             return
         }
 
@@ -128,7 +134,6 @@ class MainActivity : BaseActivity<MainDesign>() {
                     ActivityResultContracts.StartActivityForResult(),
                     vpnRequest
                 )
-
                 if (result.resultCode == RESULT_OK)
                     startClashService()
             }
@@ -139,7 +144,8 @@ class MainActivity : BaseActivity<MainDesign>() {
 
     private suspend fun queryAppVersionName(): String {
         return withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0).versionName + "\n" + Bridge.nativeCoreVersion().replace("_", "-")
+            packageManager.getPackageInfo(packageName, 0).versionName +
+                "\n" + Bridge.nativeCoreVersion().replace("_", "-")
         }
     }
 
@@ -147,13 +153,12 @@ class MainActivity : BaseActivity<MainDesign>() {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val requestPermissionLauncher =
-                registerForActivityResult(RequestPermission()
-                ) { isGranted: Boolean ->
-                }
+                registerForActivityResult(RequestPermission()) { }
             if (ContextCompat.checkSelfPermission(
                     this,
                     android.Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED) {
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         }

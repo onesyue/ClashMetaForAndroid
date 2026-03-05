@@ -1,358 +1,371 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-    <string name="launch_name_meta">Clash Meta</string>
-    <string name="launch_name_alpha">Clash Meta Alpha</string>
-    <string name="application_name_meta">Clash Meta for Android</string>
-    <string name="application_name_alpha">Clash Meta for Android Alpha</string>
+    <!-- 品牌名称 -->
+    <string name="launch_name_meta">悦通</string>
+    <string name="launch_name_alpha">悦通 Beta</string>
+    <string name="application_name_meta">悦通</string>
+    <string name="application_name_alpha">悦通 Beta</string>
+    <string name="launch_name">悦通</string>
+    <string name="application_name">悦通</string>
 
-    <string name="stopped">Stopped</string>
-    <string name="tap_to_start">Tap to start</string>
-    <string name="running">Running</string>
-    <string name="format_traffic_forwarded">%s Forwarded</string>
+    <string name="stopped">未连接</string>
+    <string name="tap_to_start">点击连接</string>
+    <string name="running">已连接</string>
+    <string name="status_connected">已连接</string>
+    <string name="status_disconnected">未连接</string>
+    <string name="format_traffic_forwarded">已转发 %s</string>
 
-    <string name="proxy">Proxy</string>
-    <string name="direct_mode">Direct Mode</string>
-    <string name="rule_mode">Rule Mode</string>
-    <string name="global_mode">Global Mode</string>
-    <string name="proxy_empty_tips">No groups can be displayed</string>
+    <string name="proxy">节点</string>
+    <string name="direct_mode">直连模式</string>
+    <string name="rule_mode">规则模式</string>
+    <string name="global_mode">全局模式</string>
+    <string name="proxy_empty_tips">暂无可显示的节点组</string>
 
-    <string name="profiles">Profiles</string>
-    <string name="not_selected">Not selected</string>
-    <string name="format_profile_activated">%s Activated</string>
+    <string name="profiles">订阅管理</string>
+    <string name="not_selected">未选择</string>
+    <string name="format_profile_activated">%s</string>
 
-    <string name="logs">Logs</string>
-    <string name="settings">Settings</string>
-    <string name="help">Help</string>
-    <string name="about">About</string>
+    <string name="logs">日志</string>
+    <string name="settings">设置</string>
+    <string name="help">帮助</string>
+    <string name="about">关于</string>
 
-    <string name="copied">Copied</string>
+    <string name="copied">已复制</string>
+    <string name="recently">最近</string>
 
-    <string name="recently">Recently</string>
+    <string name="format_minutes">%d 分钟</string>
+    <string name="format_elements">%d 项</string>
+    <string name="format_minutes_ago">%d 分钟前</string>
+    <string name="format_hours_ago">%d 小时前</string>
+    <string name="format_days_ago">%d 天前</string>
+    <string name="format_months_ago">%d 个月前</string>
+    <string name="format_years_ago">%d 年前</string>
 
-    <string name="format_minutes">%d min</string>
-    <string name="format_elements">%d elements</string>
-
-    <string name="format_minutes_ago">%d min ago</string>
-    <string name="format_hours_ago">%d hours ago</string>
-    <string name="format_days_ago">%d days ago</string>
-    <string name="format_months_ago">%d months ago</string>
-    <string name="format_years_ago">%d years ago</string>
-
-    <string name="create_profile">Create Profile</string>
-    <string name="file">File</string>
-    <string name="import_from_file">Import from File</string>
+    <string name="create_profile">添加订阅</string>
+    <string name="file">文件</string>
+    <string name="import_from_file">从文件导入</string>
     <string name="url">URL</string>
     <string name="qr" translatable="false">QR Code</string>
-    <string name="import_from_url">Import from URL</string>
-    <string name="import_from_qr">Import from QR Code</string>
-    <string name="external">External</string>
-    <string name="format_type_unsaved">%s (Unsaved)</string>
+    <string name="import_from_url">从链接导入</string>
+    <string name="import_from_qr">扫码导入</string>
+    <string name="external">外部</string>
+    <string name="format_type_unsaved">%s（未保存）</string>
 
-    <string name="application_broken">Application Broken</string>
-    <string name="application_crashed">Application Crashed</string>
-    <string name="application_broken_tips">App lacks the necessary runtime components, which is usually caused by downloading an incomplete apk.</string>
-    <string name="reinstall">Reinstall</string>
-    <string name="github_releases">Github Releases</string>
+    <string name="application_broken">应用损坏</string>
+    <string name="application_crashed">应用崩溃</string>
+    <string name="application_broken_tips">应用缺少必要的运行组件，通常由不完整的 APK 造成。</string>
+    <string name="reinstall">重新安装</string>
+    <string name="github_releases">GitHub Releases</string>
 
-    <string name="profile">Profile</string>
-    <string name="name">Name</string>
-    <string name="profile_name">Profile Name</string>
-    <string name="profile_url">Profile URL</string>
-    <string name="auto_update">Auto Update</string>
-    <string name="auto_update_minutes">Auto Update (Minutes)</string>
+    <string name="profile">订阅</string>
+    <string name="name">名称</string>
+    <string name="profile_name">订阅名称</string>
+    <string name="profile_url">订阅链接</string>
+    <string name="auto_update">自动更新</string>
+    <string name="auto_update_minutes">自动更新（分钟）</string>
 
-    <string name="accept_http_content">Accept only http(s)</string>
-    <string name="at_least_15_minutes">At least 15 minutes or empty</string>
-    <string name="should_not_be_blank">Should not be blank</string>
-    <string name="detail">Detail</string>
-    <string name="update">Update</string>
-    <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
-    <string name="export">Export</string>
-    <string name="import_">Import</string>
-    <string name="properties">Properties</string>
-    <string name="duplicate">Duplicate</string>
-    <string name="active_unsaved_tips">Profile needs to be saved before activation</string>
+    <string name="accept_http_content">仅接受 http(s)</string>
+    <string name="at_least_15_minutes">至少 15 分钟或留空</string>
+    <string name="should_not_be_blank">不能为空</string>
+    <string name="detail">详情</string>
+    <string name="update">更新</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="export">导出</string>
+    <string name="import_">导入</string>
+    <string name="properties">属性</string>
+    <string name="duplicate">复制</string>
+    <string name="active_unsaved_tips">激活前需要先保存订阅</string>
 
-    <string name="exit_without_save">Exit without Save</string>
-    <string name="exit_without_save_warning">All changed will *LOST*</string>
+    <string name="exit_without_save">不保存退出</string>
+    <string name="exit_without_save_warning">所有更改将会丢失</string>
 
     <string name="raw_cn" translatable="false">cn</string>
-    <string name="disabled">Disabled</string>
-    <string name="unavailable">Unavailable</string>
-    <string name="empty_name">Empty Name</string>
-    <string name="invalid_url">Invalid URL</string>
-    <string name="loading">Loading</string>
+    <string name="disabled">已禁用</string>
+    <string name="unavailable">不可用</string>
+    <string name="empty_name">名称为空</string>
+    <string name="invalid_url">无效链接</string>
+    <string name="loading">加载中</string>
 
-    <string name="format_fetching_configuration">Fetching configuration from \'%s\'</string>
-    <string name="format_fetching_provider">Fetching provider \'%s\'</string>
-    <string name="initializing">Initializing</string>
-    <string name="verifying">Verifying</string>
+    <string name="format_fetching_configuration">正在获取配置 \'%s\'</string>
+    <string name="format_fetching_provider">正在获取 \'%s\'</string>
+    <string name="initializing">初始化中</string>
+    <string name="verifying">验证中</string>
 
-    <string name="new_profile">New Profile</string>
+    <string name="new_profile">新建订阅</string>
 
-    <string name="delay">Delay</string>
-    <string name="sort">Sort</string>
-    <string name="default_">Default</string>
+    <string name="delay">延迟</string>
+    <string name="sort">排序</string>
+    <string name="default_">默认</string>
 
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="reset">Reset</string>
+    <string name="ok">确认</string>
+    <string name="cancel">取消</string>
+    <string name="reset">重置</string>
 
-    <string name="clash_logcat">Clash Logcat</string>
-    <string name="history">History</string>
+    <string name="clash_logcat">调试日志</string>
+    <string name="history">历史</string>
     <string name="logcat">Logcat</string>
 
-    <string name="delete_all_logs">Delete All Logs</string>
-    <string name="delete_all_logs_warn">All historical logs will *LOST*</string>
-    <string name="file_exported">File Exported</string>
+    <string name="delete_all_logs">删除全部日志</string>
+    <string name="delete_all_logs_warn">所有历史日志将被清除</string>
+    <string name="file_exported">文件已导出</string>
 
-    <string name="behavior">Behavior</string>
-    <string name="network">Network</string>
-    <string name="interface_">Interface</string>
-    <string name="override">Override</string>
+    <string name="behavior">行为</string>
+    <string name="network">网络</string>
+    <string name="interface_">接口</string>
+    <string name="override">覆写</string>
 
-    <string name="auto_restart">Auto Restart</string>
-    <string name="allow_clash_auto_restart">Allow clash auto restart</string>
+    <string name="auto_restart">自动重启</string>
+    <string name="allow_clash_auto_restart">允许自动重启服务</string>
 
-    <string name="route_system_traffic">Route System Traffic</string>
-    <string name="routing_via_vpn_service">Auto routing all system traffic via VpnService</string>
+    <string name="route_system_traffic">路由系统流量</string>
+    <string name="routing_via_vpn_service">通过 VpnService 自动路由所有系统流量</string>
 
-    <string name="vpn_service_options">VpnService Options</string>
-    <string name="bypass_private_network">Bypass Private Network</string>
-    <string name="bypass_private_network_summary">Bypass private network addresses</string>
-    <string name="dns_hijacking">DNS Hijacking</string>
-    <string name="dns_hijacking_summary">Handle all dns packet</string>
-    <string name="block_loopback">Block Loopback</string>
-    <string name="block_loopback_summary">Block loopback connections</string>
-    <string name="allow_bypass">Allow Bypass</string>
-    <string name="allow_bypass_summary">Allows all apps to bypass this VPN connection</string>
-    <string name="allow_ipv6">Allow Ipv6</string>
-    <string name="allow_ipv6_summary">Allows ipv6 traffic via VpnService</string>
-    <string name="system_proxy">System Proxy</string>
-    <string name="system_proxy_summary">Attach http proxy to VpnService</string>
-    <string name="access_control_mode">Access Control Mode</string>
-    <string name="access_control_packages">Access Control Packages</string>
-    <string name="access_control_packages_summary">Configure access permission for apps</string>
+    <string name="vpn_service_options">VPN 选项</string>
+    <string name="bypass_private_network">绕过局域网</string>
+    <string name="bypass_private_network_summary">绕过私有网络地址</string>
+    <string name="dns_hijacking">DNS 劫持</string>
+    <string name="dns_hijacking_summary">处理所有 DNS 数据包</string>
+    <string name="block_loopback">阻断回环</string>
+    <string name="block_loopback_summary">阻断回环连接</string>
+    <string name="allow_bypass">允许绕过</string>
+    <string name="allow_bypass_summary">允许所有应用绕过此 VPN 连接</string>
+    <string name="allow_ipv6">允许 IPv6</string>
+    <string name="allow_ipv6_summary">允许通过 VpnService 传输 IPv6 流量</string>
+    <string name="system_proxy">系统代理</string>
+    <string name="system_proxy_summary">为 VpnService 附加 HTTP 代理</string>
+    <string name="access_control_mode">访问控制模式</string>
+    <string name="access_control_packages">访问控制应用</string>
+    <string name="access_control_packages_summary">配置应用的访问权限</string>
 
-    <string name="options_unavailable">Options Unavailable until Clash Stopped</string>
+    <string name="options_unavailable">需要停止后才能修改</string>
 
-    <string name="general">General</string>
+    <string name="general">通用</string>
     <string name="dns">DNS</string>
-    <string name="prefer_h3">Prefer h3</string>
-    <string name="http_port">HTTP Port</string>
-    <string name="socks_port">Socks Port</string>
-    <string name="redirect_port">Redirect Port</string>
-    <string name="mixed_port">Mixed Port</string>
-    <string name="tproxy_port">TProxy Port</string>
-    <string name="authentication">Authentication</string>
-    <string name="allow_lan">Allow LAN</string>
-    <string name="bind_address">Bind Address</string>
-    <string name="mode">Mode</string>
-    <string name="log_level">Log Level</string>
+    <string name="prefer_h3">优先 H3</string>
+    <string name="http_port">HTTP 端口</string>
+    <string name="socks_port">Socks 端口</string>
+    <string name="redirect_port">重定向端口</string>
+    <string name="mixed_port">混合端口</string>
+    <string name="tproxy_port">TProxy 端口</string>
+    <string name="authentication">认证</string>
+    <string name="allow_lan">允许局域网</string>
+    <string name="bind_address">绑定地址</string>
+    <string name="mode">模式</string>
+    <string name="log_level">日志级别</string>
     <string name="ipv6">IPv6</string>
-    <string name="external_controller">External Controller</string>
-    <string name="external_controller_tls">External Controller TLS</string>
-    <string name="allow_origins">External Controller Allow Origins</string>
-    <string name="allow_private_network">External Controller Allow Private Network</string>
-    <string name="secret">Secret</string>
+    <string name="external_controller">外部控制器</string>
+    <string name="external_controller_tls">外部控制器 TLS</string>
+    <string name="allow_origins">外部控制器允许来源</string>
+    <string name="allow_private_network">外部控制器允许私有网络</string>
+    <string name="secret">密钥</string>
     <string name="hosts">Hosts</string>
-    <string name="_new">New</string>
-    <string name="value">Value</string>
+    <string name="_new">新建</string>
+    <string name="value">值</string>
 
-    <string name="strategy">Strategy</string>
-    <string name="listen">Listen</string>
-    <string name="append_system_dns">Append System DNS</string>
-    <string name="use_hosts">Use Hosts</string>
-    <string name="enhanced_mode">Enhanced Mode</string>
-    <string name="name_server">Name Server</string>
-    <string name="fallback">Fallback Name Server</string>
-    <string name="default_name_server">Default Name Server</string>
-    <string name="fakeip_filter">Fake-IP Filter</string>
-    <string name="fakeip_filter_mode">Fake-IP Filter Mode</string>
-    <string name="geoip_fallback">GeoIP Fallback</string>
-    <string name="geoip_fallback_code">GeoIP Fallback Code</string>
-    <string name="ipcidr_fallback">IPCIDR Fallback</string>
-    <string name="domain_fallback">Domain Fallback</string>
-    <string name="name_server_policy">Name Server Policy</string>
+    <string name="strategy">策略</string>
+    <string name="listen">监听</string>
+    <string name="append_system_dns">附加系统 DNS</string>
+    <string name="use_hosts">使用 Hosts</string>
+    <string name="enhanced_mode">增强模式</string>
+    <string name="name_server">名称服务器</string>
+    <string name="fallback">备用名称服务器</string>
+    <string name="default_name_server">默认名称服务器</string>
+    <string name="fakeip_filter">Fake-IP 过滤</string>
+    <string name="fakeip_filter_mode">Fake-IP 过滤模式</string>
+    <string name="geoip_fallback">GeoIP 回退</string>
+    <string name="geoip_fallback_code">GeoIP 回退代码</string>
+    <string name="ipcidr_fallback">IPCIDR 回退</string>
+    <string name="domain_fallback">域名回退</string>
+    <string name="name_server_policy">名称服务器策略</string>
 
-    <string name="dont_modify">Do not modify</string>
-    <string name="empty">Empty</string>
+    <string name="dont_modify">不修改</string>
+    <string name="empty">清空</string>
+    <string name="enabled">已启用</string>
 
-    <string name="enabled">Enabled</string>
+    <string name="info">信息</string>
+    <string name="warning">警告</string>
+    <string name="error">错误</string>
+    <string name="debug">调试</string>
+    <string name="silent">静默</string>
 
-    <string name="info">Info</string>
-    <string name="warning">Warning</string>
-    <string name="error">Error</string>
-    <string name="debug">Debug</string>
-    <string name="silent">Silent</string>
+    <string name="force_enable">强制启用</string>
 
-    <string name="force_enable">Force Enable</string>
+    <string name="mapping">真实 IP 到域名映射</string>
+    <string name="fakeip">Fake-IP 到域名映射</string>
 
-    <string name="mapping">Real-IP to domain mapping</string>
-    <string name="fakeip">Fake-IP to domain mapping</string>
+    <string name="blacklist">黑名单</string>
+    <string name="whitelist">白名单</string>
 
-    <string name="blacklist">Black List</string>
-    <string name="whitelist">White List</string>
+    <string name="off">关闭</string>
+    <string name="strict">严格</string>
+    <string name="always">始终</string>
 
-    <string name="off">OFF</string>
-    <string name="strict">Strict</string>
-    <string name="always">Always</string>
+    <string name="system_apps">系统应用</string>
+    <string name="filter">过滤</string>
+    <string name="package_name">包名</string>
+    <string name="update_time">更新时间</string>
+    <string name="install_time">安装时间</string>
+    <string name="reverse">反选</string>
+    <string name="search">搜索</string>
+    <string name="select_all">全选</string>
+    <string name="select_invert">反选</string>
+    <string name="select_none">取消全选</string>
+    <string name="import_from_clipboard">从剪贴板导入</string>
+    <string name="export_to_clipboard">导出到剪贴板</string>
 
-    <string name="system_apps">System Apps</string>
-    <string name="filter">Filter</string>
-    <string name="package_name">Package Name</string>
-    <string name="update_time">Update Time</string>
-    <string name="install_time">Install Time</string>
-    <string name="reverse">Reverse</string>
-    <string name="search">Search</string>
-    <string name="select_all">Select All</string>
-    <string name="select_invert">Select Invert</string>
-    <string name="select_none">Select None</string>
-    <string name="import_from_clipboard">Import from Clipboard</string>
-    <string name="export_to_clipboard">Export to Clipboard</string>
+    <string name="clash_meta_for_android">悦通</string>
 
-    <string name="clash_meta_for_android">Clash Meta for Android</string>
-
-    <string name="document">Document</string>
-    <string name="feedback">Feedback</string>
-    <string name="sources">Sources</string>
-    <string name="donate">Donate</string>
-    <string name="clash_wiki">Clash Wiki</string>
-    <string name="github_issues">Github Issues</string>
+    <string name="document">文档</string>
+    <string name="feedback">反馈</string>
+    <string name="sources">源码</string>
+    <string name="donate">捐赠</string>
+    <string name="clash_wiki">Wiki</string>
+    <string name="github_issues">GitHub Issues</string>
     <string name="google_play">Google Play</string>
-    <string name="clash_meta_core">Clash Meta Core</string>
-    <string name="clash_wiki_url" translatable="false">https://github.com/Dreamacro/clash/wiki</string>
-    <string name="meta_github_url" translatable="false">https://github.com/MetaCubeX/ClashMetaForAndroid</string>
-    <string name="clash_meta_core_url" translatable="false">https://github.com/MetaCubeX/Clash.Meta</string>
+    <string name="clash_meta_core">核心版本</string>
+    <string name="clash_wiki_url" translatable="false">https://my.yue.to</string>
+    <string name="meta_github_url" translatable="false">https://my.yue.to</string>
+    <string name="clash_meta_core_url" translatable="false">https://my.yue.to</string>
 
-    <string name="tips_properties"><![CDATA[Accept Only <strong>Clash Config</strong>(including <strong>Proxy</strong>/<strong>Rules</strong>)]]></string>
-    <string name="tips_help"><![CDATA[Clash Meta for Android is a <strong>freeware</strong> and we do <strong>NOT</strong> provide any service for it]]></string>
+    <string name="tips_properties"><![CDATA[订阅链接需为有效的代理配置文件]]></string>
+    <string name="tips_help"><![CDATA[悦通 — 专为 AI 与流媒体打造的全球加速网络]]></string>
 
-    <string name="google_play_url" translatable="false">https://play.google.com/store/apps/details?id=com.github.kr328.clash</string>
+    <string name="google_play_url" translatable="false">https://my.yue.to</string>
 
-    <string name="app">App</string>
-    <string name="service">Service</string>
+    <string name="app">应用</string>
+    <string name="service">服务</string>
 
-    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode">深色模式</string>
 
-    <string name="show_traffic">Show Traffic</string>
-    <string name="show_traffic_summary">Auto refresh traffic in notification</string>
+    <string name="show_traffic">显示流量</string>
+    <string name="show_traffic_summary">在通知栏自动刷新流量</string>
 
-    <string name="follow_system_android_10">Follow System (Android 10+)</string>
-    <string name="always_dark">Always Dark</string>
-    <string name="always_light">Always Light</string>
+    <string name="follow_system_android_10">跟随系统（Android 10+）</string>
+    <string name="always_dark">始终深色</string>
+    <string name="always_light">始终浅色</string>
 
-    <string name="tun_stack_mode">Stack Mode</string>
+    <string name="tun_stack_mode">Stack 模式</string>
     <string name="tun_stack_system">System Stack</string>
     <string name="tun_stack_gvisor">Gvisor Stack</string>
     <string name="tun_stack_mixed">Mixed Stack</string>
 
-    <string name="allow_all_apps">Allow all apps</string>
-    <string name="allow_selected_apps">Allow selected apps</string>
-    <string name="deny_selected_apps">Deny selected apps</string>
+    <string name="allow_all_apps">允许所有应用</string>
+    <string name="allow_selected_apps">允许选中的应用</string>
+    <string name="deny_selected_apps">禁止选中的应用</string>
 
-    <string name="no_profile_selected">No profile selected</string>
+    <string name="no_profile_selected">尚未添加订阅，请前往账号中心</string>
 
-    <string name="layout">Layout</string>
-    <string name="single">Single</string>
-    <string name="doubles">Double</string>
-    <string name="multiple">Multiple</string>
-    <string name="not_selectable">Not Selectable</string>
+    <string name="layout">布局</string>
+    <string name="single">单列</string>
+    <string name="doubles">双列</string>
+    <string name="multiple">多列</string>
+    <string name="not_selectable">不可选</string>
 
-    <string name="providers">Providers</string>
+    <string name="providers">规则提供者</string>
 
-    <string name="files">Files</string>
-    <string name="browse_files">Browse Files</string>
-    <string name="browse_configuration_providers"><![CDATA[Browse configuration & providers]]></string>
-    <string name="rename">Rename</string>
-    <string name="file_name">File Name</string>
-    <string name="invalid_file_name">Invalid file name</string>
+    <string name="files">文件</string>
+    <string name="browse_files">浏览文件</string>
+    <string name="browse_configuration_providers"><![CDATA[浏览配置与规则文件]]></string>
+    <string name="rename">重命名</string>
+    <string name="file_name">文件名</string>
+    <string name="invalid_file_name">无效的文件名</string>
 
-    <string name="reset_override_settings">Reset Override Settings</string>
-    <string name="reset_override_settings_message">All override settings will be discarded</string>
-    <string name="key">Key</string>
+    <string name="reset_override_settings">重置覆写设置</string>
+    <string name="reset_override_settings_message">所有覆写设置将被丢弃</string>
+    <string name="key">键</string>
 
-    <string name="use_built_in">Use Built-in</string>
-    <string name="more">More</string>
-    <string name="save">Save</string>
-    <string name="delay_test">Delay Test</string>
+    <string name="use_built_in">使用内置</string>
+    <string name="more">更多</string>
+    <string name="save">保存</string>
+    <string name="delay_test">测速</string>
 
-    <string name="format_provider_type">%1$s(%2$s)</string>
-    <string name="rule">Rule</string>
+    <string name="format_provider_type">%1$s（%2$s）</string>
+    <string name="rule">规则</string>
     <string name="http">HTTP</string>
-    <string name="inline">Inline</string>
-    <string name="compatible">Compatible</string>
-    <string name="format_update_provider_failure">Update %1$s: %2$s</string>
-    <string name="update_all">Update All</string>
+    <string name="inline">内联</string>
+    <string name="compatible">兼容</string>
+    <string name="format_update_provider_failure">更新 %1$s 失败：%2$s</string>
+    <string name="update_all">全部更新</string>
 
-    <string name="close">Close</string>
-    <string name="keyword">Keyword</string>
+    <string name="close">关闭</string>
+    <string name="keyword">关键词</string>
 
-    <string name="invalid_log_file">Invalid log file</string>
-    <string name="unable_to_start_vpn">Unable to start VPN component</string>
+    <string name="invalid_log_file">无效的日志文件</string>
+    <string name="unable_to_start_vpn">无法启动 VPN 组件</string>
 
-    <string name="version_updated">App Updated</string>
-    <string name="version_updated_tips">The settings have been reseted and the old profiles needs to be saved again.</string>
+    <string name="version_updated">应用已更新</string>
+    <string name="version_updated_tips">设置已重置，旧订阅需要重新保存。</string>
 
-    <string name="mode_switch_tips">Valid only for current session</string>
+    <string name="mode_switch_tips">仅对当前会话有效</string>
 
-    <string name="clash_meta_wiki">Clash Meta Wiki</string>
-    <string name="clash_meta_wiki_url" translatable="false">https://wiki.metacubex.one</string>
+    <string name="clash_meta_wiki">悦通帮助中心</string>
+    <string name="clash_meta_wiki_url" translatable="false">https://my.yue.to</string>
 
-    <string name="meta_features">Meta Features</string>
-    <string name="unified_delay">Unified Delay</string>
-    <string name="geodata_mode">Geodata Mode</string>
-    <string name="tcp_concurrent">TCP Concurrent</string>
-    <string name="find_process_mode">Find Process Mode</string>
+    <string name="meta_features">高级功能</string>
+    <string name="unified_delay">统一延迟</string>
+    <string name="geodata_mode">地理数据模式</string>
+    <string name="tcp_concurrent">TCP 并发</string>
+    <string name="find_process_mode">进程匹配模式</string>
 
-    <string name="sniffer_setting">Sniffer Setting</string>
-    <string name="sniffer">Sniffer</string>
-    <string name="force_dns_mapping">Force DNS Mapping</string>
-    <string name="parse_pure_ip">Parse Pure IP</string>
-    <string name="override_destination">Override Destination</string>
-    <string name="force_domain">Force Domain</string>
-    <string name="skip_domain">Skip Domain</string>
-    <string name="skip_src_address">Skip Src Address</string>
-    <string name="skip_dst_address">Skip Dst Address</string>
-    <string name="sniff_http_ports">Sniff HTTP Ports</string>
-    <string name="sniff_tls_ports">Sniff TLS Ports</string>
-    <string name="sniff_quic_ports">Sniff QUIC Ports</string>
-    <string name="sniff_http_override_destination">Sniff HTTP Override Destination</string>
-    <string name="sniff_tls_override_destination">Sniff TLS Override Destination</string>
-    <string name="sniff_quic_override_destination">Sniff QUIC Override Destination</string>
+    <string name="sniffer_setting">嗅探设置</string>
+    <string name="sniffer">嗅探器</string>
+    <string name="force_dns_mapping">强制 DNS 映射</string>
+    <string name="parse_pure_ip">解析纯 IP</string>
+    <string name="override_destination">覆写目标</string>
+    <string name="force_domain">强制域名</string>
+    <string name="skip_domain">跳过域名</string>
+    <string name="skip_src_address">跳过源地址</string>
+    <string name="skip_dst_address">跳过目标地址</string>
+    <string name="sniff_http_ports">HTTP 嗅探端口</string>
+    <string name="sniff_tls_ports">TLS 嗅探端口</string>
+    <string name="sniff_quic_ports">QUIC 嗅探端口</string>
+    <string name="sniff_http_override_destination">HTTP 嗅探覆写目标</string>
+    <string name="sniff_tls_override_destination">TLS 嗅探覆写目标</string>
+    <string name="sniff_quic_override_destination">QUIC 嗅探覆写目标</string>
 
-    <string name="geox_url_setting">GeoX Url Setting</string>
-    <string name="geox_geoip">GeoIp Url</string>
-    <string name="geox_mmdb">MMDB Url</string>
-    <string name="geox_geosite">Geosite Url</string>
+    <string name="geox_url_setting">GeoX URL 设置</string>
+    <string name="geox_geoip">GeoIP URL</string>
+    <string name="geox_mmdb">MMDB URL</string>
+    <string name="geox_geosite">Geosite URL</string>
     <string name="geoip_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat</string>
     <string name="mmdb_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/country.mmdb</string>
     <string name="geosite_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat</string>
-    <string name="geox_files" >Geo Files</string>
-    <string name="import_geoip_file">Import GeoIP Database</string>
-    <string name="import_geosite_file">Import GeoSite Database</string>
-    <string name="import_country_file">Import Country Database</string>
-    <string name="import_asn_file">Import ASN Database</string>
-    <string name="press_to_import">Press to import...</string>
-    <string name="geofile_import_failed">Import failed</string>
-    <string name="geofile_unknown_db_format">Unknown Database format</string>
-    <string name="geofile_unknown_db_format_message">Only %1$s are supported</string>
-    <string name="geofile_imported">%1$s imported</string>
-    <string name="toast_profile_updated_complete">Update profile %s completed</string>
-    <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
-    <string name="external_control_activity">External Control</string>
-    <string name="external_control_started">Clash.Meta service started</string>
-    <string name="external_control_stopped">Clash.Meta service stopped</string>
+    <string name="geox_files">Geo 文件</string>
+    <string name="import_geoip_file">导入 GeoIP 数据库</string>
+    <string name="import_geosite_file">导入 GeoSite 数据库</string>
+    <string name="import_country_file">导入 Country 数据库</string>
+    <string name="import_asn_file">导入 ASN 数据库</string>
+    <string name="press_to_import">点击导入...</string>
+    <string name="geofile_import_failed">导入失败</string>
+    <string name="geofile_unknown_db_format">未知的数据库格式</string>
+    <string name="geofile_unknown_db_format_message">仅支持 %1$s</string>
+    <string name="geofile_imported">%1$s 已导入</string>
+    <string name="toast_profile_updated_complete">订阅 %s 更新完成</string>
+    <string name="toast_profile_updated_failed">订阅 %1$s 更新失败：%2$s</string>
+    <string name="external_control_activity">外部控制</string>
+    <string name="external_control_started">悦通服务已启动</string>
+    <string name="external_control_stopped">悦通服务已停止</string>
 
-    <string name="hide_app_icon_title">Hide App Icon</string>
-    <string name="hide_app_icon_desc">You can dial *#*#252746382#*#* to open this App</string>
-    <string name="hide_from_recents_title">Hide from Recents</string>
-    <string name="hide_from_recents_desc">Hide app from the Recent apps screen</string>
-    <string name="import_from_qr_no_permission">Camera access is restricted. Please enable it in Settings.</string>
-    <string name="import_from_qr_exception">An unhandled system exception occurred.</string>
+    <string name="hide_app_icon_title">隐藏应用图标</string>
+    <string name="hide_app_icon_desc">可拨号 *#*#252746382#*#* 重新打开</string>
+    <string name="hide_from_recents_title">从最近任务中隐藏</string>
+    <string name="hide_from_recents_desc">在最近任务界面中隐藏此应用</string>
+    <string name="import_from_qr_no_permission">相机权限受限，请在设置中开启。</string>
+    <string name="import_from_qr_exception">发生了未处理的系统异常。</string>
 
+    <!-- 悦通账号中心 -->
+    <string name="nav_home">首页</string>
+    <string name="nav_account">账号中心</string>
+    <string name="nav_settings">设置</string>
+    <string name="account_center">账号中心</string>
+    <string name="sync_subscription">同步订阅</string>
+    <string name="subscription_synced">订阅已同步</string>
+    <string name="subscription_sync_failed">同步失败，请登录后重试</string>
+    <string name="not_logged_in">请先在页面中登录</string>
+
+    <!-- XBoard 登录（保留供兼容） -->
     <string name="xboard_login">悦通登录</string>
-    <string name="xboard_login_summary">登录悦通机场，自动导入订阅</string>
+    <string name="xboard_login_summary">登录悦通，自动导入订阅</string>
     <string name="xboard_brand_name">悦通</string>
     <string name="xboard_brand_subtitle">专为 AI 与流媒体打造的全球加速网络</string>
     <string name="xboard_site_url">网站地址</string>

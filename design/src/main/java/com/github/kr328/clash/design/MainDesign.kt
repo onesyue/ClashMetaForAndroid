@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
-import com.github.kr328.clash.design.databinding.DesignAboutBinding
 import com.github.kr328.clash.design.databinding.DesignMainBinding
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.resolveThemedColor
@@ -17,11 +16,9 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     enum class Request {
         ToggleStatus,
         OpenProxy,
-        OpenProfiles,
-        OpenProviders,
+        OpenAccount,
         OpenLogs,
         OpenSettings,
-        OpenHelp,
         OpenAbout,
     }
 
@@ -60,29 +57,25 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
-    suspend fun setHasProviders(has: Boolean) {
-        withContext(Dispatchers.Main) {
-            binding.hasProviders = has
-        }
-    }
-
     suspend fun showAbout(versionName: String) {
         withContext(Dispatchers.Main) {
-            val binding = DesignAboutBinding.inflate(context.layoutInflater).apply {
-                this.versionName = versionName
-            }
-
             AlertDialog.Builder(context)
-                .setView(binding.root)
+                .setTitle(context.getString(R.string.xboard_brand_name))
+                .setMessage(
+                    context.getString(R.string.xboard_brand_subtitle) +
+                        "\n\n版本：$versionName"
+                )
+                .setPositiveButton(R.string.ok, null)
                 .show()
         }
     }
 
     init {
         binding.self = this
-
-        binding.colorClashStarted = context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
-        binding.colorClashStopped = context.resolveThemedColor(R.attr.colorClashStopped)
+        binding.colorConnected =
+            context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
+        binding.colorDisconnected =
+            context.resolveThemedColor(R.attr.colorClashStopped)
     }
 
     fun request(request: Request) {
