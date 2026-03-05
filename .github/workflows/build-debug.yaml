@@ -52,19 +52,20 @@ jobs:
           sudo update-ca-certificates
           cp -f /etc/ssl/certs/ca-certificates.crt core/src/foss/golang/clash/component/ca/ca-certificates.crt
 
-      # - name: Signing properties
-      #   env:
-      #     SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-      #     SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-      #     SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-      #   run: |
-      #     touch signing.properties
-      #     echo keystore.password="$SIGNING_STORE_PASSWORD" > signing.properties
-      #     echo key.alias="$SIGNING_KEY_ALIAS" >> signing.properties
-      #     echo key.password="$SIGNING_KEY_PASSWORD" >> signing.properties
-            
-      #     echo "cat signing.properties"
-      #     cat signing.properties
+      - name: Setup signing
+        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > release.keystore
+          cat > signing.properties <<EOF
+          keystore.password=$KEYSTORE_PASSWORD
+          key.alias=$KEY_ALIAS
+          key.password=$KEY_PASSWORD
+          EOF
 
       - name: Build
         if: success()
@@ -74,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA Debug Unsigned APK (universal) 
+          name: CMFA APK (universal) 
           path: |
             app/build/outputs/apk/alpha/release/*-universal-*.apk
       
@@ -82,7 +83,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA Debug Unsigned APK (arm64-v8a)
+          name: CMFA APK (arm64-v8a)
           path: |
             app/build/outputs/apk/alpha/release/*-arm64-v8a-*.apk
       
@@ -90,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA Debug Unsigned APK (armeabi-v7a)
+          name: CMFA APK (armeabi-v7a)
           path: |
             app/build/outputs/apk/alpha/release/*-armeabi-v7a-*.apk
       
@@ -98,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA Debug Unsigned APK (x86_64)
+          name: CMFA APK (x86_64)
           path: |
             app/build/outputs/apk/alpha/release/*-x86_64-*.apk
       
@@ -106,6 +107,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA Debug Unsigned APK (x86)
+          name: CMFA APK (x86)
           path: |
             app/build/outputs/apk/alpha/release/*-x86-*.apk
