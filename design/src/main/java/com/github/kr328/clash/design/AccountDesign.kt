@@ -12,6 +12,7 @@ import com.github.kr328.clash.design.util.applyFrom
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
 
+@SuppressLint("SetJavaScriptEnabled")
 class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
 
     sealed class Request {
@@ -53,7 +54,6 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     init {
         binding.self = this
         binding.loading = true
@@ -61,7 +61,6 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
         binding.activityBarLayout.applyFrom(context)
 
         binding.webView.apply {
-            @SuppressLint("SetJavaScriptEnabled")
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
