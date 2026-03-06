@@ -462,6 +462,7 @@
     <string name="syncing_subscription_title">正在同步订阅</string>
     <string name="syncing_subscription_detail">正在下载订阅配置，首次约需 1～2 分钟\n请保持网络连接，耐心等待…</string>
     <string name="syncing_subscription_elapsed">已等待 %d 秒，正在下载中，请耐心等待…</string>
+    <string name="subscription_commit_failed">订阅下载失败</string>
 
     <!-- 公告 -->
     <string name="notices_title">公告</string>

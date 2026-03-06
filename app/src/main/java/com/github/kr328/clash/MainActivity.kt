@@ -266,25 +266,35 @@ class MainActivity : BaseActivity<MainDesign>() {
     private suspend fun MainDesign.startClash() {
         var active = withProfile { queryActive() }
 
-        // 若 queryActive() 为 null，可能 profile 正在后台 commit 中（XBoardLoginActivity GlobalScope）
         if (active == null) {
             val all = withProfile { queryAll() }
             val pending = all.firstOrNull { it.pending && !it.imported }
+
             if (pending == null) {
-                showToast(getString(R.string.no_subscription_hint), ToastDuration.Long)
-                return
-            }
-            showSyncDialog()
-            for (retry in 1..120) {
-                delay(1_000L)
-                active = withProfile { queryActive() }
-                if (active != null) break
-                if (retry % 5 == 0) updateSyncDialog(retry)
-            }
-            dismissSyncDialog()
-            if (active == null) {
-                showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
-                return
+                // 无 pending profile — 检查是否有已下载但未激活的 profile（Bug Fix: imported-but-not-active）
+                val importedProfile = all.firstOrNull { it.imported }
+                if (importedProfile != null) {
+                    withProfile { setActive(importedProfile) }
+                    active = withProfile { queryActive() }
+                }
+                if (active == null) {
+                    showToast(getString(R.string.no_subscription_hint), ToastDuration.Long)
+                    return
+                }
+            } else {
+                // 有 pending profile — 等待后台 commit 完成（最长 120 秒）
+                showSyncDialog()
+                for (retry in 1..120) {
+                    delay(1_000L)
+                    active = withProfile { queryActive() }
+                    if (active != null) break
+                    if (retry % 5 == 0) updateSyncDialog(retry)
+                }
+                dismissSyncDialog()
+                if (active == null) {
+                    showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
+                    return
+                }
             }
         }
 

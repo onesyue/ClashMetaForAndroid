@@ -2,6 +2,7 @@ package com.github.kr328.clash
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.XBoardLoginDesign
 import com.github.kr328.clash.design.R
@@ -16,6 +17,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 
 class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
 
@@ -80,24 +82,50 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
             }
 
             val brandName = getString(R.string.xboard_brand_name)
-            val uuid = withProfile {
-                queryAll()
-                    .filter { it.name == brandName }
-                    .forEach { delete(it.uuid) }
-                create(Profile.Type.Url, brandName, result.subscribeUrl)
+
+            // 查找已有的同名 profile
+            val allProfiles = withProfile { queryAll() }.filter { it.name == brandName }
+
+            // 关键优化：如果已有相同 URL 的 imported profile，直接激活，跳过重新下载
+            val sameUrlImported = allProfiles.firstOrNull {
+                it.imported && it.source == result.subscribeUrl
             }
 
-            // commit() 完成后再 setActive，否则 ImportedDao 还没有该记录，setActive 会静默失败
-            @Suppress("OPT_IN_USAGE")
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    withProfile { commit(uuid, null) }
-                    val imported = withProfile { queryByUUID(uuid) }
-                    if (imported != null) {
-                        withProfile { setActive(imported) }
+            if (sameUrlImported != null) {
+                // 订阅已下载且 URL 未变 → 直接激活，无需重新下载
+                withProfile { setActive(sameUrlImported) }
+            } else {
+                // 删除旧 profile，创建新的，后台 commit
+                val uuid = withProfile {
+                    allProfiles.forEach { delete(it.uuid) }
+                    create(Profile.Type.Url, brandName, result.subscribeUrl)
+                }
+
+                // 捕获 context 引用（Activity 即将 finish，不能在 GlobalScope 里用 this）
+                val appCtx = applicationContext
+                val commitFailedPrefix = getString(R.string.subscription_commit_failed)
+
+                // commit() 后再 setActive；失败时 Toast 告知用户
+                @Suppress("OPT_IN_USAGE")
+                GlobalScope.launch(Dispatchers.IO) {
+                    try {
+                        withProfile { commit(uuid, null) }
+                        val imported = withProfile { queryByUUID(uuid) }
+                        if (imported != null) {
+                            withProfile { setActive(imported) }
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                appCtx,
+                                "$commitFailedPrefix: ${e.message ?: "未知错误"}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
-                } catch (_: Exception) {}
+                }
             }
+
             design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)
 
             // 若是从退出登录后以根 Activity 启动，则重新拉起主界面
