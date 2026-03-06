@@ -10,7 +10,9 @@ import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 
 class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
@@ -72,11 +74,13 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                 create(Profile.Type.Url, brandName, result.subscribeUrl)
             }
 
-            withProfile { commit(uuid, null) }
-
+            // 立即设置为活跃 profile，订阅下载放到后台 — 这样登录不需要等待几分钟
             val profile = withProfile { queryByUUID(uuid) }
             if (profile != null) {
                 withProfile { setActive(profile) }
+            }
+            launch(Dispatchers.IO) {
+                try { withProfile { commit(uuid, null) } } catch (_: Exception) {}
             }
 
             design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)

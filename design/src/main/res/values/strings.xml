@@ -376,7 +376,7 @@
     <string name="xboard_invite_code">邀请码（选填）</string>
     <string name="xboard_tab_login">登录</string>
     <string name="xboard_tab_register">注册</string>
-    <string name="xboard_do_login">登录 / 切换账号</string>
+    <string name="xboard_do_login">登录</string>
     <string name="xboard_do_register">注册</string>
     <string name="xboard_request_failed">请求失败</string>
     <string name="xboard_default_url" translatable="false">https://my.yue.to</string>

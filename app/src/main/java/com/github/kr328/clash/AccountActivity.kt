@@ -14,9 +14,14 @@ import kotlinx.coroutines.selects.select
 
 class AccountActivity : BaseActivity<AccountDesign>() {
 
+    companion object {
+        const val EXTRA_PATH = "extra_initial_path"
+    }
+
     override suspend fun main() {
         val baseUrl = RemoteConfig.getXboardUrl(this)
-        val design = AccountDesign(this, baseUrl)
+        val initialPath = intent.getStringExtra(EXTRA_PATH) ?: ""
+        val design = AccountDesign(this, baseUrl, initialPath)
 
         setContentDesign(design)
 

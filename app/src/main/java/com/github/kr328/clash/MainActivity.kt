@@ -251,9 +251,7 @@ class MainActivity : BaseActivity<MainDesign>() {
 
         val inviteInfo = XBoardApi.getInviteInfo(baseUrl, authData)
         setInviteLink(inviteInfo?.inviteUrl?.takeIf { it.isNotBlank() })
-
-        val referralCount = XBoardApi.getReferralCount(baseUrl, authData)
-        setReferralCount(referralCount)
+        setReferralCount(inviteInfo?.referralCount ?: 0)
     }
 
     private suspend fun MainDesign.startClash() {

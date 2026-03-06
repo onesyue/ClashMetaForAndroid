@@ -1,7 +1,6 @@
 package com.github.kr328.clash
 
-import android.content.Intent
-import android.net.Uri
+import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.StoreDesign
 import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.xboard.XBoardApi
@@ -25,10 +24,10 @@ class StoreActivity : BaseActivity<StoreDesign>() {
                 design.requests.onReceive { request ->
                     when (request) {
                         is StoreDesign.Request.BuyPlan -> {
-                            val baseUrl = RemoteConfig.getXboardUrl(this@StoreActivity)
-                            val buyUrl = "${baseUrl.trimEnd('/')}/#/buy"
                             startActivity(
-                                Intent(Intent.ACTION_VIEW, Uri.parse(buyUrl))
+                                AccountActivity::class.intent.apply {
+                                    putExtra(AccountActivity.EXTRA_PATH, "/#/buy")
+                                }
                             )
                         }
                         is StoreDesign.Request.Retry -> {

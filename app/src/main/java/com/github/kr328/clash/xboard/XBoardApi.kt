@@ -23,8 +23,8 @@ object XBoardApi {
     )
 
     data class InviteInfo(
-        val code: String,
-        val inviteUrl: String
+        val inviteUrl: String,
+        val referralCount: Int
     )
 
     data class Plan(
@@ -136,19 +136,22 @@ object XBoardApi {
     }
 
     /**
-     * 获取邀请信息（专用接口，比 user/info 更可靠）
+     * 获取邀请信息 + 邀请人数（合并调用 /api/v1/user/invite）
+     * codes[0].code → 邀请码；stat[0] → 已注册用户数
      */
     suspend fun getInviteInfo(baseUrl: String, authData: String): InviteInfo? {
         return try {
             withContext(Dispatchers.IO) {
                 val data = httpGet(baseUrl, "/api/v1/user/invite", authData)
                     .optJSONObject("data") ?: return@withContext null
-                val code = data.optString("code", "")
-                val url = data.optString("invite_url", "")
-                    .takeIf { it.isNotBlank() }
-                    ?: if (code.isNotBlank()) "${baseUrl.trimEnd('/')}/#/register?code=$code" else ""
-                if (code.isBlank() && url.isBlank()) null
-                else InviteInfo(code, url)
+                val codes = data.optJSONArray("codes")
+                val code = codes?.optJSONObject(0)?.optString("code", "") ?: ""
+                val url = if (code.isNotBlank())
+                    "${baseUrl.trimEnd('/')}/#/register?code=$code"
+                else ""
+                val stat = data.optJSONArray("stat")
+                val referralCount = stat?.optInt(0, 0) ?: 0
+                InviteInfo(url, referralCount)
             }
         } catch (_: Exception) { null }
     }
@@ -181,20 +184,8 @@ object XBoardApi {
     }
 
     /**
-     * 获取邀请人数，失败静默返回 0
-     */
-    suspend fun getReferralCount(baseUrl: String, authData: String): Int {
-        return try {
-            withContext(Dispatchers.IO) {
-                val root = httpGet(baseUrl, "/api/v1/user/stat", authData)
-                val data = root.optJSONObject("data")
-                data?.optInt("register_count", 0) ?: 0
-            }
-        } catch (_: Exception) { 0 }
-    }
-
-    /**
      * 获取用户信息，失败时静默返回 null
+     * 注意：u/d 流量字段在 getSubscribe 里，info 里不含
      */
     suspend fun getUserInfo(baseUrl: String, authData: String): UserInfo? {
         return try {
@@ -202,11 +193,13 @@ object XBoardApi {
                 val infoData = httpGet(baseUrl, "/api/v1/user/info", authData)
                     .getJSONObject("data")
 
-                val planName = try {
-                    val subData = httpGet(baseUrl, "/api/v1/user/getSubscribe", authData)
+                val subData = try {
+                    httpGet(baseUrl, "/api/v1/user/getSubscribe", authData)
                         .getJSONObject("data")
-                    subData.optJSONObject("plan")?.optString("name")?.takeIf { it.isNotBlank() }
                 } catch (_: Exception) { null }
+
+                val planName = subData?.optJSONObject("plan")
+                    ?.optString("name")?.takeIf { it.isNotBlank() }
 
                 UserInfo(
                     email = infoData.optString("email", ""),
@@ -215,8 +208,8 @@ object XBoardApi {
                     expiredAt = if (infoData.isNull("expired_at")) null
                                 else infoData.optLong("expired_at").takeIf { it > 0 },
                     transferEnable = infoData.optLong("transfer_enable", 0),
-                    usedDownload = infoData.optLong("d", 0),
-                    usedUpload = infoData.optLong("u", 0),
+                    usedDownload = subData?.optLong("d", 0) ?: 0,
+                    usedUpload = subData?.optLong("u", 0) ?: 0,
                     uuid = infoData.optString("uuid", ""),
                     planName = planName
                 )
