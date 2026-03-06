@@ -109,12 +109,10 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             text = trafficText
             textSize = 14f
             setTextColor(0xFF5C7CAB.toInt())
-            val mt = (4 * dp).toInt()
-            (layoutParams as? LinearLayout.LayoutParams)?.topMargin = mt
-                ?: run { layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { topMargin = mt } }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = (4 * dp).toInt() }
         })
 
         // Description
