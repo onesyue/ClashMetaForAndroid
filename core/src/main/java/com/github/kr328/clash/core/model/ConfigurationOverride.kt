@@ -62,6 +62,12 @@ data class ConfigurationOverride(
     @SerialName("geodata-mode")
     var geodataMode: Boolean? = null,
 
+    @SerialName("geo-auto-update")
+    var geoAutoUpdate: Boolean? = null,
+
+    @SerialName("geo-update-interval")
+    var geoUpdateInterval: Int? = null,
+
     @SerialName("tcp-concurrent")
     var tcpConcurrent: Boolean? = null,
 
@@ -211,6 +217,9 @@ data class ConfigurationOverride(
 
         @SerialName("mmdb")
         var mmdb: String? = null,
+
+        @SerialName("asn")
+        var asn: String? = null,
 
         @SerialName("geosite")
         var geosite: String? = null,

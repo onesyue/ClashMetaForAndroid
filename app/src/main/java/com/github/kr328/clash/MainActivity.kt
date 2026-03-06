@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
+import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.design.MainDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -48,6 +49,8 @@ class MainActivity : BaseActivity<MainDesign>() {
         setContentDesign(design)
 
         design.fetch()
+        // Apply fixed geo settings silently on every start (CDN URLs accessible in China)
+        launch { applyGeoDefaults() }
         // fetchUserData 放后台，不阻塞事件循环启动（避免 API 延迟导致按钮无响应）
         launch { design.fetchUserData() }
 
@@ -321,6 +324,20 @@ class MainActivity : BaseActivity<MainDesign>() {
             }
         } catch (e: Exception) {
             design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
+        }
+    }
+
+    private suspend fun applyGeoDefaults() {
+        withClash {
+            val cfg = queryOverride(Clash.OverrideSlot.Persist)
+            cfg.geodataMode = true
+            cfg.geoAutoUpdate = true
+            cfg.geoUpdateInterval = 24
+            cfg.geoxurl.geoip = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+            cfg.geoxurl.geosite = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+            cfg.geoxurl.mmdb = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+            cfg.geoxurl.asn = "https://cdn.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
+            patchOverride(Clash.OverrideSlot.Persist, cfg)
         }
     }
 
