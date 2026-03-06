@@ -21,7 +21,7 @@ class AccountActivity : BaseActivity<AccountDesign>() {
     }
 
     override suspend fun main() {
-        val baseUrl    = RemoteConfig.getXboardUrl(this)
+        val baseUrl    = RemoteConfig.getWebviewUrl(this)
         val fullUrl    = intent.getStringExtra(EXTRA_FULL_URL)
         val initialPath = intent.getStringExtra(EXTRA_PATH) ?: ""
         val design = AccountDesign(
