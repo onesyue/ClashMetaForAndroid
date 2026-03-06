@@ -1,33 +1,67 @@
 package com.github.kr328.clash
 
-import com.github.kr328.clash.design.AccountDesign
+import android.content.Intent
+import android.net.Uri
+import com.github.kr328.clash.design.StoreDesign
 import com.github.kr328.clash.remote.RemoteConfig
-import com.github.kr328.clash.xboard.XBoardSession
+import com.github.kr328.clash.xboard.XBoardApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 
-class StoreActivity : BaseActivity<AccountDesign>() {
+class StoreActivity : BaseActivity<StoreDesign>() {
 
     override suspend fun main() {
-        val baseUrl = RemoteConfig.getXboardUrl(this)
-        val design = AccountDesign(this, baseUrl, "/#/buy", showSyncButton = false)
-
+        val design = StoreDesign(this)
         setContentDesign(design)
+
+        loadPlans(design)
 
         while (isActive) {
             select<Unit> {
                 events.onReceive { }
-
                 design.requests.onReceive { request ->
                     when (request) {
-                        is AccountDesign.Request.AuthDataChanged -> {
-                            XBoardSession.save(this@StoreActivity, request.authData, request.baseUrl)
+                        is StoreDesign.Request.BuyPlan -> {
+                            val baseUrl = RemoteConfig.getXboardUrl(this@StoreActivity)
+                            val buyUrl = "${baseUrl.trimEnd('/')}/#/buy"
+                            startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse(buyUrl))
+                            )
                         }
-                        is AccountDesign.Request.SyncSubscription -> {
-                            // Sync not needed from store page; ignore
+                        is StoreDesign.Request.Retry -> {
+                            loadPlans(design)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun loadPlans(design: StoreDesign) {
+        design.showLoading()
+        launch(Dispatchers.IO) {
+            try {
+                val baseUrl = RemoteConfig.getXboardUrl(this@StoreActivity)
+                val apiPlans = XBoardApi.getPlans(baseUrl)
+                val plans = apiPlans.map { p ->
+                    StoreDesign.Plan(
+                        id            = p.id,
+                        name          = p.name,
+                        content       = p.content,
+                        transferGb    = p.transferGb,
+                        monthPrice    = p.monthPrice,
+                        quarterPrice  = p.quarterPrice,
+                        halfYearPrice = p.halfYearPrice,
+                        yearPrice     = p.yearPrice,
+                        onetimePrice  = p.onetimePrice
+                    )
+                }
+                withContext(Dispatchers.Main) { design.showPlans(plans) }
+            } catch (_: Exception) {
+                withContext(Dispatchers.Main) { design.showError() }
             }
         }
     }

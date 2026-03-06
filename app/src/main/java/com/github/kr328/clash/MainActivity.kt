@@ -1,5 +1,6 @@
 package com.github.kr328.clash
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +12,6 @@ import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.design.MainDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
-import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
@@ -31,28 +31,22 @@ import java.util.concurrent.TimeUnit
 class MainActivity : BaseActivity<MainDesign>() {
 
     private var connectStartMs: Long = 0L
-    private var lastTrafficRaw: Long = -1L  // packed Long from queryTrafficTotal()
+    private var lastTrafficRaw: Long = -1L
 
     override suspend fun main() {
-        val design = MainDesign(this)
-
-        setContentDesign(design)
-
-        // Fetch OSS config on every launch (non-blocking)
-        launch(Dispatchers.IO) { RemoteConfig.fetchAndCache(this@MainActivity) }
-
-        design.fetch()
-
-        val hasProfile = withProfile { queryAll().isNotEmpty() }
-        if (!hasProfile) {
+        // 强制登录：未登录则跳登录页，返回后仍无 auth → 退出
+        if (XBoardSession.getAuthData(this) == null) {
             startActivityForResult(
                 ActivityResultContracts.StartActivityForResult(),
                 XBoardLoginActivity::class.intent
             )
-            design.fetch()
+            if (XBoardSession.getAuthData(this) == null) return
         }
 
-        // Load user info from Xboard API
+        val design = MainDesign(this)
+        setContentDesign(design)
+
+        design.fetch()
         design.fetchUserData()
 
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
@@ -95,12 +89,8 @@ class MainActivity : BaseActivity<MainDesign>() {
                         }
                         MainDesign.Request.OpenProfiles ->
                             startActivity(ProfilesActivity::class.intent)
-                        MainDesign.Request.OpenStore -> {
-                            startActivityForResult(
-                                ActivityResultContracts.StartActivityForResult(),
-                                StoreActivity::class.intent
-                            )
-                        }
+                        MainDesign.Request.OpenStore ->
+                            startActivity(StoreActivity::class.intent)
                         MainDesign.Request.OpenLogs -> {
                             if (LogcatService.running) {
                                 startActivity(LogcatActivity::class.intent)
@@ -112,6 +102,26 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(SettingsActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
+                        MainDesign.Request.ChangePassword -> {
+                            val pending = design.pendingPasswordChange ?: return@onReceive
+                            design.pendingPasswordChange = null
+                            val authData = XBoardSession.getAuthData(this@MainActivity) ?: return@onReceive
+                            val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
+                            launch(Dispatchers.IO) {
+                                try {
+                                    XBoardApi.changePassword(baseUrl, authData, pending.first, pending.second)
+                                    design.showToast(
+                                        getString(R.string.password_changed),
+                                        ToastDuration.Short
+                                    )
+                                } catch (e: Exception) {
+                                    design.showToast(
+                                        e.message ?: getString(R.string.xboard_request_failed),
+                                        ToastDuration.Long
+                                    )
+                                }
+                            }
+                        }
                         MainDesign.Request.Logout -> {
                             val authData = XBoardSession.getAuthData(this@MainActivity)
                             val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
@@ -121,12 +131,12 @@ class MainActivity : BaseActivity<MainDesign>() {
                                 }
                             }
                             XBoardSession.clear(this@MainActivity)
-                            startActivityForResult(
-                                ActivityResultContracts.StartActivityForResult(),
-                                XBoardLoginActivity::class.intent
+                            design.resetUserData()
+                            startActivity(
+                                XBoardLoginActivity::class.intent.apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                }
                             )
-                            design.fetch()
-                            design.fetchUserData()
                         }
                     }
                 }
@@ -157,7 +167,6 @@ class MainActivity : BaseActivity<MainDesign>() {
     private suspend fun MainDesign.fetchTraffic() {
         val current = withClash { queryTrafficTotal() }
 
-        // Decode the packed Long: upper 32 bits = upload, lower 32 bits = download
         val curUpBytes = decodeTrafficHalf(current ushr 32)
         val curDlBytes = decodeTrafficHalf(current and 0xFFFFFFFFL)
 
@@ -174,7 +183,6 @@ class MainActivity : BaseActivity<MainDesign>() {
         setForwarded(current)
     }
 
-    /** Mirror of the private scaleTraffic() in core/Traffic.kt */
     private fun decodeTrafficHalf(half: Long): Long {
         val type = (half ushr 30) and 0x3L
         val data = half and 0x3FFFFFFFL
@@ -199,25 +207,20 @@ class MainActivity : BaseActivity<MainDesign>() {
         else                         -> "${bytes / 1024} KB"
     }
 
-    /**
-     * Fetch real user info from Xboard API and populate home + profile tabs.
-     * Silent no-op if not logged in or network fails.
-     */
     private suspend fun MainDesign.fetchUserData() {
         val authData = XBoardSession.getAuthData(this@MainActivity) ?: return
         val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
 
         val info = XBoardApi.getUserInfo(baseUrl, authData) ?: return
 
-        // Home tab
         setUserEmail(info.email.takeIf { it.isNotBlank() })
 
-        // Expiry: null/0 → "永久", past → "已过期", future → date string
         val now = System.currentTimeMillis() / 1000
         val expired = info.expiredAt != null && info.expiredAt > 0 && info.expiredAt < now
         val expiryDisplay = when {
-            info.expiredAt == null || info.expiredAt == 0L -> "永久"
-            expired -> "已过期"
+            info.expiredAt == null || info.expiredAt == 0L ->
+                getString(R.string.expiry_permanent)
+            expired -> getString(R.string.expiry_expired)
             else -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(info.expiredAt * 1000))
         }
         setExpiryDate(expiryDisplay, expired)
@@ -228,23 +231,26 @@ class MainActivity : BaseActivity<MainDesign>() {
         } else 0
         setTrafficPercent(trafficPercent)
 
-        // Profile tab
         setPlanName(info.planName)
         setProfileExpiryDate(expiryDisplay, expired)
         setProfileTrafficPercent(trafficPercent)
 
-        val trafficDetail = if (info.transferEnable > 0) {
-            "${formatBytes(usedBytes)} / ${formatBytes(info.transferEnable)}"
-        } else ""
+        val trafficDetail = when {
+            info.transferEnable == 0L -> getString(R.string.unlimited_traffic)
+            usedBytes == 0L           -> getString(R.string.not_used_yet)
+            else -> getString(
+                R.string.traffic_detail_format,
+                formatBytes(usedBytes),
+                formatBytes(info.transferEnable)
+            )
+        }
         setTrafficDetail(trafficDetail)
 
         setBalance(info.balance)
         setCommissionBalance(info.commissionBalance)
 
-        val inviteLink = if (info.inviteCode.isNotBlank()) {
-            "${baseUrl.trimEnd('/')}/#/register?code=${info.inviteCode}"
-        } else null
-        setInviteLink(inviteLink)
+        val inviteInfo = XBoardApi.getInviteInfo(baseUrl, authData)
+        setInviteLink(inviteInfo?.inviteUrl?.takeIf { it.isNotBlank() })
 
         val referralCount = XBoardApi.getReferralCount(baseUrl, authData)
         setReferralCount(referralCount)

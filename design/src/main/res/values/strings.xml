@@ -417,4 +417,23 @@
     <string name="expiry_expired">已过期</string>
     <string name="traffic_detail_format">已用 %1$s / 共 %2$s</string>
     <string name="store_title">商店</string>
+    <string name="forgot_password">忘记密码？</string>
+    <string name="forgot_password_email_hint">请输入注册邮箱</string>
+    <string name="forgot_password_sent">重置邮件已发送，请查收</string>
+    <string name="change_password">修改密码</string>
+    <string name="old_password">当前密码</string>
+    <string name="new_password">新密码</string>
+    <string name="password_changed">密码修改成功</string>
+    <string name="store_empty">暂无可用套餐</string>
+    <string name="store_error">加载失败，请重试</string>
+    <string name="store_retry">重试</string>
+    <string name="buy_now">立即购买 →</string>
+    <string name="unlimited_traffic">不限流量</string>
+    <string name="traffic_gb_format">%d GB 流量</string>
+    <string name="not_used_yet">尚未使用</string>
+    <string name="price_monthly">月付 ¥%s</string>
+    <string name="price_quarterly">季付 ¥%s</string>
+    <string name="price_half_year">半年付 ¥%s</string>
+    <string name="price_yearly">年付 ¥%s</string>
+    <string name="price_onetime">一次性 ¥%s</string>
 </resources>

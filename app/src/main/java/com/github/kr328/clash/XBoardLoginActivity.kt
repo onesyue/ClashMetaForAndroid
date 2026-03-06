@@ -1,6 +1,7 @@
 package com.github.kr328.clash
 
 import android.app.Activity
+import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.XBoardLoginDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -13,6 +14,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
 class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
+
     override suspend fun main() {
         val design = XBoardLoginDesign(this, RemoteConfig.getXboardUrl(this))
 
@@ -38,6 +40,9 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                                 )
                             }
                         }
+                        is XBoardLoginDesign.Request.ForgotPassword -> {
+                            performForgotPassword(design, request.email)
+                        }
                     }
                 }
             }
@@ -55,30 +60,32 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
         try {
             val result = action()
 
-            // Persist auth session so native API calls work without WebView
             if (result.authData.isNotBlank()) {
                 XBoardSession.save(this@XBoardLoginActivity, result.authData, url)
             }
 
             val brandName = getString(R.string.xboard_brand_name)
             val uuid = withProfile {
-                // 同名订阅先删除再创建，保证链接最新
                 queryAll()
                     .filter { it.name == brandName }
                     .forEach { delete(it.uuid) }
                 create(Profile.Type.Url, brandName, result.subscribeUrl)
             }
 
-            // 自动下载并导入配置
             withProfile { commit(uuid, null) }
 
-            // 激活订阅
             val profile = withProfile { queryByUUID(uuid) }
             if (profile != null) {
                 withProfile { setActive(profile) }
             }
 
             design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)
+
+            // 若是从退出登录后以根 Activity 启动，则重新拉起主界面
+            if (isTaskRoot) {
+                startActivity(MainActivity::class.intent)
+            }
+
             setResult(Activity.RESULT_OK)
             finish()
         } catch (e: Exception) {
@@ -89,5 +96,27 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
         } finally {
             design.processing = false
         }
+    }
+
+    private suspend fun performForgotPassword(design: XBoardLoginDesign, email: String) {
+        design.processing = true
+        try {
+            val url = RemoteConfig.getXboardUrl(this)
+            XBoardApi.forgotPassword(url, email)
+            design.showToast(getString(R.string.forgot_password_sent), ToastDuration.Long)
+        } catch (e: Exception) {
+            design.showToast(
+                e.message ?: getString(R.string.xboard_request_failed),
+                ToastDuration.Long
+            )
+        } finally {
+            design.processing = false
+        }
+    }
+
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun onBackPressed() {
+        // 登录页按返回键退出整个 App（强制登录策略）
+        finishAffinity()
     }
 }

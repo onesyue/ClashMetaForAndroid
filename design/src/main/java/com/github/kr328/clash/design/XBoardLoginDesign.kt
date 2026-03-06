@@ -1,7 +1,11 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.text.InputType
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import com.github.kr328.clash.design.databinding.DesignXboardLoginBinding
 import com.github.kr328.clash.design.util.*
 import com.google.android.material.tabs.TabLayout
@@ -21,6 +25,8 @@ class XBoardLoginDesign(context: Context, defaultUrl: String = "") : Design<XBoa
             val password: String,
             val inviteCode: String
         ) : Request()
+
+        data class ForgotPassword(val email: String) : Request()
     }
 
     private val binding = DesignXboardLoginBinding
@@ -124,6 +130,35 @@ class XBoardLoginDesign(context: Context, defaultUrl: String = "") : Design<XBoa
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
                 override fun onTabReselected(tab: TabLayout.Tab) {}
             })
+        }
+
+        // 忘记密码按钮
+        binding.forgotPasswordBtn.setOnClickListener {
+            val prefillEmail = binding.loginEmailField.text?.toString()?.trim() ?: ""
+            val emailEdit = EditText(context).apply {
+                setText(prefillEmail)
+                hint = context.getString(R.string.forgot_password_email_hint)
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            }
+            val dp20 = (20 * context.resources.displayMetrics.density + 0.5f).toInt()
+            val layout = LinearLayout(context).apply {
+                setPadding(dp20, 0, dp20, 0)
+                addView(emailEdit, LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ))
+            }
+            AlertDialog.Builder(context)
+                .setTitle(R.string.forgot_password)
+                .setView(layout)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    val email = emailEdit.text?.toString()?.trim() ?: ""
+                    if (email.isNotBlank()) {
+                        requests.trySend(Request.ForgotPassword(email))
+                    }
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
         }
     }
 }

@@ -135,10 +135,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:layout_marginBottom="16dp"
                         android:enabled="@{!processing}"
                         android:onClick="@{() -> self.requestLogin()}"
                         android:text="@string/xboard_do_login" />
+
+                    <TextView
+                        android:id="@+id/forgot_password_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/forgot_password"
+                        android:textColor="#3A6BBF"
+                        android:textSize="13sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="4dp" />
 
                 </LinearLayout>
 

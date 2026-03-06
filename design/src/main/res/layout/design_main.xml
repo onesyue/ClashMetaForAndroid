@@ -772,6 +772,7 @@
 
                     <!-- 邀请卡 -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/profile_invite_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
@@ -847,6 +848,16 @@
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
+
+                    <!-- 修改密码按钮 -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profile_change_password_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/change_password"
+                        app:cornerRadius="12dp" />
 
                     <!-- 退出登录按钮 -->
                     <com.google.android.material.button.MaterialButton
