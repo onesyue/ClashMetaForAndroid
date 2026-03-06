@@ -61,19 +61,28 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     suspend fun setUserEmail(email: String?) {
         withContext(Dispatchers.Main) {
-            binding.userEmail = email
+            val display = email ?: context.getString(R.string.xboard_login_summary)
+            binding.userEmail = display
+            val letter = email?.firstOrNull()?.uppercaseChar()?.toString() ?: "U"
+            binding.avatarLetterHeader.text = letter
+            binding.avatarLetterCard.text = letter
         }
     }
 
     suspend fun setExpiryDate(date: String?) {
         withContext(Dispatchers.Main) {
-            binding.expiryDate = date
+            binding.expiryDate = if (date != null) {
+                context.getString(R.string.expiry_prefix) + date
+            } else {
+                context.getString(R.string.expiry_prefix) + "--"
+            }
         }
     }
 
     suspend fun setTrafficPercent(percent: Int) {
         withContext(Dispatchers.Main) {
-            binding.trafficPercent = percent
+            binding.trafficText = context.getString(R.string.traffic_usage_label) + " $percent%"
+            binding.trafficProgress.progress = percent
         }
     }
 
@@ -110,7 +119,12 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     init {
         binding.self = this
-        binding.trafficPercent = 0
+        binding.userEmail = context.getString(R.string.xboard_login_summary)
+        binding.expiryDate = context.getString(R.string.expiry_prefix) + "--"
+        binding.trafficText = context.getString(R.string.traffic_usage_label) + " 0%"
+        binding.connectionTime = "00:00:00"
+        binding.downloadSpeed = "0 B/s"
+        binding.uploadSpeed = "0 B/s"
         binding.colorConnected =
             context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorDisconnected =

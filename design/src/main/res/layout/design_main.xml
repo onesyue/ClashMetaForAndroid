@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="self"             type="com.github.kr328.clash.design.MainDesign" />
-        <variable name="clashRunning"     type="boolean" />
-        <variable name="forwarded"        type="String" />
-        <variable name="mode"             type="String" />
-        <variable name="profileName"      type="String" />
-        <variable name="colorConnected"   type="int" />
+        <variable name="self"              type="com.github.kr328.clash.design.MainDesign" />
+        <variable name="clashRunning"      type="boolean" />
+        <variable name="forwarded"         type="String" />
+        <variable name="mode"              type="String" />
+        <variable name="profileName"       type="String" />
+        <variable name="colorConnected"    type="int" />
         <variable name="colorDisconnected" type="int" />
-        <variable name="userEmail"        type="String" />
-        <variable name="expiryDate"       type="String" />
-        <variable name="trafficPercent"   type="int" />
-        <variable name="connectionTime"   type="String" />
-        <variable name="downloadSpeed"    type="String" />
-        <variable name="uploadSpeed"      type="String" />
+        <variable name="userEmail"         type="String" />
+        <variable name="expiryDate"        type="String" />
+        <variable name="trafficText"       type="String" />
+        <variable name="connectionTime"    type="String" />
+        <variable name="downloadSpeed"     type="String" />
+        <variable name="uploadSpeed"       type="String" />
 
         <import type="android.view.View" />
         <import type="android.content.res.ColorStateList" />
         <import type="com.github.kr328.clash.design.MainDesign.Request" />
     </data>
 
-    <!-- Root: vertical, gradient background, edge-to-edge padding -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,9 +30,7 @@
         android:paddingStart="@{self.surface.insets.start}"
         android:paddingEnd="@{self.surface.insets.end}">
 
-        <!-- ══════════════════════════════════════════════
-             PERSISTENT HEADER (always visible across tabs)
-             ══════════════════════════════════════════════ -->
+        <!-- ══ 顶部标题栏（所有标签页共用） ══ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +41,6 @@
             android:paddingEnd="8dp"
             android:paddingBottom="12dp">
 
-            <!-- Title + subtitle -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -58,20 +54,17 @@
                     android:textSize="26sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.03"
-                    android:textColor="#1A237E"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                    android:textColor="#1A237E" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/vpn_subtitle"
                     android:textSize="12sp"
-                    android:textColor="#5C7CAB"
-                    android:layout_marginTop="1dp" />
+                    android:textColor="#5C7CAB" />
 
             </LinearLayout>
 
-            <!-- Notification icon -->
             <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -81,7 +74,6 @@
                 android:contentDescription="@null"
                 android:padding="8dp" />
 
-            <!-- Settings icon -->
             <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -92,8 +84,9 @@
                 android:padding="8dp"
                 android:onClick="@{() -> self.request(Request.OpenSettings)}" />
 
-            <!-- Avatar circle: first letter of email -->
+            <!-- 头像首字母圆（文字由代码设置） -->
             <TextView
+                android:id="@+id/avatar_letter_header"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginStart="4dp"
@@ -102,26 +95,21 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="@{userEmail != null &amp;&amp; userEmail.length() > 0 ? userEmail.substring(0, 1) : @string/default_avatar_letter}" />
+                android:text="U" />
 
         </LinearLayout>
 
-        <!-- ══════════════════════════════════════
-             TAB CONTENT (switches between 3 tabs)
-             ══════════════════════════════════════ -->
+        <!-- ══ 三标签页内容区域 ══ -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <!-- ─────────────────────────────────
-                 TAB 1: HOME — VPN Dashboard
-                 ───────────────────────────────── -->
+            <!-- ── 标签1：首页 ── -->
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/home_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="false"
                 android:overScrollMode="never">
 
                 <LinearLayout
@@ -132,7 +120,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="24dp">
 
-                    <!-- ── USER INFO CARD ── -->
+                    <!-- 用户信息卡 -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -148,8 +136,9 @@
                             android:gravity="center_vertical"
                             android:padding="16dp">
 
-                            <!-- Avatar circle -->
+                            <!-- 头像 -->
                             <TextView
+                                android:id="@+id/avatar_letter_card"
                                 android:layout_width="52dp"
                                 android:layout_height="52dp"
                                 android:gravity="center"
@@ -157,9 +146,8 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
-                                android:text="@{userEmail != null &amp;&amp; userEmail.length() > 0 ? userEmail.substring(0, 1) : @string/default_avatar_letter}" />
+                                android:text="U" />
 
-                            <!-- User info text block -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -167,7 +155,7 @@
                                 android:orientation="vertical"
                                 android:layout_marginStart="12dp">
 
-                                <!-- Email + renew button row -->
+                                <!-- 邮箱 + 续费按钮 -->
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -183,7 +171,7 @@
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@{userEmail != null ? userEmail : @string/xboard_login_summary}"
+                                            android:text="@{userEmail}"
                                             android:textSize="14sp"
                                             android:textStyle="bold"
                                             android:textColor="#1A237E"
@@ -193,15 +181,15 @@
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@{expiryDate != null ? @string/expiry_prefix + expiryDate : @string/expiry_prefix + `--`}"
+                                            android:text="@{expiryDate}"
                                             android:textSize="12sp"
                                             android:textColor="#5C7CAB"
                                             android:layout_marginTop="2dp" />
 
                                     </LinearLayout>
 
-                                    <!-- 续费 button -->
                                     <com.google.android.material.button.MaterialButton
+                                        style="@style/Widget.MaterialComponents.Button.TextButton"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/renew_button"
@@ -210,26 +198,26 @@
                                         app:icon="@drawable/ic_baseline_replay"
                                         app:iconSize="14dp"
                                         app:iconPadding="4dp"
-                                        app:cornerRadius="20dp"
-                                        style="@style/Widget.MaterialComponents.Button.TextButton" />
+                                        app:cornerRadius="20dp" />
 
                                 </LinearLayout>
 
-                                <!-- Traffic usage row -->
+                                <!-- 流量用量文字 -->
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@{`流量使用 ` + trafficPercent + `%`}"
+                                    android:text="@{trafficText}"
                                     android:textSize="11sp"
                                     android:textColor="#5C7CAB"
                                     android:layout_marginTop="8dp" />
 
+                                <!-- 流量进度条（进度由代码设置） -->
                                 <ProgressBar
+                                    android:id="@+id/traffic_progress"
+                                    style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="6dp"
-                                    style="?android:attr/progressBarStyleHorizontal"
                                     android:max="100"
-                                    android:progress="@{trafficPercent}"
                                     android:progressDrawable="@drawable/bg_progress_bar"
                                     android:layout_marginTop="4dp" />
 
@@ -239,7 +227,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- ── VPN CONNECT CARD ── -->
+                    <!-- VPN 连接卡 -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -256,13 +244,12 @@
                             android:paddingTop="32dp"
                             android:paddingBottom="28dp">
 
-                            <!-- Power button with glow rings -->
+                            <!-- 发光环 + 电源按钮 -->
                             <FrameLayout
                                 android:layout_width="180dp"
                                 android:layout_height="180dp"
                                 android:layout_gravity="center_horizontal">
 
-                                <!-- Outer glow ring -->
                                 <View
                                     android:layout_width="180dp"
                                     android:layout_height="180dp"
@@ -270,7 +257,6 @@
                                     android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
                                     android:alpha="0.12" />
 
-                                <!-- Inner glow ring -->
                                 <View
                                     android:layout_width="152dp"
                                     android:layout_height="152dp"
@@ -279,7 +265,6 @@
                                     android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
                                     android:alpha="0.22" />
 
-                                <!-- Clickable power button circle -->
                                 <FrameLayout
                                     android:layout_width="128dp"
                                     android:layout_height="128dp"
@@ -303,7 +288,7 @@
 
                             </FrameLayout>
 
-                            <!-- Connection status text -->
+                            <!-- 连接状态文字 -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -313,7 +298,7 @@
                                 android:textStyle="bold"
                                 android:textColor="@{clashRunning ? colorConnected : colorDisconnected}" />
 
-                            <!-- Hint text -->
+                            <!-- 提示文字（未连接时显示） -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -323,12 +308,12 @@
                                 android:textColor="#8EAACB"
                                 android:visibility="@{clashRunning ? View.GONE : View.VISIBLE}" />
 
-                            <!-- Connection time (when connected) -->
+                            <!-- 连接时长（连接时显示） -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="@{connectionTime ?? `00:00:00`}"
+                                android:text="@{connectionTime}"
                                 android:textSize="13sp"
                                 android:textColor="#5C7CAB"
                                 android:fontFamily="monospace"
@@ -338,7 +323,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- ── CONNECTION STATUS CARD (only when connected) ── -->
+                    <!-- 连接状态卡（连接时显示） -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -354,7 +339,6 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
-                            <!-- Traffic total -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -363,14 +347,12 @@
                                 android:textColor="#8EAACB"
                                 android:visibility="@{forwarded != null ? View.VISIBLE : View.GONE}" />
 
-                            <!-- Speed row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:layout_marginTop="8dp">
 
-                                <!-- Download -->
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -388,7 +370,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{downloadSpeed ?? `0 B/s`}"
+                                        android:text="@{downloadSpeed}"
                                         android:textSize="15sp"
                                         android:textStyle="bold"
                                         android:textColor="#1A237E"
@@ -396,14 +378,12 @@
 
                                 </LinearLayout>
 
-                                <!-- Divider -->
                                 <View
                                     android:layout_width="1dp"
                                     android:layout_height="36dp"
                                     android:layout_gravity="center_vertical"
                                     android:background="#E0EAF8" />
 
-                                <!-- Upload -->
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -421,7 +401,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{uploadSpeed ?? `0 B/s`}"
+                                        android:text="@{uploadSpeed}"
                                         android:textSize="15sp"
                                         android:textStyle="bold"
                                         android:textColor="#1A237E"
@@ -435,7 +415,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- ── PROXY MODE CARD ── -->
+                    <!-- 代理模式卡 -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -487,7 +467,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- ── NODE SELECTION CARD ── -->
+                    <!-- 节点选择卡 -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -501,7 +481,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <!-- Card header row -->
+                            <!-- 标题行 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -533,7 +513,6 @@
 
                             </LinearLayout>
 
-                            <!-- Divider -->
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
@@ -541,7 +520,7 @@
                                 android:layout_marginStart="16dp"
                                 android:layout_marginEnd="16dp" />
 
-                            <!-- Node: Hong Kong -->
+                            <!-- 香港 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="52dp"
@@ -570,7 +549,7 @@
 
                             </LinearLayout>
 
-                            <!-- Node: Japan -->
+                            <!-- 日本 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="52dp"
@@ -599,7 +578,7 @@
 
                             </LinearLayout>
 
-                            <!-- Node: Singapore -->
+                            <!-- 新加坡 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="52dp"
@@ -628,7 +607,7 @@
 
                             </LinearLayout>
 
-                            <!-- Node: United States -->
+                            <!-- 美国 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="52dp"
@@ -665,9 +644,7 @@
 
             </androidx.core.widget.NestedScrollView>
 
-            <!-- ─────────────────────────────────
-                 TAB 2: STORE — Coming Soon
-                 ───────────────────────────────── -->
+            <!-- ── 标签2：商店 ── -->
             <LinearLayout
                 android:id="@+id/store_content"
                 android:layout_width="match_parent"
@@ -688,24 +665,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/store_coming_soon"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textColor="#8EAACB"
                     android:gravity="center" />
 
             </LinearLayout>
 
-            <!-- ─────────────────────────────────
-                 TAB 3: PROFILE — Account / My
-                 ───────────────────────────────── -->
+            <!-- ── 标签3：我的 ── -->
             <LinearLayout
                 android:id="@+id/profile_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingBottom="@{self.surface.insets.bottom}"
                 android:visibility="gone">
 
-                <!-- Profile header -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -735,7 +708,6 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- Account info card -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -783,7 +755,6 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Login button -->
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -792,7 +763,6 @@
                         android:text="@string/xboard_do_login"
                         app:cornerRadius="12dp" />
 
-                    <!-- Profiles button -->
                     <com.google.android.material.button.MaterialButton
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
@@ -807,9 +777,7 @@
 
         </FrameLayout>
 
-        <!-- ══════════════════════════════
-             BOTTOM NAVIGATION BAR
-             ══════════════════════════════ -->
+        <!-- ══ 底部导航栏 ══ -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
