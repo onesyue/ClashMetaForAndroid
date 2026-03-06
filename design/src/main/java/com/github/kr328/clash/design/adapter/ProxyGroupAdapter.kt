@@ -19,7 +19,7 @@ class ProxyGroupAdapter(
     private val onUrlTest: (groupIndex: Int) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private data class GroupData(
+    internal data class GroupData(
         val index: Int,
         val name: String,
         var proxies: List<Proxy> = emptyList(),
@@ -29,7 +29,7 @@ class ProxyGroupAdapter(
         var testing: Boolean = false,
     )
 
-    private sealed class ListItem {
+    internal sealed class ListItem {
         data class Header(val group: GroupData) : ListItem()
         data class Node(val groupIndex: Int, val proxy: Proxy, val state: ProxyState) : ListItem()
     }
@@ -142,7 +142,7 @@ class ProxyGroupAdapter(
         private val testButton: ImageView = view.findViewById(R.id.test_button)
         private val chevron: ImageView = view.findViewById(R.id.chevron)
 
-        private fun bind(group: GroupData) {
+        internal fun bind(group: GroupData) {
             groupName.text = group.name
             currentNode.text = group.state.now.ifEmpty { "—" }
 
@@ -188,7 +188,7 @@ class ProxyGroupAdapter(
         private val nodeSubtitle: TextView = view.findViewById(R.id.node_subtitle)
         private val delayBadge: TextView = view.findViewById(R.id.delay_badge)
 
-        private fun bind(item: ListItem.Node) {
+        internal fun bind(item: ListItem.Node) {
             val proxy = item.proxy
             val isSelected = proxy.name == item.state.now
 
