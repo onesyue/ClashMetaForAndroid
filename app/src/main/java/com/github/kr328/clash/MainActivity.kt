@@ -10,9 +10,11 @@ import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.core.Clash
+import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.design.MainDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
+import com.github.kr328.clash.service.remote.IFetchObserver
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
@@ -282,15 +284,21 @@ class MainActivity : BaseActivity<MainDesign>() {
                     return
                 }
             } else {
-                // 有 pending profile — 等待后台 commit 完成（最长 120 秒）
+                // 有 pending profile — 触发 commit 并显示实时进度
                 showSyncDialog()
-                for (retry in 1..120) {
-                    delay(1_000L)
-                    active = withProfile { queryActive() }
-                    if (active != null) break
-                    if (retry % 5 == 0) updateSyncDialog(retry)
+                val pendingObserver = buildFetchObserver(this)
+                try {
+                    withProfile { commit(pending.uuid, pendingObserver) }
+                } catch (e: Exception) {
+                    dismissSyncDialog()
+                    showToast(
+                        e.message ?: getString(R.string.subscription_commit_failed),
+                        ToastDuration.Long
+                    )
+                    return
                 }
                 dismissSyncDialog()
+                active = withProfile { queryActive() }
                 if (active == null) {
                     showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
                     return
@@ -298,32 +306,24 @@ class MainActivity : BaseActivity<MainDesign>() {
             }
         }
 
-        // 若 profile 尚未同步节点，触发同步并等待完成（最多120秒）
+        // 若 profile 尚未同步节点，触发同步并等待完成
         if (!active.imported) {
+            showSyncDialog()
+            val commitObserver = buildFetchObserver(this)
             try {
-                withProfile { commit(active.uuid, null) }
+                withProfile { commit(active.uuid, commitObserver) }
             } catch (e: Exception) {
+                dismissSyncDialog()
                 showToast(
                     e.message ?: getString(R.string.subscription_sync_failed),
                     ToastDuration.Long
                 )
                 return
             }
-
-            showSyncDialog()
-            var imported = false
-            for (retry in 1..120) {
-                delay(1_000L)
-                val updated = withProfile { queryByUUID(active.uuid) }
-                if (updated?.imported == true) {
-                    imported = true
-                    break
-                }
-                if (retry % 5 == 0) updateSyncDialog(retry)
-            }
             dismissSyncDialog()
 
-            if (!imported) {
+            val updated = withProfile { queryByUUID(active.uuid) }
+            if (updated?.imported != true) {
                 showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
                 return
             }
@@ -344,6 +344,26 @@ class MainActivity : BaseActivity<MainDesign>() {
         } catch (e: Exception) {
             design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
         }
+    }
+
+    private fun buildFetchObserver(design: MainDesign): IFetchObserver = IFetchObserver { status ->
+        val msg = when (status.action) {
+            FetchStatus.Action.FetchConfiguration ->
+                getString(R.string.sync_fetching_config)
+            FetchStatus.Action.FetchProviders -> {
+                val name = status.args.firstOrNull() ?: ""
+                getString(R.string.sync_fetching_provider, status.progress + 1, status.max, name)
+            }
+            FetchStatus.Action.Verifying ->
+                getString(R.string.sync_verifying)
+        }
+        val current = when (status.action) {
+            FetchStatus.Action.FetchProviders -> status.progress + 1
+            FetchStatus.Action.Verifying -> status.max
+            else -> 0
+        }
+        val total = status.max.coerceAtLeast(1)
+        this@MainActivity.launch { design.updateSyncProgress(current, total, msg) }
     }
 
     private suspend fun applyGeoDefaults() {

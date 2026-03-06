@@ -218,20 +218,43 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     private var syncDialog: AlertDialog? = null
     private var syncMsgView: android.widget.TextView? = null
+    private var syncProgressBar: android.widget.ProgressBar? = null
 
     suspend fun showSyncDialog() {
         withContext(Dispatchers.Main) {
             if (syncDialog?.isShowing == true) return@withContext
             val dp = context.resources.displayMetrics.density
+            val pad = (24 * dp).toInt()
+            val padSm = (8 * dp).toInt()
+
             val msgView = android.widget.TextView(context).apply {
                 text = context.getString(R.string.syncing_subscription_detail)
-                setPadding((24 * dp).toInt(), (8 * dp).toInt(), (24 * dp).toInt(), (16 * dp).toInt())
                 textSize = 14f
             }
+            val progressBar = android.widget.ProgressBar(
+                context, null, android.R.attr.progressBarStyleHorizontal
+            ).apply {
+                isIndeterminate = false
+                max = 100
+                progress = 0
+                visibility = android.view.View.GONE
+            }
             syncMsgView = msgView
+            syncProgressBar = progressBar
+
+            val container = android.widget.LinearLayout(context).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                setPadding(pad, padSm, pad, pad)
+                addView(msgView)
+                addView(progressBar, android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also { it.topMargin = padSm })
+            }
+
             syncDialog = AlertDialog.Builder(context)
                 .setTitle(R.string.syncing_subscription_title)
-                .setView(msgView)
+                .setView(container)
                 .setCancelable(false)
                 .show()
         }
@@ -243,11 +266,23 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
+    suspend fun updateSyncProgress(current: Int, total: Int, message: String) {
+        withContext(Dispatchers.Main) {
+            syncMsgView?.text = message
+            syncProgressBar?.apply {
+                visibility = android.view.View.VISIBLE
+                max = total.coerceAtLeast(1)
+                progress = current
+            }
+        }
+    }
+
     suspend fun dismissSyncDialog() {
         withContext(Dispatchers.Main) {
             syncDialog?.dismiss()
             syncDialog = null
             syncMsgView = null
+            syncProgressBar = null
         }
     }
 
