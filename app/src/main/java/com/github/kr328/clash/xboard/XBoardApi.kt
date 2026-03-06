@@ -234,9 +234,16 @@ object XBoardApi {
                     commissionBalance = infoData.optLong("commission_balance", 0),
                     expiredAt = if (infoData.isNull("expired_at")) null
                                 else infoData.optLong("expired_at").takeIf { it > 0 },
-                    transferEnable = infoData.optLong("transfer_enable", 0),
-                    usedDownload = subData?.optLong("d", 0) ?: 0,
-                    usedUpload = subData?.optLong("u", 0) ?: 0,
+                    transferEnable = infoData.optLong("transfer_enable", 0)
+                        .takeIf { it > 0 }
+                        ?: (subData?.optLong("transfer_enable", 0) ?: 0),
+                    // d/u may be in user/info or in getSubscribe depending on XBoard version
+                    usedDownload = infoData.optLong("d", 0)
+                        .takeIf { it > 0 }
+                        ?: (subData?.optLong("d", 0) ?: 0),
+                    usedUpload = infoData.optLong("u", 0)
+                        .takeIf { it > 0 }
+                        ?: (subData?.optLong("u", 0) ?: 0),
                     uuid = infoData.optString("uuid", ""),
                     planName = planName
                 )

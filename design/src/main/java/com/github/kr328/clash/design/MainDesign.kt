@@ -97,8 +97,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     suspend fun setTrafficPercent(percent: Int) {
         withContext(Dispatchers.Main) {
-            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label)
-                .replace("0%", "$percent%")
+            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, percent)
             binding.trafficProgress.progress = percent
         }
     }
@@ -136,8 +135,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     suspend fun setProfileTrafficPercent(percent: Int) {
         withContext(Dispatchers.Main) {
-            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label)
-                .replace("0%", "$percent%")
+            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, percent)
             binding.profileTrafficProgress.progress = percent
         }
     }
@@ -193,7 +191,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.avatarLetterCard.text = "U"
             binding.expiryText.text = unknownExp
             binding.expiryText.setTextColor(0xFF5C7CAB.toInt())
-            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label)
+            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, 0)
             binding.trafficProgress.progress = 0
 
             // Profile tab header
@@ -205,7 +203,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.profilePlanNameText.text = unknownPlan
             binding.profileExpiryText.text = "--"
             binding.profileExpiryText.setTextColor(0xFF1A237E.toInt())
-            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label)
+            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, 0)
             binding.profileTrafficProgress.progress = 0
             binding.profileTrafficDetailText.text = ""
             binding.profileBalanceText.text = "¥ --"

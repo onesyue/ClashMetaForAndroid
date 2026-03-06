@@ -394,7 +394,7 @@
     <string name="renew_button">续费</string>
     <string name="expiry_prefix">到期：</string>
     <string name="expiry_unknown">到期：--</string>
-    <string name="traffic_usage_label">流量使用 0%</string>
+    <string name="traffic_usage_label">流量使用 %d%%</string>
     <string name="node_selection_title">节点选择</string>
     <string name="view_all_nodes">查看全部 ›</string>
     <string name="download_label">↓ 下载</string>
