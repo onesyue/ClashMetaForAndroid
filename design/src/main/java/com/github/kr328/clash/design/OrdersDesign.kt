@@ -67,12 +67,19 @@ class OrdersDesign(context: Context) : Design<Unit>(context) {
     }
 
     private fun periodLabel(period: String): String = when (period) {
-        "monthly"    -> context.getString(R.string.period_monthly)
-        "quarterly"  -> context.getString(R.string.period_quarterly)
-        "half_yearly"-> context.getString(R.string.period_half_yearly)
-        "yearly"     -> context.getString(R.string.period_yearly)
-        "onetime"    -> context.getString(R.string.period_onetime)
-        else         -> period
+        // 新格式（新版 Xboard 订单返回）
+        "monthly"     -> context.getString(R.string.period_monthly)
+        "quarterly"   -> context.getString(R.string.period_quarterly)
+        "half_yearly" -> context.getString(R.string.period_half_yearly)
+        "yearly"      -> context.getString(R.string.period_yearly)
+        "onetime"     -> context.getString(R.string.period_onetime)
+        // 旧格式（OrderResource::getLegacyPeriod 转换后）
+        "month_price"     -> context.getString(R.string.period_monthly)
+        "quarter_price"   -> context.getString(R.string.period_quarterly)
+        "half_year_price" -> context.getString(R.string.period_half_yearly)
+        "year_price"      -> context.getString(R.string.period_yearly)
+        "onetime_price"   -> context.getString(R.string.period_onetime)
+        else              -> period
     }
 
     private fun createOrderCard(order: Order): View {

@@ -143,13 +143,13 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             ).apply { topMargin = (12 * dp).toInt(); bottomMargin = (8 * dp).toInt() }
         })
 
-        // Period rows (each period = one clickable row)
+        // Period rows — period 使用服务端 OrderSave 验证接受的 legacy 格式
         listOf(
-            Triple("monthly",    "月付",   plan.monthPrice),
-            Triple("quarterly",  "季付",   plan.quarterPrice),
-            Triple("half_yearly","半年付", plan.halfYearPrice),
-            Triple("yearly",     "年付",   plan.yearPrice),
-            Triple("onetime",    "一次性", plan.onetimePrice)
+            Triple("month_price",     "月付",   plan.monthPrice),
+            Triple("quarter_price",   "季付",   plan.quarterPrice),
+            Triple("half_year_price", "半年付", plan.halfYearPrice),
+            Triple("year_price",      "年付",   plan.yearPrice),
+            Triple("onetime_price",   "一次性", plan.onetimePrice)
         ).forEach { (period, label, cents) ->
             if (cents != null && cents > 0) {
                 inner.addView(createPeriodRow(plan, period, label, cents, dp))

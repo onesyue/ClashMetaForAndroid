@@ -449,6 +449,7 @@
     <string name="checkout_no_method">请选择支付方式</string>
     <string name="checkout_free">免费</string>
     <string name="syncing_subscription">正在同步订阅节点，请稍候...</string>
+    <string name="syncing_subscription_progress">正在同步订阅节点，已等待 %d 秒...</string>
     <string name="subscription_sync_success">订阅已同步</string>
     <string name="no_subscription_hint">暂无订阅，请前往商店购买套餐</string>
 

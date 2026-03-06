@@ -268,7 +268,7 @@ class MainActivity : BaseActivity<MainDesign>() {
             return
         }
 
-        // 若 profile 尚未同步节点，触发同步并轮询等待完成（最多30秒）
+        // 若 profile 尚未同步节点，触发同步并轮询等待完成（最多60秒）
         if (!active.imported) {
             showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
 
@@ -283,14 +283,21 @@ class MainActivity : BaseActivity<MainDesign>() {
                 return
             }
 
-            // 轮询等待 imported 变为 true（最长30秒，每秒检查一次）
+            // 轮询等待 imported 变为 true（最长60秒：订阅文件+外部资源下载）
             var imported = false
-            for (retry in 1..30) {
+            for (retry in 1..60) {
                 delay(1_000L)
                 val updated = withProfile { queryByUUID(active.uuid) }
                 if (updated?.imported == true) {
                     imported = true
                     break
+                }
+                // 每10秒更新提示，告知用户正在等待
+                if (retry % 10 == 0) {
+                    showToast(
+                        getString(R.string.syncing_subscription_progress, retry),
+                        ToastDuration.Long
+                    )
                 }
             }
 
