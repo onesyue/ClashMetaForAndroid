@@ -1,6 +1,8 @@
 package com.github.kr328.clash
 
 import com.github.kr328.clash.design.OrdersDesign
+import com.github.kr328.clash.design.R
+import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +22,30 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
         while (isActive) {
             select<Unit> {
                 events.onReceive { }
+                design.requests.onReceive { request ->
+                    when (request) {
+                        is OrdersDesign.Request.CancelOrder -> {
+                            val authData = XBoardSession.getAuthData(this@OrdersActivity) ?: return@onReceive
+                            val baseUrl = XBoardSession.getBaseUrl(this@OrdersActivity)
+                            launch(Dispatchers.IO) {
+                                try {
+                                    XBoardApi.cancelOrder(baseUrl, authData, request.tradeNo)
+                                    withContext(Dispatchers.Main) {
+                                        design.showToast(getString(R.string.order_cancelled), ToastDuration.Short)
+                                        loadOrders(design)
+                                    }
+                                } catch (e: Exception) {
+                                    withContext(Dispatchers.Main) {
+                                        design.showToast(
+                                            e.message ?: getString(R.string.xboard_request_failed),
+                                            ToastDuration.Long
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

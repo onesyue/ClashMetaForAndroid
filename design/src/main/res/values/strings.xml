@@ -461,6 +461,9 @@
     <string name="orders_title">我的订单</string>
     <string name="orders_empty">暂无订单记录</string>
     <string name="order_status_pending">待支付</string>
+    <string name="order_cancel_btn">取消订单</string>
+    <string name="order_cancelled">订单已取消</string>
+    <string name="web_login_hint">遇到验证码？点击使用网页登录</string>
     <string name="order_status_processing">处理中</string>
     <string name="order_status_cancelled">已取消</string>
     <string name="order_status_completed">已完成</string>

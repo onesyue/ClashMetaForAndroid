@@ -264,14 +264,33 @@ class MainActivity : BaseActivity<MainDesign>() {
     }
 
     private suspend fun MainDesign.startClash() {
-        val active = withProfile { queryActive() }
+        var active = withProfile { queryActive() }
 
+        // 若 queryActive() 为 null，可能 profile 正在后台 commit 中（XBoardLoginActivity GlobalScope）
         if (active == null) {
-            showToast(getString(R.string.no_subscription_hint), ToastDuration.Long)
-            return
+            val all = withProfile { queryAll() }
+            val pending = all.firstOrNull { it.pending && !it.imported }
+            if (pending == null) {
+                showToast(getString(R.string.no_subscription_hint), ToastDuration.Long)
+                return
+            }
+            // 等待后台 commit 完成并设置 active（最长 120 秒：40+ rule-providers 下载）
+            showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
+            for (retry in 1..120) {
+                delay(1_000L)
+                active = withProfile { queryActive() }
+                if (active != null) break
+                if (retry % 15 == 0) {
+                    showToast(getString(R.string.syncing_subscription_progress, retry), ToastDuration.Long)
+                }
+            }
+            if (active == null) {
+                showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
+                return
+            }
         }
 
-        // 若 profile 尚未同步节点，触发同步并轮询等待完成（最多60秒）
+        // 若 profile 尚未同步节点，触发同步并轮询等待完成（最多120秒）
         if (!active.imported) {
             showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
 
@@ -286,17 +305,16 @@ class MainActivity : BaseActivity<MainDesign>() {
                 return
             }
 
-            // 轮询等待 imported 变为 true（最长60秒：订阅文件+外部资源下载）
+            // 轮询等待 imported 变为 true（最长120秒：含40+ rule-providers 下载）
             var imported = false
-            for (retry in 1..60) {
+            for (retry in 1..120) {
                 delay(1_000L)
                 val updated = withProfile { queryByUUID(active.uuid) }
                 if (updated?.imported == true) {
                     imported = true
                     break
                 }
-                // 每10秒更新提示，告知用户正在等待
-                if (retry % 10 == 0) {
+                if (retry % 15 == 0) {
                     showToast(
                         getString(R.string.syncing_subscription_progress, retry),
                         ToastDuration.Long

@@ -1,87 +1,74 @@
-## Clash Meta for Android
+## 悦通 VPN
 
-A Graphical user interface of [Clash.Meta](https://github.com/MetaCubeX/Clash.Meta) for Android
+基于 [Clash Meta for Android](https://github.com/MetaCubeX/ClashMetaForAndroid) 深度定制，对接 [悦通](https://yue.to) XBoard 订阅面板的 Android VPN 客户端。
 
-### Feature
+### 功能特性
 
-Feature of [Clash.Meta](https://github.com/MetaCubeX/Clash.Meta)
+- 原生登录 / 注册，遇到 CF 验证可一键切换网页登录
+- 自动同步订阅（登录后后台下载，支持 hysteria2 / vless / reality 等协议）
+- VPN 仪表盘：流量、速率、连接时长实时显示
+- 账号中心：套餐到期、流量用量、余额、邀请链接
+- 商店：套餐列表（Markdown 格式说明）、一键购买
+- 我的订单：订单历史，待支付订单可直接取消
+- 公告：面板通知（Markdown 渲染）
+- GeoIP / GeoSite 数据库通过 jsDelivr CDN 分发（国内可直接访问）
+- 每 24 小时自动更新 Geo 数据
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-     alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/com.github.metacubex.clash.meta/)
+### 系统要求
 
-### Requirement
+- Android 5.0+（推荐 7.0+）
+- 支持架构：`armeabi-v7a`、`arm64-v8a`、`x86`、`x86_64`
 
-- Android 5.0+ (minimum)
-- Android 7.0+ (recommend)
-- `armeabi-v7a` , `arm64-v8a`, `x86` or `x86_64` Architecture
+### 编译
 
-### Build
-
-1. Update submodules
+1. 初始化子模块
 
    ```bash
    git submodule update --init --recursive
    ```
 
-2. Install **OpenJDK 11**, **Android SDK**, **CMake** and **Golang**
+2. 安装 **OpenJDK 11**、**Android SDK**、**CMake**、**Golang**
 
-3. Create `local.properties` in project root with
+3. 在项目根目录创建 `local.properties`
 
    ```properties
    sdk.dir=/path/to/android-sdk
    ```
 
-4. (Optional) Custom app package name. Add the following configuration to `local.properties`.
-
-   ```properties
-   # config your ownn applicationId, or it will be 'com.github.metacubex.clash'
-   custom.application.id=com.my.compile.clash
-   # remove application id suffix, or the applicaion id will be 'com.github.metacubex.clash.alpha'
-   remove.suffix=true
-
-5. Create `signing.properties` in project root with
+4. 在项目根目录创建 `signing.properties`
 
    ```properties
    keystore.path=/path/to/keystore/file
-   keystore.password=<key store password>
+   keystore.password=<keystore 密码>
    key.alias=<key alias>
-   key.password=<key password>
+   key.password=<key 密码>
    ```
 
-6. Build
+5. 编译 Release 包
 
    ```bash
    ./gradlew app:assembleAlphaRelease
    ```
 
-### Automation
+### CI / CD
 
-APP package name is `com.github.metacubex.clash.meta`
+推送 `alpha` tag 自动触发 GitHub Actions 构建并发布：
 
-- Toggle Clash.Meta service status
-  - Send intent to activity `com.github.kr328.clash.ExternalControlActivity` with action `com.github.metacubex.clash.meta.action.TOGGLE_CLASH`
-- Start Clash.Meta service
-  - Send intent to activity `com.github.kr328.clash.ExternalControlActivity` with action `com.github.metacubex.clash.meta.action.START_CLASH`
-- Stop Clash.Meta service
-  - Send intent to activity `com.github.kr328.clash.ExternalControlActivity` with action `com.github.metacubex.clash.meta.action.STOP_CLASH`
-- Import a profile
-  - URL Scheme `clash://install-config?url=<encoded URI>` or `clashmeta://install-config?url=<encoded URI>`
+```bash
+git tag alpha -f
+git push origin alpha -f
+```
 
-### Contribution and Project Maintenance
+### 技术架构
 
-#### Meta Kernel
+| 层级 | 说明 |
+|------|------|
+| 内核 | [mihomo (Clash.Meta)](https://github.com/MetaCubeX/Clash.Meta) Go 原生库 |
+| 服务 | Android Foreground Service，管理 VPN 隧道和 Profile 下载 |
+| 面板 | [XBoard (cedar2025)](https://github.com/cedar2025/Xboard) API 对接 |
+| UI | Material Design 3，DataBinding，Kotlin Coroutines |
 
-- CMFA uses the kernel from `android-real` branch under `MetaCubeX/Clash.Meta`, which is a merge of the main `Alpha` branch and `android-open`.
-  - If you want to contribute to the kernel, make PRs to `Alpha` branch of the Meta kernel repository.
-  - If you want to contribute Android-specific patches to the kernel, make PRs to  `android-open` branch of the Meta kernel repository.
+### 订阅下载说明
 
-#### Maintenance
-
-- When `MetaCubeX/Clash.Meta` kernel is updated to a new version, the `Update Dependencies` actions in this repo will be triggered automatically.
-  - It will pull the new version of the meta kernel, update all the golang dependencies, and create a PR without manual intervention.
-  - If there is any compile error in PR, you need to fix it before merging. Alternatively, you may merge the PR directly.
-- Manually triggering `Build Pre-Release` actions will compile and publish a `PreRelease` version.
-- Manually triggering `Build Release` actions will compile, tag and publish a `Release` version.
-  - You must fill the blank `Release Tag` with the tag you want to release in the format of `v1.2.3`.
-  - `versionName` and `versionCode` in `build.gradle.kts` will be automatically bumped to the tag you filled above.
+首次登录后，订阅下载在后台自动进行（不阻塞界面）。订阅包含 40+ rule-providers（规则集），
+全部来自 jsDelivr CDN，首次下载约需 1~2 分钟，后续秒开。

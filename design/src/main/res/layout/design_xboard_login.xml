@@ -237,9 +237,25 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:indeterminate="true"
                     android:visibility="@{processing ? View.VISIBLE : View.GONE}" />
+
+                <!-- CF 验证降级：网页登录入口 -->
+                <TextView
+                    android:id="@+id/web_login_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/web_login_hint"
+                    android:textColor="#3A6BBF"
+                    android:textSize="13sp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:onClick="@{() -> self.requestWebLogin()}" />
 
             </LinearLayout>
         </com.github.kr328.clash.design.view.ObservableScrollView>

@@ -27,6 +27,8 @@ class XBoardLoginDesign(context: Context, defaultUrl: String = "") : Design<XBoa
         ) : Request()
 
         data class ForgotPassword(val email: String) : Request()
+
+        object WebLogin : Request()
     }
 
     private val binding = DesignXboardLoginBinding
@@ -93,6 +95,10 @@ class XBoardLoginDesign(context: Context, defaultUrl: String = "") : Design<XBoa
         } else passwordPair.second.error = null
 
         return ok
+    }
+
+    fun requestWebLogin() {
+        requests.trySend(Request.WebLogin)
     }
 
     fun showError(message: String) {

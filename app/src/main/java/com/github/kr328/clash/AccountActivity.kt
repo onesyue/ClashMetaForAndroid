@@ -79,9 +79,9 @@ class AccountActivity : BaseActivity<AccountDesign>() {
 
                                 withProfile { commit(uuid, null) }
 
-                                // commit() 是异步的，轮询等待实际下载完成（最长 60s）
+                                // commit() 是异步的，轮询等待实际下载完成（最长 120s，含 40+ rule-providers）
                                 var imported = false
-                                for (retry in 1..60) {
+                                for (retry in 1..120) {
                                     delay(1_000L)
                                     val p = withProfile { queryByUUID(uuid) }
                                     if (p?.imported == true) { imported = true; break }

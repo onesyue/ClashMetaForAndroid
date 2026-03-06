@@ -1,6 +1,7 @@
 package com.github.kr328.clash
 
 import android.app.Activity
+import android.content.Intent
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.XBoardLoginDesign
 import com.github.kr328.clash.design.R
@@ -46,6 +47,17 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                         is XBoardLoginDesign.Request.ForgotPassword -> {
                             performForgotPassword(design, request.email)
                         }
+                        is XBoardLoginDesign.Request.WebLogin -> {
+                            // CF 验证触发时降级到 WebView 登录
+                            val result = startActivityForResult(
+                                androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+                                Intent(this@XBoardLoginActivity, AccountActivity::class.java)
+                            )
+                            if (result.resultCode == Activity.RESULT_OK) {
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        }
                     }
                 }
             }
@@ -75,14 +87,16 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                 create(Profile.Type.Url, brandName, result.subscribeUrl)
             }
 
-            // 立即设置为活跃 profile，订阅下载放到 GlobalScope 后台（不随 Activity 销毁取消）
-            val profile = withProfile { queryByUUID(uuid) }
-            if (profile != null) {
-                withProfile { setActive(profile) }
-            }
+            // commit() 完成后再 setActive，否则 ImportedDao 还没有该记录，setActive 会静默失败
             @Suppress("OPT_IN_USAGE")
             GlobalScope.launch(Dispatchers.IO) {
-                try { withProfile { commit(uuid, null) } } catch (_: Exception) {}
+                try {
+                    withProfile { commit(uuid, null) }
+                    val imported = withProfile { queryByUUID(uuid) }
+                    if (imported != null) {
+                        withProfile { setActive(imported) }
+                    }
+                } catch (_: Exception) {}
             }
             design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)
 

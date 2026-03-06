@@ -302,6 +302,19 @@ object XBoardApi {
     }
 
     /**
+     * 取消订单（仅 status=0 待支付订单可取消）
+     */
+    suspend fun cancelOrder(baseUrl: String, authData: String, tradeNo: String) {
+        withContext(Dispatchers.IO) {
+            httpPostAuth(
+                baseUrl, "/api/v1/user/order/cancel",
+                JSONObject().apply { put("trade_no", tradeNo) },
+                authData
+            )
+        }
+    }
+
+    /**
      * 获取公告列表
      * 路由：GET /api/v1/user/notice/fetch
      */

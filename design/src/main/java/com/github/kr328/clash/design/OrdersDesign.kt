@@ -12,7 +12,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class OrdersDesign(context: Context) : Design<Unit>(context) {
+class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
+
+    sealed class Request {
+        data class CancelOrder(val tradeNo: String) : Request()
+    }
 
     data class Order(
         val tradeNo: String,
@@ -160,6 +164,26 @@ class OrdersDesign(context: Context) : Design<Unit>(context) {
             setTextColor(0xFF1A237E.toInt())
         })
         inner.addView(bottomRow)
+
+        // 待支付订单（status=0）显示取消按钮
+        if (order.status == 0) {
+            inner.addView(com.google.android.material.button.MaterialButton(context).apply {
+                text = context.getString(R.string.order_cancel_btn)
+                textSize = 13f
+                setTextColor(0xFFB71C1C.toInt())
+                strokeColor = android.content.res.ColorStateList.valueOf(0xFFB71C1C.toInt())
+                backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
+                val btnPad = (12 * dp).toInt()
+                setPadding(btnPad, 0, btnPad, 0)
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    (40 * dp).toInt()
+                ).apply { topMargin = (8 * dp).toInt() }
+                setOnClickListener {
+                    requests.trySend(Request.CancelOrder(order.tradeNo))
+                }
+            })
+        }
 
         card.addView(inner)
         return card
