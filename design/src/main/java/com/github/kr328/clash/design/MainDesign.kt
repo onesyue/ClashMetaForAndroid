@@ -18,6 +18,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         OpenProxy,
         OpenAccount,
         OpenProfiles,
+        OpenStore,
         OpenLogs,
         OpenSettings,
         OpenAbout,
@@ -52,9 +53,45 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.mode = when (mode) {
                 TunnelState.Mode.Direct -> context.getString(R.string.direct_mode)
                 TunnelState.Mode.Global -> context.getString(R.string.global_mode)
-                TunnelState.Mode.Rule -> context.getString(R.string.rule_mode)
-                else -> context.getString(R.string.rule_mode)
+                TunnelState.Mode.Rule   -> context.getString(R.string.rule_mode)
+                else                    -> context.getString(R.string.rule_mode)
             }
+        }
+    }
+
+    suspend fun setUserEmail(email: String?) {
+        withContext(Dispatchers.Main) {
+            binding.userEmail = email
+        }
+    }
+
+    suspend fun setExpiryDate(date: String?) {
+        withContext(Dispatchers.Main) {
+            binding.expiryDate = date
+        }
+    }
+
+    suspend fun setTrafficPercent(percent: Int) {
+        withContext(Dispatchers.Main) {
+            binding.trafficPercent = percent
+        }
+    }
+
+    suspend fun setConnectionTime(time: String) {
+        withContext(Dispatchers.Main) {
+            binding.connectionTime = time
+        }
+    }
+
+    suspend fun setDownloadSpeed(speed: String) {
+        withContext(Dispatchers.Main) {
+            binding.downloadSpeed = speed
+        }
+    }
+
+    suspend fun setUploadSpeed(speed: String) {
+        withContext(Dispatchers.Main) {
+            binding.uploadSpeed = speed
         }
     }
 
@@ -73,6 +110,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     init {
         binding.self = this
+        binding.trafficPercent = 0
         binding.colorConnected =
             context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorDisconnected =
@@ -82,12 +120,20 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             when (item.itemId) {
                 R.id.nav_home -> {
                     binding.homeContent.visibility = View.VISIBLE
-                    binding.accountContent.visibility = View.GONE
+                    binding.storeContent.visibility = View.GONE
+                    binding.profileContent.visibility = View.GONE
                     true
                 }
-                R.id.nav_account -> {
+                R.id.nav_store -> {
                     binding.homeContent.visibility = View.GONE
-                    binding.accountContent.visibility = View.VISIBLE
+                    binding.storeContent.visibility = View.VISIBLE
+                    binding.profileContent.visibility = View.GONE
+                    true
+                }
+                R.id.nav_profile -> {
+                    binding.homeContent.visibility = View.GONE
+                    binding.storeContent.visibility = View.GONE
+                    binding.profileContent.visibility = View.VISIBLE
                     true
                 }
                 else -> false

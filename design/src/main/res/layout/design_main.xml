@@ -3,343 +3,823 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="self"
-            type="com.github.kr328.clash.design.MainDesign" />
-        <variable
-            name="clashRunning"
-            type="boolean" />
-        <variable
-            name="forwarded"
-            type="String" />
-        <variable
-            name="mode"
-            type="String" />
-        <variable
-            name="profileName"
-            type="String" />
-        <variable
-            name="colorConnected"
-            type="int" />
-        <variable
-            name="colorDisconnected"
-            type="int" />
+        <variable name="self"             type="com.github.kr328.clash.design.MainDesign" />
+        <variable name="clashRunning"     type="boolean" />
+        <variable name="forwarded"        type="String" />
+        <variable name="mode"             type="String" />
+        <variable name="profileName"      type="String" />
+        <variable name="colorConnected"   type="int" />
+        <variable name="colorDisconnected" type="int" />
+        <variable name="userEmail"        type="String" />
+        <variable name="expiryDate"       type="String" />
+        <variable name="trafficPercent"   type="int" />
+        <variable name="connectionTime"   type="String" />
+        <variable name="downloadSpeed"    type="String" />
+        <variable name="uploadSpeed"      type="String" />
 
         <import type="android.view.View" />
         <import type="android.content.res.ColorStateList" />
         <import type="com.github.kr328.clash.design.MainDesign.Request" />
     </data>
 
+    <!-- Root: vertical, gradient background, edge-to-edge padding -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@drawable/bg_gradient_main"
         android:paddingStart="@{self.surface.insets.start}"
         android:paddingEnd="@{self.surface.insets.end}">
 
-        <!-- Content area (switches between Home and Account tab) -->
+        <!-- ══════════════════════════════════════════════
+             PERSISTENT HEADER (always visible across tabs)
+             ══════════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="@{self.surface.insets.top}"
+            android:paddingStart="20dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="12dp">
+
+            <!-- Title + subtitle -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/xboard_brand_name"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.03"
+                    android:textColor="#1A237E"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vpn_subtitle"
+                    android:textSize="12sp"
+                    android:textColor="#5C7CAB"
+                    android:layout_marginTop="1dp" />
+
+            </LinearLayout>
+
+            <!-- Notification icon -->
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_notification"
+                android:tint="#3A6BBF"
+                android:contentDescription="@null"
+                android:padding="8dp" />
+
+            <!-- Settings icon -->
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_settings"
+                android:tint="#3A6BBF"
+                android:contentDescription="@string/settings"
+                android:padding="8dp"
+                android:onClick="@{() -> self.request(Request.OpenSettings)}" />
+
+            <!-- Avatar circle: first letter of email -->
+            <TextView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="4dp"
+                android:gravity="center"
+                android:background="@drawable/bg_avatar"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="@{userEmail != null &amp;&amp; userEmail.length() > 0 ? userEmail.substring(0, 1) : @string/default_avatar_letter}" />
+
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════
+             TAB CONTENT (switches between 3 tabs)
+             ══════════════════════════════════════ -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <!-- ===== HOME TAB ===== -->
-            <LinearLayout
+            <!-- ─────────────────────────────────
+                 TAB 1: HOME — VPN Dashboard
+                 ───────────────────────────────── -->
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/home_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="@{self.surface.insets.top}">
+                android:fillViewport="false"
+                android:overScrollMode="never">
 
-                <!-- Top brand bar -->
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="4dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/xboard_brand_name"
-                        android:textSize="26sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.04"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
-
-                    <ImageButton
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/settings"
-                        android:onClick="@{() -> self.request(Request.OpenSettings)}"
-                        android:src="@drawable/ic_baseline_settings"
-                        android:tint="?attr/colorControlNormal" />
-
-                </LinearLayout>
-
-                <!-- Center: VPN button + status + traffic -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="204dp"
-                        android:layout_height="204dp"
-                        android:layout_gravity="center_horizontal">
-
-                        <View
-                            android:layout_width="204dp"
-                            android:layout_height="204dp"
-                            android:background="@drawable/bg_connect_button_ring"
-                            android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
-                            android:alpha="0.15" />
-
-                        <View
-                            android:layout_width="174dp"
-                            android:layout_height="174dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/bg_connect_button_ring"
-                            android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
-                            android:alpha="0.25" />
-
-                        <FrameLayout
-                            android:layout_width="148dp"
-                            android:layout_height="148dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/bg_connect_button"
-                            android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:onClick="@{() -> self.request(Request.ToggleStatus)}"
-                            android:elevation="8dp">
-
-                            <ImageView
-                                android:layout_width="64dp"
-                                android:layout_height="64dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_power_button"
-                                android:tint="@android:color/white" />
-
-                        </FrameLayout>
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="28dp"
-                        android:text="@{clashRunning ? @string/status_connected : @string/status_disconnected}"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="@{forwarded}"
-                        android:textSize="14sp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                        android:visibility="@{clashRunning &amp;&amp; forwarded != null ? View.VISIBLE : View.GONE}" />
-
-                </LinearLayout>
-
-                <!-- Proxy mode card (always visible) -->
-                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
-                    android:onClick="@{() -> self.request(Request.OpenProxy)}"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp">
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="24dp">
 
-                    <LinearLayout
+                    <!-- ── USER INFO CARD ── -->
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:gravity="center_vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="12dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:src="@drawable/ic_baseline_apps"
-                            android:tint="?attr/colorControlNormal"
-                            android:layout_marginEnd="12dp" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <!-- Avatar circle -->
+                            <TextView
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:gravity="center"
+                                android:background="@drawable/bg_avatar"
+                                android:textColor="@android:color/white"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                android:text="@{userEmail != null &amp;&amp; userEmail.length() > 0 ? userEmail.substring(0, 1) : @string/default_avatar_letter}" />
+
+                            <!-- User info text block -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="12dp">
+
+                                <!-- Email + renew button row -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@{userEmail != null ? userEmail : @string/xboard_login_summary}"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold"
+                                            android:textColor="#1A237E"
+                                            android:maxLines="1"
+                                            android:ellipsize="end" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@{expiryDate != null ? @string/expiry_prefix + expiryDate : @string/expiry_prefix + `--`}"
+                                            android:textSize="12sp"
+                                            android:textColor="#5C7CAB"
+                                            android:layout_marginTop="2dp" />
+
+                                    </LinearLayout>
+
+                                    <!-- 续费 button -->
+                                    <com.google.android.material.button.MaterialButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/renew_button"
+                                        android:textSize="12sp"
+                                        android:onClick="@{() -> self.request(Request.OpenAccount)}"
+                                        app:icon="@drawable/ic_baseline_replay"
+                                        app:iconSize="14dp"
+                                        app:iconPadding="4dp"
+                                        app:cornerRadius="20dp"
+                                        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+                                </LinearLayout>
+
+                                <!-- Traffic usage row -->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{`流量使用 ` + trafficPercent + `%`}"
+                                    android:textSize="11sp"
+                                    android:textColor="#5C7CAB"
+                                    android:layout_marginTop="8dp" />
+
+                                <ProgressBar
+                                    android:layout_width="match_parent"
+                                    android:layout_height="6dp"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:max="100"
+                                    android:progress="@{trafficPercent}"
+                                    android:progressDrawable="@drawable/bg_progress_bar"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- ── VPN CONNECT CARD ── -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="32dp"
+                            android:paddingBottom="28dp">
+
+                            <!-- Power button with glow rings -->
+                            <FrameLayout
+                                android:layout_width="180dp"
+                                android:layout_height="180dp"
+                                android:layout_gravity="center_horizontal">
+
+                                <!-- Outer glow ring -->
+                                <View
+                                    android:layout_width="180dp"
+                                    android:layout_height="180dp"
+                                    android:background="@drawable/bg_connect_button_ring"
+                                    android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
+                                    android:alpha="0.12" />
+
+                                <!-- Inner glow ring -->
+                                <View
+                                    android:layout_width="152dp"
+                                    android:layout_height="152dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/bg_connect_button_ring"
+                                    android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
+                                    android:alpha="0.22" />
+
+                                <!-- Clickable power button circle -->
+                                <FrameLayout
+                                    android:layout_width="128dp"
+                                    android:layout_height="128dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/bg_connect_button"
+                                    android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    android:onClick="@{() -> self.request(Request.ToggleStatus)}"
+                                    android:elevation="6dp">
+
+                                    <ImageView
+                                        android:layout_width="52dp"
+                                        android:layout_height="52dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_power_button"
+                                        android:tint="@android:color/white" />
+
+                                </FrameLayout>
+
+                            </FrameLayout>
+
+                            <!-- Connection status text -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:text="@{clashRunning ? @string/status_connected : @string/status_disconnected}"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@{clashRunning ? colorConnected : colorDisconnected}" />
+
+                            <!-- Hint text -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="@string/click_to_connect_hint"
+                                android:textSize="12sp"
+                                android:textColor="#8EAACB"
+                                android:visibility="@{clashRunning ? View.GONE : View.VISIBLE}" />
+
+                            <!-- Connection time (when connected) -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@{connectionTime ?? `00:00:00`}"
+                                android:textSize="13sp"
+                                android:textColor="#5C7CAB"
+                                android:fontFamily="monospace"
+                                android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- ── CONNECTION STATUS CARD (only when connected) ── -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Traffic total -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{forwarded}"
+                                android:textSize="12sp"
+                                android:textColor="#8EAACB"
+                                android:visibility="@{forwarded != null ? View.VISIBLE : View.GONE}" />
+
+                            <!-- Speed row -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="8dp">
+
+                                <!-- Download -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/download_label"
+                                        android:textSize="12sp"
+                                        android:textColor="#5C7CAB" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@{downloadSpeed ?? `0 B/s`}"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold"
+                                        android:textColor="#1A237E"
+                                        android:layout_marginTop="2dp" />
+
+                                </LinearLayout>
+
+                                <!-- Divider -->
+                                <View
+                                    android:layout_width="1dp"
+                                    android:layout_height="36dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:background="#E0EAF8" />
+
+                                <!-- Upload -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/upload_label"
+                                        android:textSize="12sp"
+                                        android:textColor="#5C7CAB" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@{uploadSpeed ?? `0 B/s`}"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold"
+                                        android:textColor="#1A237E"
+                                        android:layout_marginTop="2dp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- ── PROXY MODE CARD ── -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:onClick="@{() -> self.request(Request.OpenProxy)}"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="12dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_baseline_apps"
+                                android:tint="#3A6BBF"
+                                android:layout_marginEnd="10dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/proxy"
-                                android:textSize="12sp"
-                                android:alpha="0.55"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                                android:textSize="13sp"
+                                android:textColor="#8EAACB"
+                                android:layout_marginEnd="8dp" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:text="@{mode != null ? mode : @string/rule_mode}"
-                                android:textSize="15sp"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#1A237E" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_chevron_right"
+                                android:tint="#8EAACB" />
 
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="?attr/colorControlNormal"
-                            android:alpha="0.4" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                    </LinearLayout>
+                    <!-- ── NODE SELECTION CARD ── -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
 
-                </com.google.android.material.card.MaterialCardView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-            </LinearLayout>
+                            <!-- Card header row -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="12dp"
+                                android:paddingTop="14dp"
+                                android:paddingBottom="10dp">
 
-            <!-- ===== ACCOUNT TAB ===== -->
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/node_selection_title"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/view_all_nodes"
+                                    android:textSize="12sp"
+                                    android:textColor="#3A6BBF"
+                                    android:background="?attr/selectableItemBackground"
+                                    android:padding="4dp"
+                                    android:onClick="@{() -> self.request(Request.OpenProxy)}" />
+
+                            </LinearLayout>
+
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#E0EAF8"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp" />
+
+                            <!-- Node: Hong Kong -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="52dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="14dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/node_hk"
+                                    android:textSize="14sp"
+                                    android:textColor="#1A237E" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    android:tint="#C5D8F0" />
+
+                            </LinearLayout>
+
+                            <!-- Node: Japan -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="52dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="14dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/node_jp"
+                                    android:textSize="14sp"
+                                    android:textColor="#1A237E" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    android:tint="#C5D8F0" />
+
+                            </LinearLayout>
+
+                            <!-- Node: Singapore -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="52dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="14dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/node_sg"
+                                    android:textSize="14sp"
+                                    android:textColor="#1A237E" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    android:tint="#C5D8F0" />
+
+                            </LinearLayout>
+
+                            <!-- Node: United States -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="52dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="14dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/node_us"
+                                    android:textSize="14sp"
+                                    android:textColor="#1A237E" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    android:tint="#C5D8F0" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <!-- ─────────────────────────────────
+                 TAB 2: STORE — Coming Soon
+                 ───────────────────────────────── -->
             <LinearLayout
-                android:id="@+id/account_content"
+                android:id="@+id/store_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingTop="@{self.surface.insets.top}"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:src="@drawable/ic_baseline_extension"
+                    android:tint="#B0C8E8"
+                    android:alpha="0.7" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/store_coming_soon"
+                    android:textSize="16sp"
+                    android:textColor="#8EAACB"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <!-- ─────────────────────────────────
+                 TAB 3: PROFILE — Account / My
+                 ───────────────────────────────── -->
+            <LinearLayout
+                android:id="@+id/profile_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:paddingBottom="@{self.surface.insets.bottom}"
                 android:visibility="gone">
 
-                <!-- Account header -->
+                <!-- Profile header -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingStart="20dp"
-                    android:paddingEnd="20dp">
+                    android:paddingEnd="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/nav_account"
-                        android:textSize="24sp"
+                        android:text="@string/nav_profile"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                        android:textColor="#1A237E" />
 
                 </LinearLayout>
 
-                <!-- Spacer -->
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
-                <!-- Subscription info card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="12dp"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
+                    <!-- Account info card -->
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:gravity="center_vertical"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:src="@drawable/ic_person"
-                            android:tint="?attr/colorControlNormal"
-                            android:layout_marginEnd="12dp" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
 
-                            <TextView
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/ic_person"
+                                android:tint="#3A6BBF"
+                                android:layout_marginEnd="12dp" />
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/profile"
-                                android:textSize="12sp"
-                                android:alpha="0.55"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@{profileName != null ? profileName : @string/xboard_login_summary}"
-                                android:textSize="15sp"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/profile"
+                                    android:textSize="11sp"
+                                    android:textColor="#8EAACB" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{profileName != null ? profileName : @string/xboard_login_summary}"
+                                    android:textSize="14sp"
+                                    android:textColor="#1A237E" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
-                    </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
-                </com.google.android.material.card.MaterialCardView>
+                    <!-- Login button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:onClick="@{() -> self.request(Request.OpenAccount)}"
+                        android:text="@string/xboard_do_login"
+                        app:cornerRadius="12dp" />
 
-                <!-- Login / switch account button -->
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="10dp"
-                    android:onClick="@{() -> self.request(Request.OpenAccount)}"
-                    android:text="@string/xboard_do_login"
-                    app:cornerRadius="12dp" />
+                    <!-- Profiles button -->
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> self.request(Request.OpenProfiles)}"
+                        android:text="@string/profiles"
+                        app:cornerRadius="12dp" />
 
-                <!-- Subscription management button -->
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:onClick="@{() -> self.request(Request.OpenProfiles)}"
-                    android:text="@string/profiles"
-                    app:cornerRadius="12dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                </LinearLayout>
 
             </LinearLayout>
 
         </FrameLayout>
 
-        <!-- Bottom Navigation -->
+        <!-- ══════════════════════════════
+             BOTTOM NAVIGATION BAR
+             ══════════════════════════════ -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             android:paddingBottom="@{self.surface.insets.bottom}"
             app:menu="@menu/menu_main_nav"
-            app:labelVisibilityMode="labeled" />
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@color/selector_bottom_nav_icon"
+            app:itemTextColor="@color/selector_bottom_nav_icon" />
 
     </LinearLayout>
 

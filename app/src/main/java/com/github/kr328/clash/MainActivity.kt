@@ -23,6 +23,10 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity<MainDesign>() {
+
+    // Tracks when VPN connected (for duration display)
+    private var connectStartMs: Long = 0L
+
     override suspend fun main() {
         val design = MainDesign(this)
 
@@ -30,7 +34,7 @@ class MainActivity : BaseActivity<MainDesign>() {
 
         design.fetch()
 
-        // 首次启动无订阅 → 打开原生 Xboard 登录页
+        // First launch: no profile → prompt login
         val hasProfile = withProfile { queryAll().isNotEmpty() }
         if (!hasProfile) {
             startActivityForResult(
@@ -48,8 +52,14 @@ class MainActivity : BaseActivity<MainDesign>() {
                     when (it) {
                         Event.ActivityStart,
                         Event.ServiceRecreated,
-                        Event.ClashStop, Event.ClashStart,
-                        Event.ProfileLoaded, Event.ProfileChanged -> design.fetch()
+                        Event.ClashStop,
+                        Event.ClashStart,
+                        Event.ProfileLoaded,
+                        Event.ProfileChanged -> {
+                            if (it == Event.ClashStart) connectStartMs = System.currentTimeMillis()
+                            if (it == Event.ClashStop) connectStartMs = 0L
+                            design.fetch()
+                        }
                         else -> Unit
                     }
                 }
@@ -73,6 +83,14 @@ class MainActivity : BaseActivity<MainDesign>() {
                         }
                         MainDesign.Request.OpenProfiles ->
                             startActivity(ProfilesActivity::class.intent)
+                        MainDesign.Request.OpenStore -> {
+                            // TODO: open store WebView when ready
+                            startActivityForResult(
+                                ActivityResultContracts.StartActivityForResult(),
+                                XBoardLoginActivity::class.intent
+                            )
+                            design.fetch()
+                        }
                         MainDesign.Request.OpenLogs -> {
                             if (LogcatService.running) {
                                 startActivity(LogcatActivity::class.intent)
@@ -89,6 +107,9 @@ class MainActivity : BaseActivity<MainDesign>() {
                 if (clashRunning) {
                     ticker.onReceive {
                         design.fetchTraffic()
+                        if (connectStartMs > 0L) {
+                            design.setConnectionTime(formatDuration(System.currentTimeMillis() - connectStartMs))
+                        }
                     }
                 }
             }
@@ -98,14 +119,14 @@ class MainActivity : BaseActivity<MainDesign>() {
     private suspend fun MainDesign.fetch() {
         setClashRunning(clashRunning)
 
-        val state = withClash {
-            queryTunnelState()
-        }
-
+        val state = withClash { queryTunnelState() }
         setMode(state.mode)
 
         withProfile {
-            setProfileName(queryActive()?.name)
+            val active = queryActive()
+            setProfileName(active?.name)
+            // Use profile name as placeholder email until real API is wired
+            setUserEmail(active?.name)
         }
     }
 
@@ -119,7 +140,6 @@ class MainActivity : BaseActivity<MainDesign>() {
         val active = withProfile { queryActive() }
 
         if (active == null || !active.imported) {
-            // 无有效订阅 → 打开原生 Xboard 登录页
             startActivityForResult(
                 ActivityResultContracts.StartActivityForResult(),
                 XBoardLoginActivity::class.intent
@@ -128,8 +148,9 @@ class MainActivity : BaseActivity<MainDesign>() {
             return
         }
 
-        val vpnRequest = startClashService()
+        connectStartMs = System.currentTimeMillis()
 
+        val vpnRequest = startClashService()
         try {
             if (vpnRequest != null) {
                 val result = startActivityForResult(
@@ -142,6 +163,14 @@ class MainActivity : BaseActivity<MainDesign>() {
         } catch (e: Exception) {
             design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
         }
+    }
+
+    private fun formatDuration(ms: Long): String {
+        val totalSeconds = ms / 1000
+        val h = totalSeconds / 3600
+        val m = (totalSeconds % 3600) / 60
+        val s = totalSeconds % 60
+        return "%02d:%02d:%02d".format(h, m, s)
     }
 
     private suspend fun queryAppVersionName(): String {
@@ -168,4 +197,3 @@ class MainActivity : BaseActivity<MainDesign>() {
 }
 
 val mainActivityAlias = "${MainActivity::class.java.name}Alias"
-

@@ -5,7 +5,11 @@
         android:icon="@drawable/ic_nav_home"
         android:title="@string/nav_home" />
     <item
-        android:id="@+id/nav_account"
+        android:id="@+id/nav_store"
+        android:icon="@drawable/ic_baseline_extension"
+        android:title="@string/nav_store" />
+    <item
+        android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person"
-        android:title="@string/nav_account" />
+        android:title="@string/nav_profile" />
 </menu>

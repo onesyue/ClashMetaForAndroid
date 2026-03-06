@@ -356,6 +356,8 @@
     <!-- 悦通账号中心 -->
     <string name="nav_home">首页</string>
     <string name="nav_account">账号中心</string>
+    <string name="nav_store">商店</string>
+    <string name="nav_profile">我的</string>
     <string name="nav_settings">设置</string>
     <string name="account_center">账号中心</string>
     <string name="sync_subscription">同步订阅</string>
@@ -374,8 +376,24 @@
     <string name="xboard_invite_code">邀请码（选填）</string>
     <string name="xboard_tab_login">登录</string>
     <string name="xboard_tab_register">注册</string>
-    <string name="xboard_do_login">登录</string>
+    <string name="xboard_do_login">登录 / 切换账号</string>
     <string name="xboard_do_register">注册</string>
     <string name="xboard_request_failed">请求失败</string>
     <string name="xboard_default_url" translatable="false">https://my.yue.to</string>
+
+    <!-- 主界面 VPN 仪表盘 -->
+    <string name="vpn_subtitle">VPN 连接控制中心</string>
+    <string name="click_to_connect_hint">点击上方按钮连接VPN</string>
+    <string name="renew_button">续费</string>
+    <string name="expiry_prefix">到期：</string>
+    <string name="node_selection_title">节点选择</string>
+    <string name="view_all_nodes">查看全部 ›</string>
+    <string name="download_label">↓ 下载</string>
+    <string name="upload_label">↑ 上传</string>
+    <string name="store_coming_soon">商店即将上线，敬请期待</string>
+    <string name="default_avatar_letter">U</string>
+    <string name="node_hk">🇭🇰  香港</string>
+    <string name="node_jp">🇯🇵  日本</string>
+    <string name="node_sg">🇸🇬  新加坡</string>
+    <string name="node_us">🇺🇸  美国</string>
 </resources>
