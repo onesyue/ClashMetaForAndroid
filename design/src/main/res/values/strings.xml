@@ -459,6 +459,9 @@
     <string name="syncing_subscription_progress">正在同步订阅节点，已等待 %d 秒...</string>
     <string name="subscription_sync_success">订阅已同步</string>
     <string name="no_subscription_hint">暂无订阅，请前往商店购买套餐</string>
+    <string name="syncing_subscription_title">正在同步订阅</string>
+    <string name="syncing_subscription_detail">正在下载订阅配置，首次约需 1～2 分钟\n请保持网络连接，耐心等待…</string>
+    <string name="syncing_subscription_elapsed">已等待 %d 秒，正在下载中，请耐心等待…</string>
 
     <!-- 公告 -->
     <string name="notices_title">公告</string>

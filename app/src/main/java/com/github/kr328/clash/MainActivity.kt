@@ -274,27 +274,22 @@ class MainActivity : BaseActivity<MainDesign>() {
                 showToast(getString(R.string.no_subscription_hint), ToastDuration.Long)
                 return
             }
-            // 等待后台 commit 完成并设置 active（最长 120 秒：40+ rule-providers 下载）
-            showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
+            showSyncDialog()
             for (retry in 1..120) {
                 delay(1_000L)
                 active = withProfile { queryActive() }
                 if (active != null) break
-                if (retry % 15 == 0) {
-                    showToast(getString(R.string.syncing_subscription_progress, retry), ToastDuration.Long)
-                }
+                if (retry % 5 == 0) updateSyncDialog(retry)
             }
+            dismissSyncDialog()
             if (active == null) {
                 showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
                 return
             }
         }
 
-        // 若 profile 尚未同步节点，触发同步并轮询等待完成（最多120秒）
+        // 若 profile 尚未同步节点，触发同步并等待完成（最多120秒）
         if (!active.imported) {
-            showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
-
-            // 先触发一次 commit（commit() 是异步提交，立刻返回，实际下载在后台）
             try {
                 withProfile { commit(active.uuid, null) }
             } catch (e: Exception) {
@@ -305,7 +300,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                 return
             }
 
-            // 轮询等待 imported 变为 true（最长120秒：含40+ rule-providers 下载）
+            showSyncDialog()
             var imported = false
             for (retry in 1..120) {
                 delay(1_000L)
@@ -314,13 +309,9 @@ class MainActivity : BaseActivity<MainDesign>() {
                     imported = true
                     break
                 }
-                if (retry % 15 == 0) {
-                    showToast(
-                        getString(R.string.syncing_subscription_progress, retry),
-                        ToastDuration.Long
-                    )
-                }
+                if (retry % 5 == 0) updateSyncDialog(retry)
             }
+            dismissSyncDialog()
 
             if (!imported) {
                 showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)

@@ -85,13 +85,13 @@ class ProxyGroupAdapter(
     }
 
     private fun formatDelay(delay: Int): String = when {
-        delay <= 0 -> "—"
-        delay <= Short.MAX_VALUE -> "${delay}ms"
-        else -> "超时"
+        delay <= 0 -> "●"
+        delay > Short.MAX_VALUE -> "超时"
+        else -> "${delay}ms"
     }
 
     private fun delayColor(delay: Int): Int = when {
-        delay <= 0 -> COLOR_NONE
+        delay <= 0 -> COLOR_GOOD          // 未测速默认绿色（正常可用状态）
         delay > Short.MAX_VALUE -> COLOR_BAD
         delay <= 150 -> COLOR_GOOD
         delay <= 300 -> COLOR_MEDIUM

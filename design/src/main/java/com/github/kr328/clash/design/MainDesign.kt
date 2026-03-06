@@ -214,6 +214,43 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
+    // ── Sync progress dialog ────────────────────────────────────────────────
+
+    private var syncDialog: AlertDialog? = null
+    private var syncMsgView: android.widget.TextView? = null
+
+    suspend fun showSyncDialog() {
+        withContext(Dispatchers.Main) {
+            if (syncDialog?.isShowing == true) return@withContext
+            val dp = context.resources.displayMetrics.density
+            val msgView = android.widget.TextView(context).apply {
+                text = context.getString(R.string.syncing_subscription_detail)
+                setPadding((24 * dp).toInt(), (8 * dp).toInt(), (24 * dp).toInt(), (16 * dp).toInt())
+                textSize = 14f
+            }
+            syncMsgView = msgView
+            syncDialog = AlertDialog.Builder(context)
+                .setTitle(R.string.syncing_subscription_title)
+                .setView(msgView)
+                .setCancelable(false)
+                .show()
+        }
+    }
+
+    suspend fun updateSyncDialog(elapsed: Int) {
+        withContext(Dispatchers.Main) {
+            syncMsgView?.text = context.getString(R.string.syncing_subscription_elapsed, elapsed)
+        }
+    }
+
+    suspend fun dismissSyncDialog() {
+        withContext(Dispatchers.Main) {
+            syncDialog?.dismiss()
+            syncDialog = null
+            syncMsgView = null
+        }
+    }
+
     // ── Dialogs ────────────────────────────────────────────────────────────
 
     suspend fun showAbout(versionName: String) {
