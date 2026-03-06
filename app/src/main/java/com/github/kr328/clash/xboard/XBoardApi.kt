@@ -211,40 +211,44 @@ object XBoardApi {
     }
 
     /**
-     * 获取用户信息，失败时静默返回 null
-     * 注意：u/d 流量字段在 getSubscribe 里，info 里不含
+     * 获取用户信息
+     *
+     * XBoard API 说明（cedar2025/Xboard）：
+     *  - /api/v1/user/getSubscribe → 返回 u(bytes)、d(bytes)、transfer_enable(bytes)、
+     *    email、expired_at、plan{name}  ← 流量数据的唯一来源
+     *  - /api/v1/user/info         → 返回 balance、commission_balance、uuid，
+     *    不含 u/d 字段
+     *
+     * getSubscribe 必须成功才能得到正确流量，失败时整体返回 null。
      */
     suspend fun getUserInfo(baseUrl: String, authData: String): UserInfo? {
         return try {
             withContext(Dispatchers.IO) {
-                val infoData = httpGet(baseUrl, "/api/v1/user/info", authData)
+                // getSubscribe 是流量数据的唯一权威来源
+                val subData = httpGet(baseUrl, "/api/v1/user/getSubscribe", authData)
                     .getJSONObject("data")
 
-                val subData = try {
-                    httpGet(baseUrl, "/api/v1/user/getSubscribe", authData)
+                // info 仅用于 balance / commission_balance / uuid
+                val infoData = try {
+                    httpGet(baseUrl, "/api/v1/user/info", authData)
                         .getJSONObject("data")
                 } catch (_: Exception) { null }
 
-                val planName = subData?.optJSONObject("plan")
+                val planName = subData.optJSONObject("plan")
                     ?.optString("name")?.takeIf { it.isNotBlank() }
 
                 UserInfo(
-                    email = infoData.optString("email", ""),
-                    balance = infoData.optLong("balance", 0),
-                    commissionBalance = infoData.optLong("commission_balance", 0),
-                    expiredAt = if (infoData.isNull("expired_at")) null
-                                else infoData.optLong("expired_at").takeIf { it > 0 },
-                    transferEnable = infoData.optLong("transfer_enable", 0)
-                        .takeIf { it > 0 }
-                        ?: (subData?.optLong("transfer_enable", 0) ?: 0),
-                    // d/u may be in user/info or in getSubscribe depending on XBoard version
-                    usedDownload = infoData.optLong("d", 0)
-                        .takeIf { it > 0 }
-                        ?: (subData?.optLong("d", 0) ?: 0),
-                    usedUpload = infoData.optLong("u", 0)
-                        .takeIf { it > 0 }
-                        ?: (subData?.optLong("u", 0) ?: 0),
-                    uuid = infoData.optString("uuid", ""),
+                    email = subData.optString("email", "")
+                        .ifBlank { infoData?.optString("email", "") ?: "" },
+                    balance = infoData?.optLong("balance", 0) ?: 0,
+                    commissionBalance = infoData?.optLong("commission_balance", 0) ?: 0,
+                    expiredAt = if (subData.isNull("expired_at")) null
+                                else subData.optLong("expired_at").takeIf { it > 0 },
+                    // u、d、transfer_enable 全部来自 getSubscribe，单位均为字节
+                    transferEnable = subData.optLong("transfer_enable", 0),
+                    usedDownload = subData.optLong("d", 0),
+                    usedUpload = subData.optLong("u", 0),
+                    uuid = infoData?.optString("uuid", "") ?: subData.optString("uuid", ""),
                     planName = planName
                 )
             }

@@ -95,10 +95,11 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
-    suspend fun setTrafficPercent(percent: Int) {
+    suspend fun setTrafficPercent(percent: Float) {
         withContext(Dispatchers.Main) {
-            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, percent)
-            binding.trafficProgress.progress = percent
+            val label = formatPercent(percent)
+            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, label)
+            binding.trafficProgress.progress = percent.toInt().coerceIn(0, 100)
         }
     }
 
@@ -133,10 +134,11 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
-    suspend fun setProfileTrafficPercent(percent: Int) {
+    suspend fun setProfileTrafficPercent(percent: Float) {
         withContext(Dispatchers.Main) {
-            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, percent)
-            binding.profileTrafficProgress.progress = percent
+            val label = formatPercent(percent)
+            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, label)
+            binding.profileTrafficProgress.progress = percent.toInt().coerceIn(0, 100)
         }
     }
 
@@ -191,7 +193,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.avatarLetterCard.text = "U"
             binding.expiryText.text = unknownExp
             binding.expiryText.setTextColor(0xFF5C7CAB.toInt())
-            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, 0)
+            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.trafficProgress.progress = 0
 
             // Profile tab header
@@ -203,7 +205,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.profilePlanNameText.text = unknownPlan
             binding.profileExpiryText.text = "--"
             binding.profileExpiryText.setTextColor(0xFF1A237E.toInt())
-            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, 0)
+            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.profileTrafficProgress.progress = 0
             binding.profileTrafficDetailText.text = ""
             binding.profileBalanceText.text = "¥ --"
@@ -213,6 +215,14 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     }
 
     // ── Sync progress dialog ────────────────────────────────────────────────
+
+    private fun formatPercent(percent: Float): String = when {
+        percent <= 0f -> "0%"
+        percent < 1f  -> "<1%"
+        percent >= 100f -> "100%"
+        percent < 10f -> "%.1f%%".format(percent)
+        else -> "${percent.toInt()}%"
+    }
 
     private var syncDialog: AlertDialog? = null
     private var syncMsgView: android.widget.TextView? = null

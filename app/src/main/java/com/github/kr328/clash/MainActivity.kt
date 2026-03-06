@@ -237,9 +237,10 @@ class MainActivity : BaseActivity<MainDesign>() {
         setExpiryDate(expiryDisplay, expired)
 
         val usedBytes = info.usedDownload + info.usedUpload
-        val trafficPercent = if (info.transferEnable > 0) {
-            ((usedBytes.toDouble() / info.transferEnable) * 100).toInt().coerceIn(0, 100)
-        } else 0
+        val trafficPercent: Float = if (info.transferEnable > 0) {
+            ((usedBytes.toDouble() / info.transferEnable) * 100.0)
+                .coerceIn(0.0, 100.0).toFloat()
+        } else 0f
         setTrafficPercent(trafficPercent)
 
         setPlanName(info.planName)
