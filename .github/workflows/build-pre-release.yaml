@@ -75,7 +75,7 @@ jobs:
 
       - name: Pre-release Build
         if: success()
-        run: ./gradlew --no-daemon app:assembleAlphaRelease
+        run: ./gradlew --no-daemon app:assembleAlphaRelease --stacktrace 2>&1 | tee /tmp/build.log; tail -300 /tmp/build.log
 
       # Delete old Prerelease-alpha
       - uses: dev-drprasad/delete-tag-and-release@v1.1
