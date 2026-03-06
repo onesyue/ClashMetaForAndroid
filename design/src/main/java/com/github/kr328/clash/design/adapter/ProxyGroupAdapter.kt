@@ -142,7 +142,7 @@ class ProxyGroupAdapter(
         private val testButton: ImageView = view.findViewById(R.id.test_button)
         private val chevron: ImageView = view.findViewById(R.id.chevron)
 
-        fun bind(group: GroupData) {
+        private fun bind(group: GroupData) {
             groupName.text = group.name
             currentNode.text = group.state.now.ifEmpty { "—" }
 
@@ -188,7 +188,7 @@ class ProxyGroupAdapter(
         private val nodeSubtitle: TextView = view.findViewById(R.id.node_subtitle)
         private val delayBadge: TextView = view.findViewById(R.id.delay_badge)
 
-        fun bind(item: ListItem.Node) {
+        private fun bind(item: ListItem.Node) {
             val proxy = item.proxy
             val isSelected = proxy.name == item.state.now
 

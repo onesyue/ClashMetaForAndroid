@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 class ProxyDesign(
     context: Context,
     overrideMode: TunnelState.Mode?,
-    groupNames: List<String>,
+    private val groupNames: List<String>,
     uiStore: UiStore,
 ) : Design<ProxyDesign.Request>(context) {
     sealed class Request {
