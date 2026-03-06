@@ -1,9 +1,6 @@
 package com.github.kr328.clash
 
 import android.app.Activity
-import androidx.activity.result.contract.ActivityResultContracts
-import com.github.kr328.clash.common.util.intent
-import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.design.XBoardLoginDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -12,7 +9,6 @@ import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
-import java.util.UUID
 
 class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
     override suspend fun main() {
@@ -56,10 +52,28 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
         design.processing = true
         try {
             val result = action()
+
+            val brandName = getString(R.string.xboard_brand_name)
             val uuid = withProfile {
-                create(Profile.Type.Url, email, result.subscribeUrl)
+                // 同名订阅先删除再创建，保证链接最新
+                queryAll()
+                    .filter { it.name == brandName }
+                    .forEach { delete(it.uuid) }
+                create(Profile.Type.Url, brandName, result.subscribeUrl)
             }
-            launchProperties(uuid)
+
+            // 自动下载并导入配置
+            withProfile { commit(uuid, null) }
+
+            // 激活订阅
+            val profile = withProfile { queryByUUID(uuid) }
+            if (profile != null) {
+                withProfile { setActive(profile) }
+            }
+
+            design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)
+            setResult(Activity.RESULT_OK)
+            finish()
         } catch (e: Exception) {
             design.showToast(
                 e.message ?: getString(R.string.xboard_request_failed),
@@ -68,13 +82,5 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
         } finally {
             design.processing = false
         }
-    }
-
-    private suspend fun launchProperties(uuid: UUID) {
-        val r = startActivityForResult(
-            ActivityResultContracts.StartActivityForResult(),
-            PropertiesActivity::class.intent.setUUID(uuid)
-        )
-        if (r.resultCode == Activity.RESULT_OK) finish()
     }
 }

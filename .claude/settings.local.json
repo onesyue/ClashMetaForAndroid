@@ -6,7 +6,9 @@
       "Bash(where go:*)",
       "Bash(gh api:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(./gradlew :design:kaptAlphaReleaseKotlin --stacktrace 2>&1 | tail -100)",
+      "Bash(git show HEAD --no-stat -p | head -80)"
     ]
   }
 }

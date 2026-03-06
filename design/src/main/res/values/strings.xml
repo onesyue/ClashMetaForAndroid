@@ -364,8 +364,8 @@
     <string name="not_logged_in">请先在页面中登录</string>
 
     <!-- XBoard 登录（保留供兼容） -->
-    <string name="xboard_login">悦通登录</string>
-    <string name="xboard_login_summary">登录悦通，自动导入订阅</string>
+    <string name="xboard_login">账号登录</string>
+    <string name="xboard_login_summary">点击登录以导入订阅</string>
     <string name="xboard_brand_name">悦通</string>
     <string name="xboard_brand_subtitle">专为 AI 与流媒体打造的全球加速网络</string>
     <string name="xboard_site_url">网站地址</string>

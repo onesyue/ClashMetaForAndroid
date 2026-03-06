@@ -30,12 +30,12 @@ class MainActivity : BaseActivity<MainDesign>() {
 
         design.fetch()
 
-        // 首次启动无订阅 → 直接打开账号中心
+        // 首次启动无订阅 → 打开原生 Xboard 登录页
         val hasProfile = withProfile { queryAll().isNotEmpty() }
         if (!hasProfile) {
             startActivityForResult(
                 ActivityResultContracts.StartActivityForResult(),
-                AccountActivity::class.intent
+                XBoardLoginActivity::class.intent
             )
             design.fetch()
         }
@@ -67,7 +67,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                         MainDesign.Request.OpenAccount -> {
                             startActivityForResult(
                                 ActivityResultContracts.StartActivityForResult(),
-                                AccountActivity::class.intent
+                                XBoardLoginActivity::class.intent
                             )
                             design.fetch()
                         }
@@ -117,10 +117,10 @@ class MainActivity : BaseActivity<MainDesign>() {
         val active = withProfile { queryActive() }
 
         if (active == null || !active.imported) {
-            // 无有效订阅 → 引导至账号中心
+            // 无有效订阅 → 打开原生 Xboard 登录页
             startActivityForResult(
                 ActivityResultContracts.StartActivityForResult(),
-                AccountActivity::class.intent
+                XBoardLoginActivity::class.intent
             )
             fetch()
             return
@@ -166,3 +166,4 @@ class MainActivity : BaseActivity<MainDesign>() {
 }
 
 val mainActivityAlias = "${MainActivity::class.java.name}Alias"
+
