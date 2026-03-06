@@ -6,7 +6,7 @@ import com.github.kr328.clash.design.databinding.DesignXboardLoginBinding
 import com.github.kr328.clash.design.util.*
 import com.google.android.material.tabs.TabLayout
 
-class XBoardLoginDesign(context: Context) : Design<XBoardLoginDesign.Request>(context) {
+class XBoardLoginDesign(context: Context, defaultUrl: String = "") : Design<XBoardLoginDesign.Request>(context) {
 
     sealed class Request {
         data class Login(
@@ -97,7 +97,7 @@ class XBoardLoginDesign(context: Context) : Design<XBoardLoginDesign.Request>(co
         binding.self = this
         binding.processing = false
 
-        binding.urlField.setText(context.getString(R.string.xboard_default_url))
+        binding.urlField.setText(defaultUrl.ifBlank { context.getString(R.string.xboard_default_url) })
 
         binding.activityBarLayout.applyFrom(context)
         binding.scrollRoot.bindAppBarElevation(binding.activityBarLayout)

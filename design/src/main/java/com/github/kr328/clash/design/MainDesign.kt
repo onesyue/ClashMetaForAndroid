@@ -17,6 +17,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         ToggleStatus,
         OpenProxy,
         OpenAccount,
+        OpenProfiles,
         OpenLogs,
         OpenSettings,
         OpenAbout,
@@ -76,6 +77,22 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorDisconnected =
             context.resolveThemedColor(R.attr.colorClashStopped)
+
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    binding.homeContent.visibility = View.VISIBLE
+                    binding.accountContent.visibility = View.GONE
+                    true
+                }
+                R.id.nav_account -> {
+                    binding.homeContent.visibility = View.GONE
+                    binding.accountContent.visibility = View.VISIBLE
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     fun request(request: Request) {

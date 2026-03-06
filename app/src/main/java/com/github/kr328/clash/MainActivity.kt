@@ -71,6 +71,8 @@ class MainActivity : BaseActivity<MainDesign>() {
                             )
                             design.fetch()
                         }
+                        MainDesign.Request.OpenProfiles ->
+                            startActivity(ProfilesActivity::class.intent)
                         MainDesign.Request.OpenLogs -> {
                             if (LogcatService.running) {
                                 startActivity(LogcatActivity::class.intent)

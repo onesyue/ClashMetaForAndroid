@@ -4,6 +4,7 @@ import android.app.Activity
 import com.github.kr328.clash.design.XBoardLoginDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
+import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
@@ -12,7 +13,7 @@ import kotlinx.coroutines.selects.select
 
 class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
     override suspend fun main() {
-        val design = XBoardLoginDesign(this)
+        val design = XBoardLoginDesign(this, RemoteConfig.getXboardUrl(this))
 
         setContentDesign(design)
 

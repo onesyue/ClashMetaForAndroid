@@ -6,10 +6,13 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.currentProcessName
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.util.clashDir
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @Suppress("unused")
@@ -30,6 +33,7 @@ class MainApplication : Application() {
 
         if (processName == packageName) {
             Remote.launch()
+            GlobalScope.launch { RemoteConfig.fetchAndCache(this@MainApplication) }
         } else {
             sendServiceRecreated()
         }
