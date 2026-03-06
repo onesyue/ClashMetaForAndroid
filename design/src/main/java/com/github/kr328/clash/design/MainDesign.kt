@@ -24,6 +24,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         OpenLogs,
         OpenSettings,
         OpenAbout,
+        Logout,
     }
 
     private val binding = DesignMainBinding
@@ -72,16 +73,22 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             val letter = email?.firstOrNull()?.uppercaseChar()?.toString() ?: "U"
             binding.avatarLetterHeader.text = letter
             binding.avatarLetterCard.text = letter
+            // Profile tab header
+            binding.profileHeaderEmailText.text = display
+            binding.profileAvatarLetter.text = letter
         }
     }
 
-    suspend fun setExpiryDate(date: String?) {
+    suspend fun setExpiryDate(date: String?, expired: Boolean = false) {
         withContext(Dispatchers.Main) {
             binding.expiryText.text = if (date != null) {
                 context.getString(R.string.expiry_prefix) + date
             } else {
                 context.getString(R.string.expiry_unknown)
             }
+            binding.expiryText.setTextColor(
+                if (expired) 0xFFD32F2F.toInt() else 0xFF5C7CAB.toInt()
+            )
         }
     }
 
@@ -115,14 +122,18 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     suspend fun setPlanName(name: String?) {
         withContext(Dispatchers.Main) {
-            binding.profilePlanNameText.text = name
-                ?: context.getString(R.string.plan_unknown)
+            val display = name ?: context.getString(R.string.plan_unknown)
+            binding.profilePlanNameText.text = display
+            binding.profileHeaderPlanBadge.text = display
         }
     }
 
-    suspend fun setProfileExpiryDate(date: String?) {
+    suspend fun setProfileExpiryDate(date: String?, expired: Boolean = false) {
         withContext(Dispatchers.Main) {
             binding.profileExpiryText.text = date ?: "--"
+            binding.profileExpiryText.setTextColor(
+                if (expired) 0xFFD32F2F.toInt() else 0xFF1A237E.toInt()
+            )
         }
     }
 
@@ -131,6 +142,12 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label)
                 .replace("0%", "$percent%")
             binding.profileTrafficProgress.progress = percent
+        }
+    }
+
+    suspend fun setTrafficDetail(detail: String) {
+        withContext(Dispatchers.Main) {
+            binding.profileTrafficDetailText.text = detail
         }
     }
 
@@ -195,6 +212,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 requests.trySend(Request.OpenSettings)
             }
         }
+
         binding.profileCopyInviteBtn.setOnClickListener {
             val link = binding.profileInviteLinkText.text?.toString()
                 ?.takeIf { it.isNotBlank() && it != "--" } ?: return@setOnClickListener
@@ -203,24 +221,42 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             android.widget.Toast.makeText(context, R.string.copied, android.widget.Toast.LENGTH_SHORT).show()
         }
 
+        binding.profileLogoutBtn.setOnClickListener {
+            AlertDialog.Builder(context)
+                .setTitle(R.string.logout_confirm_title)
+                .setMessage(R.string.logout_confirm_message)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    requests.trySend(Request.Logout)
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+
+        // Track current tab so nav_store can restore it
+        var currentTabId = R.id.nav_home
+
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
                     binding.homeContent.visibility = View.VISIBLE
                     binding.storeContent.visibility = View.GONE
                     binding.profileContent.visibility = View.GONE
+                    currentTabId = R.id.nav_home
                     true
                 }
                 R.id.nav_store -> {
-                    binding.homeContent.visibility = View.GONE
-                    binding.storeContent.visibility = View.VISIBLE
-                    binding.profileContent.visibility = View.GONE
-                    true
+                    // Open store as separate activity, stay on current tab
+                    requests.trySend(Request.OpenStore)
+                    binding.bottomNav.post {
+                        binding.bottomNav.selectedItemId = currentTabId
+                    }
+                    false
                 }
                 R.id.nav_profile -> {
                     binding.homeContent.visibility = View.GONE
                     binding.storeContent.visibility = View.GONE
                     binding.profileContent.visibility = View.VISIBLE
+                    currentTabId = R.id.nav_profile
                     true
                 }
                 else -> false

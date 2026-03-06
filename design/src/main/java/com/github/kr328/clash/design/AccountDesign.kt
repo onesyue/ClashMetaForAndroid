@@ -13,7 +13,7 @@ import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
 
 @SuppressLint("SetJavaScriptEnabled")
-class AccountDesign(context: Context, private val baseUrl: String) : Design<AccountDesign.Request>(context) {
+class AccountDesign(context: Context, private val baseUrl: String, initialPath: String = "", showSyncButton: Boolean = true) : Design<AccountDesign.Request>(context) {
 
     sealed class Request {
         data class SyncSubscription(val authData: String, val baseUrl: String) : Request()
@@ -50,6 +50,10 @@ class AccountDesign(context: Context, private val baseUrl: String) : Design<Acco
         binding.self = this
         binding.loading = true
 
+        if (!showSyncButton) {
+            binding.syncButton.visibility = View.GONE
+        }
+
         binding.activityBarLayout.applyFrom(context)
 
         binding.webView.apply {
@@ -74,7 +78,9 @@ class AccountDesign(context: Context, private val baseUrl: String) : Design<Acco
 
                 override fun onPageFinished(view: WebView, url: String) {
                     binding.loading = false
-                    binding.syncButton.visibility = View.VISIBLE
+                    if (showSyncButton) {
+                        binding.syncButton.visibility = View.VISIBLE
+                    }
                     // Persist auth_data whenever page finishes loading
                     view.evaluateJavascript(
                         "(function(){ return localStorage.getItem('auth_data') || ''; })()"
@@ -100,7 +106,7 @@ class AccountDesign(context: Context, private val baseUrl: String) : Design<Acco
                 }
             }
 
-            loadUrl(baseUrl)
+            loadUrl(baseUrl.trimEnd('/') + initialPath)
         }
     }
 }

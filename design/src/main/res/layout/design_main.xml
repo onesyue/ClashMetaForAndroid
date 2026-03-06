@@ -475,7 +475,7 @@
 
             </ScrollView>
 
-            <!-- Tab 2: 商店 -->
+            <!-- Tab 2: 商店 (immediately navigates to StoreActivity) -->
             <LinearLayout
                 android:id="@+id/store_content"
                 android:layout_width="match_parent"
@@ -483,23 +483,6 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/ic_baseline_extension"
-                    android:tint="#B0C8E8"
-                    android:alpha="0.7" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/store_coming_soon"
-                    android:textSize="15sp"
-                    android:textColor="#8EAACB"
-                    android:gravity="center" />
-
             </LinearLayout>
 
             <!-- Tab 3: 我的 -->
@@ -528,6 +511,66 @@
                         android:textStyle="bold"
                         android:textColor="#1A237E"
                         android:layout_marginBottom="12dp" />
+
+                    <!-- 用户头部卡片 -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/profile_avatar_letter"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:gravity="center"
+                                android:background="@drawable/bg_avatar"
+                                android:textColor="@android:color/white"
+                                android:textSize="24sp"
+                                android:textStyle="bold"
+                                android:text="U" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:id="@+id/profile_header_email_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/xboard_login_summary"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E"
+                                    android:maxLines="1"
+                                    android:ellipsize="end" />
+
+                                <TextView
+                                    android:id="@+id/profile_header_plan_badge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/plan_unknown"
+                                    android:textSize="12sp"
+                                    android:textColor="#3A6BBF"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 套餐信息卡 -->
                     <com.google.android.material.card.MaterialCardView
@@ -563,8 +606,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/plan_label"
                                     android:textSize="12sp"
-                                    android:textColor="#8EAACB"
-                                    android:layout_weight="0" />
+                                    android:textColor="#8EAACB" />
 
                                 <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
@@ -612,14 +654,31 @@
 
                             </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/profile_traffic_label"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/traffic_usage_label"
-                                android:textSize="11sp"
-                                android:textColor="#5C7CAB"
-                                android:layout_marginBottom="4dp" />
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:id="@+id/profile_traffic_label"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/traffic_usage_label"
+                                    android:textSize="11sp"
+                                    android:textColor="#5C7CAB" />
+
+                                <TextView
+                                    android:id="@+id/profile_traffic_detail_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textSize="11sp"
+                                    android:textColor="#5C7CAB" />
+
+                            </LinearLayout>
 
                             <ProgressBar
                                 android:id="@+id/profile_traffic_progress"
@@ -789,21 +848,15 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- 操作按钮 -->
+                    <!-- 退出登录按钮 -->
                     <com.google.android.material.button.MaterialButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:onClick="@{() -> self.request(Request.OpenAccount)}"
-                        android:text="@string/open_account_center"
-                        app:cornerRadius="12dp" />
-
-                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profile_logout_btn"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> self.request(Request.OpenProfiles)}"
-                        android:text="@string/manage_subscription"
+                        android:text="@string/logout"
+                        android:textColor="#D32F2F"
+                        app:strokeColor="#D32F2F"
                         app:cornerRadius="12dp" />
 
                 </LinearLayout>

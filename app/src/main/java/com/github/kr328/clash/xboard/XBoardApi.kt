@@ -116,6 +116,31 @@ object XBoardApi {
     }
 
     /**
+     * 退出登录（最佳努力，失败静默忽略）
+     */
+    suspend fun logout(baseUrl: String, authData: String) {
+        try {
+            withContext(Dispatchers.IO) {
+                val url = URL("${baseUrl.trimEnd('/')}/api/v1/user/logout")
+                val conn = url.openConnection() as HttpURLConnection
+                try {
+                    conn.requestMethod = "POST"
+                    conn.setRequestProperty("authorization", authData)
+                    conn.setRequestProperty("Content-Type", "application/json")
+                    conn.setRequestProperty("Accept", "application/json")
+                    conn.doOutput = true
+                    conn.connectTimeout = 10_000
+                    conn.readTimeout = 10_000
+                    conn.outputStream.close()
+                    conn.responseCode // trigger request
+                } finally {
+                    conn.disconnect()
+                }
+            }
+        } catch (_: Exception) { /* silent */ }
+    }
+
+    /**
      * 获取邀请人数，失败静默返回 0
      */
     suspend fun getReferralCount(baseUrl: String, authData: String): Int {

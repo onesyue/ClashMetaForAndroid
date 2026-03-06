@@ -410,4 +410,11 @@
     <string name="balance_format">¥ %s</string>
     <string name="manage_subscription">订阅管理</string>
     <string name="open_account_center">账号中心</string>
+    <string name="logout">退出登录</string>
+    <string name="logout_confirm_title">确认退出</string>
+    <string name="logout_confirm_message">退出后需要重新登录才能使用</string>
+    <string name="expiry_permanent">永久</string>
+    <string name="expiry_expired">已过期</string>
+    <string name="traffic_detail_format">已用 %1$s / 共 %2$s</string>
+    <string name="store_title">商店</string>
 </resources>

@@ -193,6 +193,13 @@
             android:windowSoftInputMode="adjustResize"
             android:label="@string/account_center" />
 
+        <activity
+            android:name=".StoreActivity"
+            android:configChanges="uiMode|keyboard|keyboardHidden"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/store_title" />
+
         <service
             android:name=".LogcatService"
             android:exported="false"

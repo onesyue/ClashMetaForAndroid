@@ -98,9 +98,8 @@ class MainActivity : BaseActivity<MainDesign>() {
                         MainDesign.Request.OpenStore -> {
                             startActivityForResult(
                                 ActivityResultContracts.StartActivityForResult(),
-                                AccountActivity::class.intent
+                                StoreActivity::class.intent
                             )
-                            design.fetch()
                         }
                         MainDesign.Request.OpenLogs -> {
                             if (LogcatService.running) {
@@ -113,6 +112,22 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(SettingsActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
+                        MainDesign.Request.Logout -> {
+                            val authData = XBoardSession.getAuthData(this@MainActivity)
+                            val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
+                            if (authData != null) {
+                                launch(Dispatchers.IO) {
+                                    XBoardApi.logout(baseUrl, authData)
+                                }
+                            }
+                            XBoardSession.clear(this@MainActivity)
+                            startActivityForResult(
+                                ActivityResultContracts.StartActivityForResult(),
+                                XBoardLoginActivity::class.intent
+                            )
+                            design.fetch()
+                            design.fetchUserData()
+                        }
                     }
                 }
                 if (clashRunning) {
@@ -178,6 +193,12 @@ class MainActivity : BaseActivity<MainDesign>() {
         else                        -> "$bytesPerSec B/s"
     }
 
+    private fun formatBytes(bytes: Long): String = when {
+        bytes >= 1024L * 1024 * 1024 -> "%.1f GB".format(bytes / 1024.0 / 1024.0 / 1024.0)
+        bytes >= 1024L * 1024        -> "%.1f MB".format(bytes / 1024.0 / 1024.0)
+        else                         -> "${bytes / 1024} KB"
+    }
+
     /**
      * Fetch real user info from Xboard API and populate home + profile tabs.
      * Silent no-op if not logged in or network fails.
@@ -191,21 +212,32 @@ class MainActivity : BaseActivity<MainDesign>() {
         // Home tab
         setUserEmail(info.email.takeIf { it.isNotBlank() })
 
-        val expiryStr = info.expiredAt?.let { ts ->
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(ts * 1000))
+        // Expiry: null/0 → "永久", past → "已过期", future → date string
+        val now = System.currentTimeMillis() / 1000
+        val expired = info.expiredAt != null && info.expiredAt > 0 && info.expiredAt < now
+        val expiryDisplay = when {
+            info.expiredAt == null || info.expiredAt == 0L -> "永久"
+            expired -> "已过期"
+            else -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(info.expiredAt * 1000))
         }
-        setExpiryDate(expiryStr)
+        setExpiryDate(expiryDisplay, expired)
 
+        val usedBytes = info.usedDownload + info.usedUpload
         val trafficPercent = if (info.transferEnable > 0) {
-            val used = info.usedDownload + info.usedUpload
-            ((used.toDouble() / info.transferEnable) * 100).toInt().coerceIn(0, 100)
+            ((usedBytes.toDouble() / info.transferEnable) * 100).toInt().coerceIn(0, 100)
         } else 0
         setTrafficPercent(trafficPercent)
 
         // Profile tab
         setPlanName(info.planName)
-        setProfileExpiryDate(expiryStr)
+        setProfileExpiryDate(expiryDisplay, expired)
         setProfileTrafficPercent(trafficPercent)
+
+        val trafficDetail = if (info.transferEnable > 0) {
+            "${formatBytes(usedBytes)} / ${formatBytes(info.transferEnable)}"
+        } else ""
+        setTrafficDetail(trafficDetail)
+
         setBalance(info.balance)
         setCommissionBalance(info.commissionBalance)
 
