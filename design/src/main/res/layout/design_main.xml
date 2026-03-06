@@ -859,6 +859,26 @@
                         android:text="@string/change_password"
                         app:cornerRadius="12dp" />
 
+                    <!-- 公告按钮 -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profile_notices_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/notices_title"
+                        app:cornerRadius="12dp" />
+
+                    <!-- 我的订单按钮 -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/profile_orders_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/orders_title"
+                        app:cornerRadius="12dp" />
+
                     <!-- 退出登录按钮 -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/profile_logout_btn"

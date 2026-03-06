@@ -207,6 +207,18 @@
             android:windowSoftInputMode="adjustResize"
             android:label="@string/checkout_title" />
 
+        <activity
+            android:name=".NoticesActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/notices_title" />
+
+        <activity
+            android:name=".OrdersActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/orders_title" />
+
         <service
             android:name=".LogcatService"
             android:exported="false"

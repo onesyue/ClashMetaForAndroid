@@ -31,6 +31,8 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         OpenAbout,
         Logout,
         ChangePassword,
+        OpenNotices,
+        OpenOrders,
     }
 
     private val binding = DesignMainBinding
@@ -250,6 +252,16 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             val clipboard = context.getSystemService(ClipboardManager::class.java)
             clipboard.setPrimaryClip(ClipData.newPlainText("invite_link", link))
             android.widget.Toast.makeText(context, R.string.copied, android.widget.Toast.LENGTH_SHORT).show()
+        }
+
+        // 公告
+        binding.profileNoticesBtn.setOnClickListener {
+            requests.trySend(Request.OpenNotices)
+        }
+
+        // 我的订单
+        binding.profileOrdersBtn.setOnClickListener {
+            requests.trySend(Request.OpenOrders)
         }
 
         // 修改密码

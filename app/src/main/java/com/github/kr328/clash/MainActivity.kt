@@ -103,6 +103,10 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(SettingsActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
+                        MainDesign.Request.OpenNotices ->
+                            startActivity(NoticesActivity::class.intent)
+                        MainDesign.Request.OpenOrders ->
+                            startActivity(OrdersActivity::class.intent)
                         MainDesign.Request.ChangePassword -> {
                             val pending = design.pendingPasswordChange ?: return@onReceive
                             design.pendingPasswordChange = null

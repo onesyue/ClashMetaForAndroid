@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Loading state -->
+        <ProgressBar
+            android:id="@+id/orders_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="visible" />
+
+        <!-- Empty state -->
+        <TextView
+            android:id="@+id/orders_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/orders_empty"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="?android:attr/textColorSecondary"
+            android:visibility="gone" />
+
+        <!-- Order list -->
+        <ScrollView
+            android:id="@+id/orders_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/orders_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="72dp"
+                android:paddingBottom="24dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+        </ScrollView>
+
+        <!-- Toolbar -->
+        <com.github.kr328.clash.design.view.ActivityBarLayout
+            android:id="@+id/activity_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/item_tailing_margin">
+
+            <include layout="@layout/common_activity_bar" />
+
+        </com.github.kr328.clash.design.view.ActivityBarLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

@@ -450,4 +450,24 @@
     <string name="checkout_free">免费</string>
     <string name="syncing_subscription">正在同步订阅节点，请稍候...</string>
     <string name="subscription_sync_success">订阅已同步</string>
+
+    <!-- 公告 -->
+    <string name="notices_title">公告</string>
+    <string name="notices_empty">暂无公告</string>
+
+    <!-- 订单 -->
+    <string name="orders_title">我的订单</string>
+    <string name="orders_empty">暂无订单记录</string>
+    <string name="order_status_pending">待支付</string>
+    <string name="order_status_processing">处理中</string>
+    <string name="order_status_cancelled">已取消</string>
+    <string name="order_status_completed">已完成</string>
+    <string name="order_status_discounted">已优惠</string>
+    <string name="order_status_unknown">未知</string>
+    <string name="order_plan_unknown">未知套餐</string>
+    <string name="period_monthly">月付</string>
+    <string name="period_quarterly">季付</string>
+    <string name="period_half_yearly">半年付</string>
+    <string name="period_yearly">年付</string>
+    <string name="period_onetime">一次性</string>
 </resources>

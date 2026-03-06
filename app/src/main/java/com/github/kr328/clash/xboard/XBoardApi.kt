@@ -50,6 +50,22 @@ object XBoardApi {
         val onetimePrice: Long?
     )
 
+    data class Notice(
+        val id: Int,
+        val title: String,
+        val content: String,
+        val createdAt: Long         // Unix timestamp
+    )
+
+    data class Order(
+        val tradeNo: String,
+        val planName: String,
+        val period: String,
+        val totalAmount: Long,      // cents
+        val status: Int,            // 0=pending, 1=processing, 2=cancelled, 3=completed, 4=discounted
+        val createdAt: Long         // Unix timestamp
+    )
+
     /**
      * 登录流程
      */
@@ -283,6 +299,51 @@ object XBoardApi {
             val data = root.opt("data")?.toString() ?: ""
             CheckoutResult(type, data)
         }
+    }
+
+    /**
+     * 获取公告列表
+     */
+    suspend fun getNotices(baseUrl: String, authData: String): List<Notice> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val root = httpGet(baseUrl, "/api/v1/user/notice", authData)
+                val arr = root.optJSONArray("data") ?: return@withContext emptyList()
+                (0 until arr.length()).mapNotNull { i ->
+                    val obj = arr.optJSONObject(i) ?: return@mapNotNull null
+                    Notice(
+                        id        = obj.optInt("id"),
+                        title     = obj.optString("title", ""),
+                        content   = obj.optString("content", ""),
+                        createdAt = obj.optLong("created_at", 0)
+                    )
+                }
+            }
+        } catch (_: Exception) { emptyList() }
+    }
+
+    /**
+     * 获取订单列表
+     */
+    suspend fun getOrders(baseUrl: String, authData: String): List<Order> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val root = httpGet(baseUrl, "/api/v1/user/order/fetch", authData)
+                val arr = root.optJSONArray("data") ?: return@withContext emptyList()
+                (0 until arr.length()).mapNotNull { i ->
+                    val obj = arr.optJSONObject(i) ?: return@mapNotNull null
+                    val planObj = obj.optJSONObject("plan")
+                    Order(
+                        tradeNo     = obj.optString("trade_no", ""),
+                        planName    = planObj?.optString("name", "") ?: obj.optString("plan_name", ""),
+                        period      = obj.optString("period", ""),
+                        totalAmount = obj.optLong("total_amount", 0),
+                        status      = obj.optInt("status", 0),
+                        createdAt   = obj.optLong("created_at", 0)
+                    )
+                }
+            }
+        } catch (_: Exception) { emptyList() }
     }
 
     // ── Private helpers ────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import com.github.kr328.clash.design.databinding.DesignStoreBinding
+import com.github.kr328.clash.design.util.MarkdownRenderer
 import com.github.kr328.clash.design.util.applyFrom
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
@@ -120,12 +121,13 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             ).apply { topMargin = (4 * dp).toInt() }
         })
 
-        // Description
+        // Description (Markdown rendered)
         if (plan.content.isNotBlank()) {
             inner.addView(android.widget.TextView(context).apply {
-                text = plan.content
+                text = MarkdownRenderer.render(plan.content)
                 textSize = 13f
-                setTextColor(0xFF757575.toInt())
+                setTextColor(0xFF616161.toInt())
+                setLineSpacing(0f, 1.3f)
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
