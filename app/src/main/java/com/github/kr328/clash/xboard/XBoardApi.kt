@@ -27,6 +27,17 @@ object XBoardApi {
         val referralCount: Int
     )
 
+    data class PaymentMethod(
+        val id: Int,
+        val name: String,
+        val payment: String   // gateway type, e.g. "AlipayF2F"
+    )
+
+    data class CheckoutResult(
+        val type: Int,        // -1=free, 0=URL, 1=HTML
+        val data: String      // URL or HTML content
+    )
+
     data class Plan(
         val id: Int,
         val name: String,
@@ -215,6 +226,63 @@ object XBoardApi {
                 )
             }
         } catch (_: Exception) { null }
+    }
+
+    /**
+     * 获取支付方式列表
+     */
+    suspend fun getPaymentMethods(baseUrl: String, authData: String): List<PaymentMethod> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val arr = httpGet(baseUrl, "/api/v1/user/order/getPaymentMethod", authData)
+                    .optJSONArray("data") ?: return@withContext emptyList()
+                (0 until arr.length()).mapNotNull { i ->
+                    val obj = arr.optJSONObject(i) ?: return@mapNotNull null
+                    PaymentMethod(
+                        id      = obj.optInt("id"),
+                        name    = obj.optString("name", ""),
+                        payment = obj.optString("payment", "")
+                    )
+                }
+            }
+        } catch (_: Exception) { emptyList() }
+    }
+
+    /**
+     * 创建订单，返回 trade_no
+     */
+    suspend fun createOrder(baseUrl: String, authData: String, planId: Int, period: String): String {
+        return withContext(Dispatchers.IO) {
+            val root = httpPostAuth(
+                baseUrl, "/api/v1/user/order/save",
+                JSONObject().apply {
+                    put("plan_id", planId)
+                    put("period", period)
+                },
+                authData
+            )
+            root.getString("data")
+        }
+    }
+
+    /**
+     * 结算订单，返回支付结果
+     * type=-1: 免费/余额支付成功; type=0: 跳转URL; type=1: HTML内容
+     */
+    suspend fun checkoutOrder(baseUrl: String, authData: String, tradeNo: String, methodId: Int): CheckoutResult {
+        return withContext(Dispatchers.IO) {
+            val root = httpPostAuth(
+                baseUrl, "/api/v1/user/order/checkout",
+                JSONObject().apply {
+                    put("trade_no", tradeNo)
+                    put("method", methodId)
+                },
+                authData
+            )
+            val type = root.optInt("type", 0)
+            val data = root.opt("data")?.toString() ?: ""
+            CheckoutResult(type, data)
+        }
     }
 
     // ── Private helpers ────────────────────────────────────────────────────

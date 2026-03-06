@@ -257,13 +257,20 @@ class MainActivity : BaseActivity<MainDesign>() {
     private suspend fun MainDesign.startClash() {
         val active = withProfile { queryActive() }
 
-        if (active == null || !active.imported) {
-            startActivityForResult(
-                ActivityResultContracts.StartActivityForResult(),
-                XBoardLoginActivity::class.intent
-            )
-            fetch()
-            return
+        if (active == null) return
+
+        // 若 profile 尚未同步（节点为空），先触发同步再连接
+        if (!active.imported) {
+            showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
+            try {
+                withProfile { commit(active.uuid, null) }
+            } catch (e: Exception) {
+                showToast(
+                    e.message ?: getString(R.string.subscription_sync_failed),
+                    ToastDuration.Long
+                )
+                return
+            }
         }
 
         connectStartMs = System.currentTimeMillis()

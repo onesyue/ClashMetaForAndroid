@@ -11,6 +11,7 @@ import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
@@ -74,15 +75,15 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                 create(Profile.Type.Url, brandName, result.subscribeUrl)
             }
 
-            // 立即设置为活跃 profile，订阅下载放到后台 — 这样登录不需要等待几分钟
+            // 立即设置为活跃 profile，订阅下载放到 GlobalScope 后台（不随 Activity 销毁取消）
             val profile = withProfile { queryByUUID(uuid) }
             if (profile != null) {
                 withProfile { setActive(profile) }
             }
-            launch(Dispatchers.IO) {
+            @Suppress("OPT_IN_USAGE")
+            GlobalScope.launch(Dispatchers.IO) {
                 try { withProfile { commit(uuid, null) } } catch (_: Exception) {}
             }
-
             design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)
 
             // 若是从退出登录后以根 Activity 启动，则重新拉起主界面

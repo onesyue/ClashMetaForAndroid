@@ -200,6 +200,13 @@
             android:windowSoftInputMode="adjustResize"
             android:label="@string/store_title" />
 
+        <activity
+            android:name=".CheckoutActivity"
+            android:configChanges="uiMode|keyboard|keyboardHidden"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/checkout_title" />
+
         <service
             android:name=".LogcatService"
             android:exported="false"

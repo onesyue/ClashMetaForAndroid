@@ -12,7 +12,13 @@ import com.google.android.material.card.MaterialCardView
 class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
     sealed class Request {
-        data class BuyPlan(val planId: Int, val planName: String) : Request()
+        data class BuyPlan(
+            val planId: Int,
+            val planName: String,
+            val period: String,
+            val periodLabel: String,
+            val priceCents: Long
+        ) : Request()
         object Retry : Request()
     }
 
@@ -36,7 +42,6 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
     init {
         binding.activityBarLayout.applyFrom(context)
-
         binding.storeRetryBtn.setOnClickListener {
             requests.trySend(Request.Retry)
         }
@@ -136,40 +141,80 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             ).apply { topMargin = (12 * dp).toInt(); bottomMargin = (8 * dp).toInt() }
         })
 
-        // Prices
+        // Period rows (each period = one clickable row)
         listOf(
-            plan.monthPrice    to R.string.price_monthly,
-            plan.quarterPrice  to R.string.price_quarterly,
-            plan.halfYearPrice to R.string.price_half_year,
-            plan.yearPrice     to R.string.price_yearly,
-            plan.onetimePrice  to R.string.price_onetime
-        ).forEach { (cents, strRes) ->
+            Triple("monthly",    "月付",   plan.monthPrice),
+            Triple("quarterly",  "季付",   plan.quarterPrice),
+            Triple("half_yearly","半年付", plan.halfYearPrice),
+            Triple("yearly",     "年付",   plan.yearPrice),
+            Triple("onetime",    "一次性", plan.onetimePrice)
+        ).forEach { (period, label, cents) ->
             if (cents != null && cents > 0) {
-                inner.addView(android.widget.TextView(context).apply {
-                    text = context.getString(strRes, "%.2f".format(cents / 100.0))
-                    textSize = 14f
-                    setTextColor(0xFF212121.toInt())
-                    layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply { topMargin = (4 * dp).toInt() }
-                })
+                inner.addView(createPeriodRow(plan, period, label, cents, dp))
             }
         }
 
-        // Buy button
-        inner.addView(com.google.android.material.button.MaterialButton(context).apply {
-            text = context.getString(R.string.buy_now)
+        card.addView(inner)
+        return card
+    }
+
+    private fun createPeriodRow(
+        plan: Plan,
+        period: String,
+        label: String,
+        priceCents: Long,
+        dp: Float
+    ): View {
+        val row = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { topMargin = (12 * dp).toInt() }
-            setOnClickListener {
-                requests.trySend(Request.BuyPlan(plan.id, plan.name))
+            ).apply { topMargin = (6 * dp).toInt() }
+        }
+
+        // Period label
+        row.addView(android.widget.TextView(context).apply {
+            text = label
+            textSize = 14f
+            setTextColor(0xFF424242.toInt())
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                gravity = android.view.Gravity.CENTER_VERTICAL
             }
         })
 
-        card.addView(inner)
-        return card
+        // Price
+        row.addView(android.widget.TextView(context).apply {
+            text = "¥%.2f".format(priceCents / 100.0)
+            textSize = 15f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTextColor(0xFF1A237E.toInt())
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                marginEnd = (12 * dp).toInt()
+            }
+        })
+
+        // Buy button
+        row.addView(com.google.android.material.button.MaterialButton(context).apply {
+            text = context.getString(R.string.buy_now)
+            textSize = 12f
+            val btnPad = (10 * dp).toInt()
+            setPadding(btnPad, 0, btnPad, 0)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                (32 * dp).toInt()
+            ).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
+            setOnClickListener {
+                requests.trySend(
+                    Request.BuyPlan(plan.id, plan.name, period, label, priceCents)
+                )
+            }
+        })
+
+        return row
     }
 }

@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
     <!-- 品牌名称 -->
     <string name="launch_name_meta">悦通</string>
-    <string name="launch_name_alpha">悦通 Beta</string>
+    <string name="launch_name_alpha">悦通</string>
     <string name="application_name_meta">悦通</string>
-    <string name="application_name_alpha">悦通 Beta</string>
+    <string name="application_name_alpha">悦通</string>
     <string name="launch_name">悦通</string>
     <string name="application_name">悦通</string>
 
@@ -436,4 +436,18 @@
     <string name="price_half_year">半年付 ¥%s</string>
     <string name="price_yearly">年付 ¥%s</string>
     <string name="price_onetime">一次性 ¥%s</string>
+
+    <!-- 结算页 -->
+    <string name="checkout_title">确认订单</string>
+    <string name="checkout_plan_label">套餐</string>
+    <string name="checkout_period_label">周期</string>
+    <string name="checkout_amount_label">金额</string>
+    <string name="checkout_payment_method">选择支付方式</string>
+    <string name="checkout_confirm_pay">确认支付</string>
+    <string name="checkout_success">支付成功</string>
+    <string name="checkout_creating_order">正在创建订单...</string>
+    <string name="checkout_no_method">请选择支付方式</string>
+    <string name="checkout_free">免费</string>
+    <string name="syncing_subscription">正在同步订阅节点，请稍候...</string>
+    <string name="subscription_sync_success">订阅已同步</string>
 </resources>

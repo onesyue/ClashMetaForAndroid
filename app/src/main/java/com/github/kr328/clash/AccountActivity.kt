@@ -15,13 +15,20 @@ import kotlinx.coroutines.selects.select
 class AccountActivity : BaseActivity<AccountDesign>() {
 
     companion object {
-        const val EXTRA_PATH = "extra_initial_path"
+        const val EXTRA_PATH     = "extra_initial_path"
+        const val EXTRA_FULL_URL = "extra_full_url"
     }
 
     override suspend fun main() {
-        val baseUrl = RemoteConfig.getXboardUrl(this)
+        val baseUrl    = RemoteConfig.getXboardUrl(this)
+        val fullUrl    = intent.getStringExtra(EXTRA_FULL_URL)
         val initialPath = intent.getStringExtra(EXTRA_PATH) ?: ""
-        val design = AccountDesign(this, baseUrl, initialPath)
+        val design = AccountDesign(
+            this,
+            fullUrl ?: baseUrl,
+            if (fullUrl != null) "" else initialPath,
+            showSyncButton = fullUrl == null
+        )
 
         setContentDesign(design)
 

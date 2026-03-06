@@ -25,8 +25,12 @@ class StoreActivity : BaseActivity<StoreDesign>() {
                     when (request) {
                         is StoreDesign.Request.BuyPlan -> {
                             startActivity(
-                                AccountActivity::class.intent.apply {
-                                    putExtra(AccountActivity.EXTRA_PATH, "/#/buy")
+                                CheckoutActivity::class.intent.apply {
+                                    putExtra(CheckoutActivity.EXTRA_PLAN_ID,      request.planId)
+                                    putExtra(CheckoutActivity.EXTRA_PLAN_NAME,    request.planName)
+                                    putExtra(CheckoutActivity.EXTRA_PERIOD,       request.period)
+                                    putExtra(CheckoutActivity.EXTRA_PERIOD_LABEL, request.periodLabel)
+                                    putExtra(CheckoutActivity.EXTRA_PRICE_CENTS,  request.priceCents)
                                 }
                             )
                         }
