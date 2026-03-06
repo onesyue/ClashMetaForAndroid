@@ -4,16 +4,19 @@ import android.app.Activity
 import com.github.kr328.clash.design.AccountDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
+import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
+import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
 class AccountActivity : BaseActivity<AccountDesign>() {
 
     override suspend fun main() {
-        val design = AccountDesign(this)
+        val baseUrl = RemoteConfig.getXboardUrl(this)
+        val design = AccountDesign(this, baseUrl)
 
         setContentDesign(design)
 
@@ -23,6 +26,11 @@ class AccountActivity : BaseActivity<AccountDesign>() {
 
                 design.requests.onReceive { request ->
                     when (request) {
+                        is AccountDesign.Request.AuthDataChanged -> {
+                            // Persist token so native API calls work without WebView
+                            XBoardSession.save(this@AccountActivity, request.authData, request.baseUrl)
+                        }
+
                         is AccountDesign.Request.SyncSubscription -> {
                             if (request.authData.isBlank()) {
                                 design.showToast(
@@ -39,10 +47,12 @@ class AccountActivity : BaseActivity<AccountDesign>() {
                                     request.authData
                                 )
 
+                                // Persist auth session after successful sync
+                                XBoardSession.save(this@AccountActivity, request.authData, request.baseUrl)
+
                                 val brandName = getString(R.string.xboard_brand_name)
 
                                 val uuid = withProfile {
-                                    // 如已有同名订阅，先删除再创建以更新链接
                                     queryAll()
                                         .filter { it.name == brandName }
                                         .forEach { delete(it.uuid) }
@@ -54,10 +64,8 @@ class AccountActivity : BaseActivity<AccountDesign>() {
                                     )
                                 }
 
-                                // 触发下载/导入
                                 withProfile { commit(uuid, null) }
 
-                                // 激活订阅
                                 val profile = withProfile { queryByUUID(uuid) }
                                 if (profile != null) {
                                     withProfile { setActive(profile) }

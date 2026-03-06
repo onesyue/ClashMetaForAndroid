@@ -13,10 +13,11 @@ import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
 
 @SuppressLint("SetJavaScriptEnabled")
-class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
+class AccountDesign(context: Context, private val baseUrl: String) : Design<AccountDesign.Request>(context) {
 
     sealed class Request {
         data class SyncSubscription(val authData: String, val baseUrl: String) : Request()
+        data class AuthDataChanged(val authData: String, val baseUrl: String) : Request()
     }
 
     private val binding = DesignAccountBinding
@@ -36,21 +37,12 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
             "(function(){ return localStorage.getItem('auth_data') || ''; })()"
         ) { result ->
             val authData = result?.trim('"')?.takeIf { it.isNotBlank() && it != "null" }
-            if (authData != null) {
-                requests.trySend(
-                    Request.SyncSubscription(
-                        authData = authData,
-                        baseUrl = context.getString(R.string.xboard_default_url)
-                    )
+            requests.trySend(
+                Request.SyncSubscription(
+                    authData = authData ?: "",
+                    baseUrl = baseUrl
                 )
-            } else {
-                requests.trySend(
-                    Request.SyncSubscription(
-                        authData = "",
-                        baseUrl = context.getString(R.string.xboard_default_url)
-                    )
-                )
-            }
+            )
         }
     }
 
@@ -77,19 +69,21 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
                     view: WebView,
                     request: WebResourceRequest
                 ): Boolean {
-                    // Stay within the WebView for all navigation
                     return false
                 }
 
                 override fun onPageFinished(view: WebView, url: String) {
                     binding.loading = false
-                    // Check if user is logged in (auth_data exists in localStorage)
+                    binding.syncButton.visibility = View.VISIBLE
+                    // Persist auth_data whenever page finishes loading
                     view.evaluateJavascript(
                         "(function(){ return localStorage.getItem('auth_data') || ''; })()"
                     ) { result ->
-                        val hasAuth = result?.trim('"')?.isNotBlank() == true &&
-                            result.trim('"') != "null"
-                        binding.syncButton.visibility = View.VISIBLE
+                        val authData = result?.trim('"')
+                            ?.takeIf { it.isNotBlank() && it != "null" }
+                        if (authData != null) {
+                            requests.trySend(Request.AuthDataChanged(authData, baseUrl))
+                        }
                     }
                 }
 
@@ -106,7 +100,7 @@ class AccountDesign(context: Context) : Design<AccountDesign.Request>(context) {
                 }
             }
 
-            loadUrl(context.getString(R.string.xboard_default_url))
+            loadUrl(baseUrl)
         }
     }
 }

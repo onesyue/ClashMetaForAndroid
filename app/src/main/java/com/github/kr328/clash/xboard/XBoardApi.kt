@@ -8,7 +8,20 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object XBoardApi {
-    data class AuthResult(val subscribeUrl: String)
+    data class AuthResult(val subscribeUrl: String, val authData: String = "")
+
+    data class UserInfo(
+        val email: String,
+        val balance: Long,            // in cents (divide by 100 for yuan)
+        val commissionBalance: Long,  // in cents
+        val expiredAt: Long?,         // Unix timestamp, null = unlimited
+        val transferEnable: Long,     // bytes total
+        val usedDownload: Long,       // bytes downloaded (d)
+        val usedUpload: Long,         // bytes uploaded (u)
+        val inviteCode: String,
+        val uuid: String,
+        val planName: String?
+    )
 
     /**
      * 登录流程：
@@ -24,7 +37,7 @@ object XBoardApi {
                 put("password", password)
             }
         )
-        return AuthResult(fetchSubscribeUrl(baseUrl, authData))
+        return AuthResult(fetchSubscribeUrl(baseUrl, authData), authData)
     }
 
     /**
@@ -45,7 +58,7 @@ object XBoardApi {
                 if (inviteCode.isNotBlank()) put("invite_code", inviteCode)
             }
         )
-        return AuthResult(fetchSubscribeUrl(baseUrl, authData))
+        return AuthResult(fetchSubscribeUrl(baseUrl, authData), authData)
     }
 
     /**
@@ -62,7 +75,7 @@ object XBoardApi {
      * WebView 登录后，用页面存储的 auth_data 直接同步订阅
      */
     suspend fun syncFromSession(baseUrl: String, authData: String): AuthResult {
-        return AuthResult(fetchSubscribeUrl(baseUrl, authData))
+        return AuthResult(fetchSubscribeUrl(baseUrl, authData), authData)
     }
 
     /**
@@ -99,6 +112,81 @@ object XBoardApi {
             } finally {
                 conn.disconnect()
             }
+        }
+    }
+
+    /**
+     * 获取邀请人数，失败静默返回 0
+     */
+    suspend fun getReferralCount(baseUrl: String, authData: String): Int {
+        return try {
+            withContext(Dispatchers.IO) {
+                val root = httpGet(baseUrl, "/api/v1/user/stat", authData)
+                val data = root.optJSONObject("data")
+                data?.optInt("register_count", 0) ?: 0
+            }
+        } catch (_: Exception) { 0 }
+    }
+
+    /**
+     * 获取用户信息（email、余额、到期时间、流量、邀请码、套餐名称）
+     * 失败时静默返回 null
+     */
+    suspend fun getUserInfo(baseUrl: String, authData: String): UserInfo? {
+        return try {
+            withContext(Dispatchers.IO) {
+                val infoData = httpGet(baseUrl, "/api/v1/user/info", authData)
+                    .getJSONObject("data")
+
+                val planName = try {
+                    val subData = httpGet(baseUrl, "/api/v1/user/getSubscribe", authData)
+                        .getJSONObject("data")
+                    subData.optJSONObject("plan")?.optString("name")?.takeIf { it.isNotBlank() }
+                } catch (_: Exception) { null }
+
+                UserInfo(
+                    email = infoData.optString("email", ""),
+                    balance = infoData.optLong("balance", 0),
+                    commissionBalance = infoData.optLong("commission_balance", 0),
+                    expiredAt = if (infoData.isNull("expired_at")) null
+                                else infoData.optLong("expired_at").takeIf { it > 0 },
+                    transferEnable = infoData.optLong("transfer_enable", 0),
+                    usedDownload = infoData.optLong("d", 0),
+                    usedUpload = infoData.optLong("u", 0),
+                    inviteCode = infoData.optString("invite_code", ""),
+                    uuid = infoData.optString("uuid", ""),
+                    planName = planName
+                )
+            }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    /**
+     * 通用 GET 请求，返回解析后的 JSON 根对象（在 IO 线程调用）
+     */
+    private fun httpGet(baseUrl: String, path: String, authData: String): JSONObject {
+        val url = URL("${baseUrl.trimEnd('/')}$path")
+        val conn = url.openConnection() as HttpURLConnection
+        try {
+            conn.requestMethod = "GET"
+            conn.setRequestProperty("authorization", authData)
+            conn.setRequestProperty("Accept", "application/json")
+            conn.connectTimeout = 15_000
+            conn.readTimeout = 15_000
+
+            val responseCode = conn.responseCode
+            val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
+                ?.bufferedReader()?.readText() ?: ""
+
+            val root = JSONObject(responseText)
+            if (responseCode != 200) {
+                throw Exception(root.optString("message", "Request failed ($responseCode)"))
+            }
+            return root
+        } finally {
+            conn.disconnect()
         }
     }
 

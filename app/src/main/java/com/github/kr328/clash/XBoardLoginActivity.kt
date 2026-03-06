@@ -8,6 +8,7 @@ import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
+import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
@@ -53,6 +54,11 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
         design.processing = true
         try {
             val result = action()
+
+            // Persist auth session so native API calls work without WebView
+            if (result.authData.isNotBlank()) {
+                XBoardSession.save(this@XBoardLoginActivity, result.authData, url)
+            }
 
             val brandName = getString(R.string.xboard_brand_name)
             val uuid = withProfile {

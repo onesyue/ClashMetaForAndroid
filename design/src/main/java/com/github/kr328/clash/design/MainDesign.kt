@@ -1,5 +1,7 @@
 package com.github.kr328.clash.design
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -30,7 +32,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     override val root: View
         get() = binding.root
 
-    // ── 原有接口（DataBinding 变量） ──────────────────────────────────
+    // ── DataBinding variables ──────────────────────────────────────────────
 
     suspend fun setProfileName(name: String?) {
         withContext(Dispatchers.Main) {
@@ -61,7 +63,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
-    // ── 新增接口（程序化设置视图，不走 DataBinding 变量） ─────────────
+    // ── Home tab — programmatic setters ───────────────────────────────────
 
     suspend fun setUserEmail(email: String?) {
         withContext(Dispatchers.Main) {
@@ -109,6 +111,58 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
+    // ── Profile tab — programmatic setters ───────────────────────────────
+
+    suspend fun setPlanName(name: String?) {
+        withContext(Dispatchers.Main) {
+            binding.profilePlanNameText.text = name
+                ?: context.getString(R.string.plan_unknown)
+        }
+    }
+
+    suspend fun setProfileExpiryDate(date: String?) {
+        withContext(Dispatchers.Main) {
+            binding.profileExpiryText.text = date ?: "--"
+        }
+    }
+
+    suspend fun setProfileTrafficPercent(percent: Int) {
+        withContext(Dispatchers.Main) {
+            binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label)
+                .replace("0%", "$percent%")
+            binding.profileTrafficProgress.progress = percent
+        }
+    }
+
+    suspend fun setBalance(cents: Long) {
+        withContext(Dispatchers.Main) {
+            val yuan = "%.2f".format(cents / 100.0)
+            binding.profileBalanceText.text = context.getString(R.string.balance_format, yuan)
+        }
+    }
+
+    suspend fun setCommissionBalance(cents: Long) {
+        withContext(Dispatchers.Main) {
+            val yuan = "%.2f".format(cents / 100.0)
+            binding.profileCommissionText.text = context.getString(R.string.balance_format, yuan)
+        }
+    }
+
+    suspend fun setInviteLink(link: String?) {
+        withContext(Dispatchers.Main) {
+            binding.profileInviteLinkText.text = link ?: "--"
+        }
+    }
+
+    suspend fun setReferralCount(count: Int) {
+        withContext(Dispatchers.Main) {
+            binding.profileReferralCountText.text =
+                context.getString(R.string.referral_count_format, count)
+        }
+    }
+
+    // ── Dialogs ──────────────────────────────────────────────────────────
+
     suspend fun showAbout(versionName: String) {
         withContext(Dispatchers.Main) {
             AlertDialog.Builder(context)
@@ -128,6 +182,26 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorDisconnected =
             context.resolveThemedColor(R.attr.colorClashStopped)
+
+        // 连续点击品牌名 5 次（3 秒内）进入隐藏设置
+        var clickCount = 0
+        var lastClickMs = 0L
+        binding.brandNameText.setOnClickListener {
+            val now = System.currentTimeMillis()
+            if (now - lastClickMs > 3_000) clickCount = 0
+            lastClickMs = now
+            if (++clickCount >= 5) {
+                clickCount = 0
+                requests.trySend(Request.OpenSettings)
+            }
+        }
+        binding.profileCopyInviteBtn.setOnClickListener {
+            val link = binding.profileInviteLinkText.text?.toString()
+                ?.takeIf { it.isNotBlank() && it != "--" } ?: return@setOnClickListener
+            val clipboard = context.getSystemService(ClipboardManager::class.java)
+            clipboard.setPrimaryClip(ClipData.newPlainText("invite_link", link))
+            android.widget.Toast.makeText(context, R.string.copied, android.widget.Toast.LENGTH_SHORT).show()
+        }
 
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {

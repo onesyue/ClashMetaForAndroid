@@ -115,12 +115,12 @@
     <string name="override">覆写</string>
 
     <string name="auto_restart">自动重启</string>
-    <string name="allow_clash_auto_restart">允许自动重启服务</string>
+    <string name="allow_clash_auto_restart">允许服务在异常时自动重启</string>
 
-    <string name="route_system_traffic">路由系统流量</string>
-    <string name="routing_via_vpn_service">通过 VpnService 自动路由所有系统流量</string>
+    <string name="route_system_traffic">全局代理模式</string>
+    <string name="routing_via_vpn_service">自动路由所有系统流量</string>
 
-    <string name="vpn_service_options">VPN 选项</string>
+    <string name="vpn_service_options">连接选项</string>
     <string name="bypass_private_network">绕过局域网</string>
     <string name="bypass_private_network_summary">绕过私有网络地址</string>
     <string name="dns_hijacking">DNS 劫持</string>
@@ -128,11 +128,11 @@
     <string name="block_loopback">阻断回环</string>
     <string name="block_loopback_summary">阻断回环连接</string>
     <string name="allow_bypass">允许绕过</string>
-    <string name="allow_bypass_summary">允许所有应用绕过此 VPN 连接</string>
+    <string name="allow_bypass_summary">允许应用绕过此代理连接</string>
     <string name="allow_ipv6">允许 IPv6</string>
-    <string name="allow_ipv6_summary">允许通过 VpnService 传输 IPv6 流量</string>
+    <string name="allow_ipv6_summary">允许传输 IPv6 流量</string>
     <string name="system_proxy">系统代理</string>
-    <string name="system_proxy_summary">为 VpnService 附加 HTTP 代理</string>
+    <string name="system_proxy_summary">为代理附加 HTTP 访问</string>
     <string name="access_control_mode">访问控制模式</string>
     <string name="access_control_packages">访问控制应用</string>
     <string name="access_control_packages_summary">配置应用的访问权限</string>
@@ -291,7 +291,7 @@
     <string name="keyword">关键词</string>
 
     <string name="invalid_log_file">无效的日志文件</string>
-    <string name="unable_to_start_vpn">无法启动 VPN 组件</string>
+    <string name="unable_to_start_vpn">无法建立连接，请重试</string>
 
     <string name="version_updated">应用已更新</string>
     <string name="version_updated_tips">设置已重置，旧订阅需要重新保存。</string>
@@ -383,7 +383,7 @@
 
     <!-- 主界面 VPN 仪表盘 -->
     <string name="vpn_subtitle">VPN 连接控制中心</string>
-    <string name="click_to_connect_hint">点击上方按钮连接VPN</string>
+    <string name="click_to_connect_hint">点击上方按钮开始连接</string>
     <string name="renew_button">续费</string>
     <string name="expiry_prefix">到期：</string>
     <string name="expiry_unknown">到期：--</string>
@@ -398,4 +398,16 @@
     <string name="node_jp">🇯🇵  日本</string>
     <string name="node_sg">🇸🇬  新加坡</string>
     <string name="node_us">🇺🇸  美国</string>
+
+    <!-- 我的 Tab -->
+    <string name="plan_label">套餐</string>
+    <string name="plan_unknown">暂无套餐</string>
+    <string name="balance_label">账户余额</string>
+    <string name="commission_label">返利余额</string>
+    <string name="invite_link_label">邀请链接</string>
+    <string name="referral_count_format">已邀请 %d 人</string>
+    <string name="copy_text">复制</string>
+    <string name="balance_format">¥ %s</string>
+    <string name="manage_subscription">订阅管理</string>
+    <string name="open_account_center">账号中心</string>
 </resources>

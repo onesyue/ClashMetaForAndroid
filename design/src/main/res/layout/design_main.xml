@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <!-- 与上一个可成功编译的版本完全相同的变量集 -->
         <variable name="self"              type="com.github.kr328.clash.design.MainDesign" />
         <variable name="clashRunning"      type="boolean" />
         <variable name="forwarded"         type="String" />
@@ -43,40 +42,21 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/brand_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/xboard_brand_name"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:textColor="#1A237E" />
+                    android:textColor="#1A237E"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/vpn_subtitle"
-                    android:textSize="12sp"
-                    android:textColor="#5C7CAB" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_notification"
-                android:tint="#3A6BBF"
-                android:contentDescription="@null"
-                android:padding="8dp" />
-
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_baseline_settings"
-                android:tint="#3A6BBF"
-                android:contentDescription="@string/settings"
-                android:padding="8dp"
-                android:onClick="@{() -> self.request(Request.OpenSettings)}" />
+            <!-- 设置通过连续点击品牌名 5 次进入（隐藏入口） -->
 
             <TextView
                 android:id="@+id/avatar_letter_header"
@@ -148,53 +128,25 @@
                                 android:orientation="vertical"
                                 android:layout_marginStart="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:id="@+id/email_text"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:gravity="center_vertical">
+                                    android:text="@string/xboard_login_summary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E"
+                                    android:maxLines="1"
+                                    android:ellipsize="end" />
 
-                                    <LinearLayout
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/email_text"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/xboard_login_summary"
-                                            android:textSize="14sp"
-                                            android:textStyle="bold"
-                                            android:textColor="#1A237E"
-                                            android:maxLines="1"
-                                            android:ellipsize="end" />
-
-                                        <TextView
-                                            android:id="@+id/expiry_text"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/expiry_unknown"
-                                            android:textSize="12sp"
-                                            android:textColor="#5C7CAB"
-                                            android:layout_marginTop="2dp" />
-
-                                    </LinearLayout>
-
-                                    <com.google.android.material.button.MaterialButton
-                                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/renew_button"
-                                        android:textSize="12sp"
-                                        android:onClick="@{() -> self.request(Request.OpenAccount)}"
-                                        app:icon="@drawable/ic_baseline_replay"
-                                        app:iconSize="14dp"
-                                        app:iconPadding="4dp"
-                                        app:cornerRadius="20dp" />
-
-                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/expiry_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/expiry_unknown"
+                                    android:textSize="12sp"
+                                    android:textColor="#5C7CAB"
+                                    android:layout_marginTop="2dp" />
 
                                 <TextView
                                     android:id="@+id/traffic_label"
@@ -408,7 +360,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- 代理模式卡 -->
+                    <!-- 代理模式 + 节点选择（合并卡） -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -420,91 +372,51 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="12dp">
-
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_baseline_apps"
-                                android:tint="#3A6BBF"
-                                android:layout_marginEnd="10dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/proxy"
-                                android:textSize="13sp"
-                                android:textColor="#8EAACB"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@{mode != null ? mode : @string/rule_mode}"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:textColor="#1A237E" />
-
-                            <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:src="@drawable/ic_chevron_right"
-                                android:tint="#8EAACB" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- 节点选择卡 -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
+                            <!-- 代理模式行 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="56dp"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:paddingStart="16dp"
-                                android:paddingEnd="12dp"
-                                android:paddingTop="14dp"
-                                android:paddingBottom="10dp">
+                                android:paddingEnd="12dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_baseline_apps"
+                                    android:tint="#3A6BBF"
+                                    android:layout_marginEnd="10dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/proxy"
+                                    android:textSize="13sp"
+                                    android:textColor="#8EAACB"
+                                    android:layout_marginEnd="8dp" />
 
                                 <TextView
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/node_selection_title"
-                                    android:textSize="15sp"
+                                    android:text="@{mode != null ? mode : @string/rule_mode}"
+                                    android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="#1A237E" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/view_all_nodes"
-                                    android:textSize="12sp"
-                                    android:textColor="#3A6BBF"
-                                    android:background="?attr/selectableItemBackground"
-                                    android:padding="4dp"
-                                    android:onClick="@{() -> self.request(Request.OpenProxy)}" />
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_chevron_right"
+                                    android:tint="#8EAACB" />
 
                             </LinearLayout>
 
+                            <!-- 分隔线 -->
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
@@ -512,115 +424,46 @@
                                 android:layout_marginStart="16dp"
                                 android:layout_marginEnd="16dp" />
 
+                            <!-- 节点选择行 -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="52dp"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:paddingStart="16dp"
-                                android:paddingEnd="14dp"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
+                                android:paddingEnd="12dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_notification"
+                                    android:tint="#3A6BBF"
+                                    android:layout_marginEnd="10dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/node_selection_title"
+                                    android:textSize="13sp"
+                                    android:textColor="#8EAACB"
+                                    android:layout_marginEnd="8dp" />
 
                                 <TextView
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/node_hk"
+                                    android:text="@{profileName != null ? profileName : @string/not_selected}"
                                     android:textSize="14sp"
-                                    android:textColor="#1A237E" />
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E"
+                                    android:maxLines="1"
+                                    android:ellipsize="end" />
 
                                 <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
                                     android:src="@drawable/ic_chevron_right"
-                                    android:tint="#C5D8F0" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="52dp"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="14dp"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/node_jp"
-                                    android:textSize="14sp"
-                                    android:textColor="#1A237E" />
-
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_chevron_right"
-                                    android:tint="#C5D8F0" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="52dp"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="14dp"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/node_sg"
-                                    android:textSize="14sp"
-                                    android:textColor="#1A237E" />
-
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_chevron_right"
-                                    android:tint="#C5D8F0" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="52dp"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="14dp"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:onClick="@{() -> self.request(Request.OpenProxy)}">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/node_us"
-                                    android:textSize="14sp"
-                                    android:textColor="#1A237E" />
-
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_chevron_right"
-                                    android:tint="#C5D8F0" />
+                                    android:tint="#8EAACB" />
 
                             </LinearLayout>
 
@@ -660,42 +503,215 @@
             </LinearLayout>
 
             <!-- Tab 3: 我的 -->
-            <LinearLayout
+            <ScrollView
                 android:id="@+id/profile_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:overScrollMode="never"
                 android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:paddingTop="8dp"
-                    android:paddingBottom="4dp">
+                    android:paddingBottom="24dp">
 
+                    <!-- 页面标题 -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/nav_profile"
                         android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textColor="#1A237E" />
+                        android:textColor="#1A237E"
+                        android:layout_marginBottom="12dp" />
 
-                </LinearLayout>
+                    <!-- 套餐信息卡 -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_person"
+                                    android:tint="#3A6BBF"
+                                    android:layout_marginEnd="8dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/plan_label"
+                                    android:textSize="12sp"
+                                    android:textColor="#8EAACB"
+                                    android:layout_weight="0" />
+
+                                <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/profile_plan_name_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/plan_unknown"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="10dp">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_baseline_replay"
+                                    android:tint="#3A6BBF"
+                                    android:layout_marginEnd="8dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/expiry_prefix"
+                                    android:textSize="12sp"
+                                    android:textColor="#8EAACB" />
+
+                                <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/profile_expiry_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--"
+                                    android:textSize="13sp"
+                                    android:textColor="#1A237E" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/profile_traffic_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/traffic_usage_label"
+                                android:textSize="11sp"
+                                android:textColor="#5C7CAB"
+                                android:layout_marginBottom="4dp" />
+
+                            <ProgressBar
+                                android:id="@+id/profile_traffic_progress"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="6dp"
+                                android:max="100"
+                                android:progress="0"
+                                android:progressDrawable="@drawable/bg_progress_bar" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- 余额卡 -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@android:color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center_horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/balance_label"
+                                    android:textSize="11sp"
+                                    android:textColor="#8EAACB" />
+
+                                <TextView
+                                    android:id="@+id/profile_balance_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="¥ --"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="#E0EAF8" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center_horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/commission_label"
+                                    android:textSize="11sp"
+                                    android:textColor="#8EAACB" />
+
+                                <TextView
+                                    android:id="@+id/profile_commission_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="¥ --"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#1A237E"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- 邀请卡 -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -707,35 +723,65 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
+                            android:orientation="vertical"
                             android:padding="16dp">
 
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:src="@drawable/ic_person"
-                                android:tint="#3A6BBF"
-                                android:layout_marginEnd="12dp" />
-
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/profile"
-                                    android:textSize="11sp"
+                                    android:text="@string/invite_link_label"
+                                    android:textSize="12sp"
                                     android:textColor="#8EAACB" />
 
+                                <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
                                 <TextView
+                                    android:id="@+id/profile_referral_count_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@{profileName != null ? profileName : @string/xboard_login_summary}"
-                                    android:textSize="14sp"
-                                    android:textColor="#1A237E" />
+                                    android:text="已邀请 0 人"
+                                    android:textSize="12sp"
+                                    android:textColor="#3A6BBF" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:background="#F5F8FF"
+                                android:padding="10dp"
+                                android:layout_marginTop="2dp">
+
+                                <TextView
+                                    android:id="@+id/profile_invite_link_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="--"
+                                    android:textSize="12sp"
+                                    android:textColor="#5C7CAB"
+                                    android:maxLines="1"
+                                    android:ellipsize="end" />
+
+                                <TextView
+                                    android:id="@+id/profile_copy_invite_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/copy_text"
+                                    android:textSize="12sp"
+                                    android:textColor="#3A6BBF"
+                                    android:background="?attr/selectableItemBackground"
+                                    android:padding="6dp"
+                                    android:layout_marginStart="8dp" />
 
                             </LinearLayout>
 
@@ -743,12 +789,13 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!-- 操作按钮 -->
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
+                        android:layout_marginBottom="10dp"
                         android:onClick="@{() -> self.request(Request.OpenAccount)}"
-                        android:text="@string/xboard_do_login"
+                        android:text="@string/open_account_center"
                         app:cornerRadius="12dp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -756,12 +803,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:onClick="@{() -> self.request(Request.OpenProfiles)}"
-                        android:text="@string/profiles"
+                        android:text="@string/manage_subscription"
                         app:cornerRadius="12dp" />
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </ScrollView>
 
         </FrameLayout>
 

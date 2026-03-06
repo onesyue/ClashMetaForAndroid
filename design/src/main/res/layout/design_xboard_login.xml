@@ -58,15 +58,14 @@
 
                 </LinearLayout>
 
-                <!-- 网站地址（登录/注册共用） -->
+                <!-- 网站地址隐藏（由 OSS 远程配置自动填充，用户无需输入） -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/url_layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/xboard_site_url"
-                    app:errorEnabled="true">
+                    android:visibility="gone"
+                    app:errorEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/url_field"

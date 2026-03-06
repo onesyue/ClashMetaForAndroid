@@ -11,30 +11,38 @@ import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.design.MainDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
+import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
-import com.github.kr328.clash.core.bridge.*
+import com.github.kr328.clash.xboard.XBoardApi
+import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity<MainDesign>() {
 
-    // Tracks when VPN connected (for duration display)
     private var connectStartMs: Long = 0L
+    private var lastTrafficRaw: Long = -1L  // packed Long from queryTrafficTotal()
 
     override suspend fun main() {
         val design = MainDesign(this)
 
         setContentDesign(design)
 
+        // Fetch OSS config on every launch (non-blocking)
+        launch(Dispatchers.IO) { RemoteConfig.fetchAndCache(this@MainActivity) }
+
         design.fetch()
 
-        // First launch: no profile → prompt login
         val hasProfile = withProfile { queryAll().isNotEmpty() }
         if (!hasProfile) {
             startActivityForResult(
@@ -43,6 +51,9 @@ class MainActivity : BaseActivity<MainDesign>() {
             )
             design.fetch()
         }
+
+        // Load user info from Xboard API
+        design.fetchUserData()
 
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
 
@@ -57,7 +68,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                         Event.ProfileLoaded,
                         Event.ProfileChanged -> {
                             if (it == Event.ClashStart) connectStartMs = System.currentTimeMillis()
-                            if (it == Event.ClashStop) connectStartMs = 0L
+                            if (it == Event.ClashStop) { connectStartMs = 0L; lastTrafficRaw = -1L }
                             design.fetch()
                         }
                         else -> Unit
@@ -77,17 +88,17 @@ class MainActivity : BaseActivity<MainDesign>() {
                         MainDesign.Request.OpenAccount -> {
                             startActivityForResult(
                                 ActivityResultContracts.StartActivityForResult(),
-                                XBoardLoginActivity::class.intent
+                                AccountActivity::class.intent
                             )
                             design.fetch()
+                            design.fetchUserData()
                         }
                         MainDesign.Request.OpenProfiles ->
                             startActivity(ProfilesActivity::class.intent)
                         MainDesign.Request.OpenStore -> {
-                            // TODO: open store WebView when ready
                             startActivityForResult(
                                 ActivityResultContracts.StartActivityForResult(),
-                                XBoardLoginActivity::class.intent
+                                AccountActivity::class.intent
                             )
                             design.fetch()
                         }
@@ -125,15 +136,86 @@ class MainActivity : BaseActivity<MainDesign>() {
         withProfile {
             val active = queryActive()
             setProfileName(active?.name)
-            // Use profile name as placeholder email until real API is wired
-            setUserEmail(active?.name)
         }
     }
 
     private suspend fun MainDesign.fetchTraffic() {
-        withClash {
-            setForwarded(queryTrafficTotal())
+        val current = withClash { queryTrafficTotal() }
+
+        // Decode the packed Long: upper 32 bits = upload, lower 32 bits = download
+        val curUpBytes = decodeTrafficHalf(current ushr 32)
+        val curDlBytes = decodeTrafficHalf(current and 0xFFFFFFFFL)
+
+        if (lastTrafficRaw >= 0) {
+            val prevUpBytes = decodeTrafficHalf(lastTrafficRaw ushr 32)
+            val prevDlBytes = decodeTrafficHalf(lastTrafficRaw and 0xFFFFFFFFL)
+            val upSpeed = (curUpBytes - prevUpBytes).coerceAtLeast(0)
+            val dlSpeed = (curDlBytes - prevDlBytes).coerceAtLeast(0)
+            setUploadSpeed(formatSpeed(upSpeed))
+            setDownloadSpeed(formatSpeed(dlSpeed))
         }
+        lastTrafficRaw = current
+
+        setForwarded(current)
+    }
+
+    /** Mirror of the private scaleTraffic() in core/Traffic.kt */
+    private fun decodeTrafficHalf(half: Long): Long {
+        val type = (half ushr 30) and 0x3L
+        val data = half and 0x3FFFFFFFL
+        return when (type) {
+            0L -> data
+            1L -> data * 1024
+            2L -> data * 1024 * 1024
+            3L -> data * 1024 * 1024 * 1024
+            else -> 0L
+        }
+    }
+
+    private fun formatSpeed(bytesPerSec: Long): String = when {
+        bytesPerSec >= 1024 * 1024 -> "%.1f MB/s".format(bytesPerSec / 1024.0 / 1024.0)
+        bytesPerSec >= 1024         -> "%.1f KB/s".format(bytesPerSec / 1024.0)
+        else                        -> "$bytesPerSec B/s"
+    }
+
+    /**
+     * Fetch real user info from Xboard API and populate home + profile tabs.
+     * Silent no-op if not logged in or network fails.
+     */
+    private suspend fun MainDesign.fetchUserData() {
+        val authData = XBoardSession.getAuthData(this@MainActivity) ?: return
+        val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
+
+        val info = XBoardApi.getUserInfo(baseUrl, authData) ?: return
+
+        // Home tab
+        setUserEmail(info.email.takeIf { it.isNotBlank() })
+
+        val expiryStr = info.expiredAt?.let { ts ->
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(ts * 1000))
+        }
+        setExpiryDate(expiryStr)
+
+        val trafficPercent = if (info.transferEnable > 0) {
+            val used = info.usedDownload + info.usedUpload
+            ((used.toDouble() / info.transferEnable) * 100).toInt().coerceIn(0, 100)
+        } else 0
+        setTrafficPercent(trafficPercent)
+
+        // Profile tab
+        setPlanName(info.planName)
+        setProfileExpiryDate(expiryStr)
+        setProfileTrafficPercent(trafficPercent)
+        setBalance(info.balance)
+        setCommissionBalance(info.commissionBalance)
+
+        val inviteLink = if (info.inviteCode.isNotBlank()) {
+            "${baseUrl.trimEnd('/')}/#/register?code=${info.inviteCode}"
+        } else null
+        setInviteLink(inviteLink)
+
+        val referralCount = XBoardApi.getReferralCount(baseUrl, authData)
+        setReferralCount(referralCount)
     }
 
     private suspend fun MainDesign.startClash() {
@@ -175,8 +257,7 @@ class MainActivity : BaseActivity<MainDesign>() {
 
     private suspend fun queryAppVersionName(): String {
         return withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0).versionName +
-                "\n" + Bridge.nativeCoreVersion().replace("_", "-")
+            packageManager.getPackageInfo(packageName, 0).versionName ?: "1.0"
         }
     }
 

@@ -53,7 +53,7 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
     }
 
     companion object {
-        const val CHANNEL_ID = "clash_status_channel"
+        const val CHANNEL_ID = "yuetong_status_channel"
 
         fun createNotificationChannel(service: Service) {
             NotificationManagerCompat.from(service).createNotificationChannel(
