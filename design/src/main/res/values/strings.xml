@@ -353,6 +353,13 @@
     <string name="import_from_qr_no_permission">相机权限受限，请在设置中开启。</string>
     <string name="import_from_qr_exception">发生了未处理的系统异常。</string>
 
+    <string name="shortcut_toggle_short">切换 VPN</string>
+    <string name="shortcut_toggle_long">开启/关闭 VPN 服务</string>
+    <string name="shortcut_start_short">开启 VPN</string>
+    <string name="shortcut_start_long">开启 VPN 服务</string>
+    <string name="shortcut_stop_short">关闭 VPN</string>
+    <string name="shortcut_stop_long">关闭 VPN 服务</string>
+
     <!-- 悦通账号中心 -->
     <string name="nav_home">首页</string>
     <string name="nav_account">账号中心</string>
@@ -475,4 +482,5 @@
     <string name="period_half_yearly">半年付</string>
     <string name="period_yearly">年付</string>
     <string name="period_onetime">一次性</string>
+</resources>
 </resources>
