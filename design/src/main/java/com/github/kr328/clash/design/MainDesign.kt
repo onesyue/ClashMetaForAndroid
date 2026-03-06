@@ -30,6 +30,8 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     override val root: View
         get() = binding.root
 
+    // ── 原有接口（DataBinding 变量） ──────────────────────────────────
+
     suspend fun setProfileName(name: String?) {
         withContext(Dispatchers.Main) {
             binding.profileName = name
@@ -59,10 +61,12 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
+    // ── 新增接口（程序化设置视图，不走 DataBinding 变量） ─────────────
+
     suspend fun setUserEmail(email: String?) {
         withContext(Dispatchers.Main) {
             val display = email ?: context.getString(R.string.xboard_login_summary)
-            binding.userEmail = display
+            binding.emailText.text = display
             val letter = email?.firstOrNull()?.uppercaseChar()?.toString() ?: "U"
             binding.avatarLetterHeader.text = letter
             binding.avatarLetterCard.text = letter
@@ -71,36 +75,37 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     suspend fun setExpiryDate(date: String?) {
         withContext(Dispatchers.Main) {
-            binding.expiryDate = if (date != null) {
+            binding.expiryText.text = if (date != null) {
                 context.getString(R.string.expiry_prefix) + date
             } else {
-                context.getString(R.string.expiry_prefix) + "--"
+                context.getString(R.string.expiry_unknown)
             }
         }
     }
 
     suspend fun setTrafficPercent(percent: Int) {
         withContext(Dispatchers.Main) {
-            binding.trafficText = context.getString(R.string.traffic_usage_label) + " $percent%"
+            binding.trafficLabel.text = context.getString(R.string.traffic_usage_label)
+                .replace("0%", "$percent%")
             binding.trafficProgress.progress = percent
         }
     }
 
     suspend fun setConnectionTime(time: String) {
         withContext(Dispatchers.Main) {
-            binding.connectionTime = time
+            binding.connectionTimeText.text = time
         }
     }
 
     suspend fun setDownloadSpeed(speed: String) {
         withContext(Dispatchers.Main) {
-            binding.downloadSpeed = speed
+            binding.downloadSpeedText.text = speed
         }
     }
 
     suspend fun setUploadSpeed(speed: String) {
         withContext(Dispatchers.Main) {
-            binding.uploadSpeed = speed
+            binding.uploadSpeedText.text = speed
         }
     }
 
@@ -119,12 +124,6 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     init {
         binding.self = this
-        binding.userEmail = context.getString(R.string.xboard_login_summary)
-        binding.expiryDate = context.getString(R.string.expiry_prefix) + "--"
-        binding.trafficText = context.getString(R.string.traffic_usage_label) + " 0%"
-        binding.connectionTime = "00:00:00"
-        binding.downloadSpeed = "0 B/s"
-        binding.uploadSpeed = "0 B/s"
         binding.colorConnected =
             context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
         binding.colorDisconnected =
