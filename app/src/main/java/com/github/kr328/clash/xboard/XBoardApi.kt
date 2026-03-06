@@ -303,11 +303,12 @@ object XBoardApi {
 
     /**
      * 获取公告列表
+     * 路由：GET /api/v1/user/notice/fetch
      */
     suspend fun getNotices(baseUrl: String, authData: String): List<Notice> {
         return try {
             withContext(Dispatchers.IO) {
-                val root = httpGet(baseUrl, "/api/v1/user/notice", authData)
+                val root = httpGet(baseUrl, "/api/v1/user/notice/fetch", authData)
                 val arr = root.optJSONArray("data") ?: return@withContext emptyList()
                 (0 until arr.length()).mapNotNull { i ->
                     val obj = arr.optJSONObject(i) ?: return@mapNotNull null

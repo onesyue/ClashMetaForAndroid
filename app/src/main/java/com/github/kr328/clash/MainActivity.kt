@@ -20,6 +20,7 @@ import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
@@ -263,13 +264,15 @@ class MainActivity : BaseActivity<MainDesign>() {
         val active = withProfile { queryActive() }
 
         if (active == null) {
-            showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
+            showToast(getString(R.string.no_subscription_hint), ToastDuration.Long)
             return
         }
 
-        // 若 profile 尚未同步节点，先触发同步再连接
+        // 若 profile 尚未同步节点，触发同步并轮询等待完成（最多30秒）
         if (!active.imported) {
             showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
+
+            // 先触发一次 commit（commit() 是异步提交，立刻返回，实际下载在后台）
             try {
                 withProfile { commit(active.uuid, null) }
             } catch (e: Exception) {
@@ -279,9 +282,19 @@ class MainActivity : BaseActivity<MainDesign>() {
                 )
                 return
             }
-            // 验证同步结果
-            val updated = withProfile { queryByUUID(active.uuid) }
-            if (updated == null || !updated.imported) {
+
+            // 轮询等待 imported 变为 true（最长30秒，每秒检查一次）
+            var imported = false
+            for (retry in 1..30) {
+                delay(1_000L)
+                val updated = withProfile { queryByUUID(active.uuid) }
+                if (updated?.imported == true) {
+                    imported = true
+                    break
+                }
+            }
+
+            if (!imported) {
                 showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
                 return
             }

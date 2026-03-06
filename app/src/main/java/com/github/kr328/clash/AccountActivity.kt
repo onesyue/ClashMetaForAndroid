@@ -10,6 +10,7 @@ import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.selects.select
 
 class AccountActivity : BaseActivity<AccountDesign>() {
@@ -77,6 +78,14 @@ class AccountActivity : BaseActivity<AccountDesign>() {
                                 }
 
                                 withProfile { commit(uuid, null) }
+
+                                // commit() 是异步的，轮询等待实际下载完成（最长 60s）
+                                var imported = false
+                                for (retry in 1..60) {
+                                    delay(1_000L)
+                                    val p = withProfile { queryByUUID(uuid) }
+                                    if (p?.imported == true) { imported = true; break }
+                                }
 
                                 val profile = withProfile { queryByUUID(uuid) }
                                 if (profile != null) {
