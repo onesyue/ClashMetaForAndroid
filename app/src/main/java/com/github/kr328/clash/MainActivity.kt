@@ -47,7 +47,8 @@ class MainActivity : BaseActivity<MainDesign>() {
         setContentDesign(design)
 
         design.fetch()
-        design.fetchUserData()
+        // fetchUserData 放后台，不阻塞事件循环启动（避免 API 延迟导致按钮无响应）
+        launch { design.fetchUserData() }
 
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
 
@@ -257,9 +258,12 @@ class MainActivity : BaseActivity<MainDesign>() {
     private suspend fun MainDesign.startClash() {
         val active = withProfile { queryActive() }
 
-        if (active == null) return
+        if (active == null) {
+            showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
+            return
+        }
 
-        // 若 profile 尚未同步（节点为空），先触发同步再连接
+        // 若 profile 尚未同步节点，先触发同步再连接
         if (!active.imported) {
             showToast(getString(R.string.syncing_subscription), ToastDuration.Long)
             try {
@@ -269,6 +273,12 @@ class MainActivity : BaseActivity<MainDesign>() {
                     e.message ?: getString(R.string.subscription_sync_failed),
                     ToastDuration.Long
                 )
+                return
+            }
+            // 验证同步结果
+            val updated = withProfile { queryByUUID(active.uuid) }
+            if (updated == null || !updated.imported) {
+                showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
                 return
             }
         }
