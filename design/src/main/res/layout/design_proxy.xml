@@ -20,8 +20,8 @@
             android:id="@+id/proxy_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@{(float)(self.surface.insets.top) + @dimen/toolbar_height + @dimen/mode_chip_bar_height}"
-            android:paddingBottom="@{self.surface.insets.bottom + 8f}"
+            android:paddingTop="@{(float) self.surface.insets.top + @dimen/proxy_list_header_height}"
+            android:paddingBottom="@{self.surface.insets.bottom}"
             android:clipToPadding="false"
             android:overScrollMode="never" />
 

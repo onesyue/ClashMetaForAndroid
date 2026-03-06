@@ -65,6 +65,8 @@
 
     <!--  Proxy Design -->
     <dimen name="mode_chip_bar_height">48dp</dimen>
+    <!-- toolbar_height(56dp) + mode_chip_bar_height(48dp) for RecyclerView top padding -->
+    <dimen name="proxy_list_header_height">104dp</dimen>
     <dimen name="proxy_layout_padding">3dp</dimen>
     <dimen name="proxy_content_padding">15dp</dimen>
     <dimen name="proxy_content_padding_grid3">12dp</dimen>
