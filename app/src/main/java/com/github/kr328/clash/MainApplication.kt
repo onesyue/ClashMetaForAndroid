@@ -41,6 +41,7 @@ class MainApplication : Application() {
             Remote.launch()
             setupShortcuts()
             createNotificationChannels()
+            com.github.kr328.clash.util.SubscriptionCheckWorker.schedule(this)
         } else {
             sendServiceRecreated()
         }

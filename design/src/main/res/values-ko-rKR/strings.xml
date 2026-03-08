@@ -253,4 +253,132 @@
     <string name="override_destination">Override Destination</string>
     <string name="import_from_qr_no_permission">카메라 접근이 제한되었습니다. 설정에서 허용해 주세요.</string>
     <string name="import_from_qr_exception">처리되지 않은 시스템 예외가 발생했습니다.</string>
+
+    <!-- Widget -->
+    <string name="widget_label">VPN 상태</string>
+    <string name="widget_description">VPN 연결 상태를 표시하고 탭하여 전환</string>
+
+    <!-- Subscription alerts -->
+    <string name="subscription_alert_title">구독 알림</string>
+    <string name="subscription_expired_alert">구독이 만료되었습니다. 갱신해 주세요</string>
+    <string name="subscription_expiring_1day">구독이 1일 이내에 만료됩니다</string>
+    <string name="subscription_expiring_3days">구독이 3일 이내에 만료됩니다</string>
+    <string name="subscription_expiring_7days">구독이 7일 이내에 만료됩니다</string>
+
+    <string name="status_connected">연결됨</string>
+    <string name="status_disconnected">연결 안 됨</string>
+
+    <string name="language">언어</string>
+    <string name="lang_system">시스템 설정 따르기</string>
+
+    <!-- Account -->
+    <string name="nav_home">홈</string>
+    <string name="nav_account">계정 센터</string>
+    <string name="nav_store">스토어</string>
+    <string name="nav_profile">마이페이지</string>
+    <string name="nav_settings">설정</string>
+    <string name="account_center">계정 센터</string>
+    <string name="sync_subscription">구독 동기화</string>
+    <string name="subscription_synced">구독이 동기화되었습니다</string>
+    <string name="subscription_sync_failed">동기화 실패, 로그인 후 다시 시도해 주세요</string>
+    <string name="not_logged_in">먼저 페이지에서 로그인해 주세요</string>
+
+    <string name="xboard_login">계정 로그인</string>
+    <string name="xboard_brand_subtitle">AI 및 스트리밍을 위한 글로벌 가속 네트워크</string>
+    <string name="xboard_email">이메일</string>
+    <string name="xboard_password">비밀번호</string>
+    <string name="xboard_invite_code">초대 코드 (선택)</string>
+    <string name="xboard_tab_login">로그인</string>
+    <string name="xboard_tab_register">회원가입</string>
+    <string name="xboard_do_login">로그인</string>
+    <string name="xboard_do_register">회원가입</string>
+    <string name="xboard_request_failed">요청 실패</string>
+
+    <string name="expiry_prefix">만료일：</string>
+    <string name="expiry_permanent">영구</string>
+    <string name="expiry_expired">만료됨</string>
+    <string name="traffic_detail_format">사용 %1$s / 전체 %2$s</string>
+    <string name="unlimited_traffic">무제한 트래픽</string>
+    <string name="not_used_yet">아직 사용하지 않음</string>
+
+    <string name="store_title">스토어</string>
+    <string name="store_empty">이용 가능한 요금제가 없습니다</string>
+    <string name="buy_now">구매하기 →</string>
+    <string name="price_monthly">월간 ¥%s</string>
+    <string name="price_quarterly">분기 ¥%s</string>
+    <string name="price_half_year">반기 ¥%s</string>
+    <string name="price_yearly">연간 ¥%s</string>
+    <string name="price_onetime">일회성 ¥%s</string>
+
+    <string name="checkout_title">주문 확인</string>
+    <string name="checkout_plan_label">요금제</string>
+    <string name="checkout_period_label">기간</string>
+    <string name="checkout_amount_label">금액</string>
+    <string name="checkout_payment_method">결제 방법 선택</string>
+    <string name="checkout_confirm_pay">결제 확인</string>
+    <string name="checkout_success">결제 완료</string>
+    <string name="checkout_no_method">결제 방법을 선택해 주세요</string>
+
+    <string name="notices_title">공지사항</string>
+    <string name="notices_empty">공지사항이 없습니다</string>
+    <string name="orders_title">주문 내역</string>
+    <string name="orders_empty">주문 내역이 없습니다</string>
+    <string name="order_status_pending">결제 대기</string>
+    <string name="order_status_processing">처리 중</string>
+    <string name="order_status_cancelled">취소됨</string>
+    <string name="order_status_completed">완료</string>
+    <string name="order_cancel_btn">주문 취소</string>
+    <string name="order_cancel_confirm_title">취소 확인</string>
+    <string name="order_cancel_confirm_message">이 주문을 취소하시겠습니까? 이 작업은 되돌릴 수 없습니다.</string>
+    <string name="period_monthly">월간</string>
+    <string name="period_quarterly">분기</string>
+    <string name="period_half_yearly">반기</string>
+    <string name="period_yearly">연간</string>
+    <string name="period_onetime">일회성</string>
+
+    <string name="coupon_label">쿠폰</string>
+    <string name="coupon_hint">쿠폰 코드를 입력하세요</string>
+    <string name="coupon_verify">확인</string>
+    <string name="coupon_valid">쿠폰이 적용되었습니다</string>
+    <string name="coupon_invalid">쿠폰이 유효하지 않거나 만료되었습니다</string>
+
+    <string name="channel_subscription">구독 알림</string>
+    <string name="channel_payment">결제 알림</string>
+    <string name="channel_announcement">공지 알림</string>
+
+    <string name="onboarding_title_1">안전한 가속</string>
+    <string name="onboarding_desc_1">원터치 연결, 스마트 라우팅\n네트워크를 원활하게</string>
+    <string name="onboarding_title_2">구독 관리</string>
+    <string name="onboarding_desc_2">요금제 구매, 주문 확인\n쿠폰 지원, 언제든 갱신</string>
+    <string name="onboarding_title_3">안전하고 신뢰할 수 있는</string>
+    <string name="onboarding_desc_3">전 구간 HTTPS 암호화\n당신의 데이터 보안이 최우선입니다</string>
+    <string name="onboarding_skip">건너뛰기</string>
+    <string name="onboarding_next">다음</string>
+    <string name="onboarding_start">시작하기</string>
+
+    <string name="about_title">정보</string>
+    <string name="about_version">버전 %s</string>
+    <string name="about_privacy">개인정보 보호정책</string>
+    <string name="about_licenses">오픈소스 라이선스</string>
+    <string name="about_feedback">문제 신고</string>
+
+    <string name="error_no_network">네트워크에 연결되지 않았습니다. 네트워크 설정을 확인하세요</string>
+    <string name="error_server">서버가 일시적으로 응답할 수 없습니다. 나중에 다시 시도하세요</string>
+    <string name="error_timeout">요청 시간이 초과되었습니다. 네트워크 확인 후 다시 시도하세요</string>
+
+    <string name="logout">로그아웃</string>
+    <string name="logout_confirm_title">로그아웃 확인</string>
+    <string name="logout_confirm_message">로그아웃하면 다시 로그인해야 사용할 수 있습니다</string>
+    <string name="plan_label">요금제</string>
+    <string name="balance_label">계정 잔액</string>
+    <string name="commission_label">리베이트 잔액</string>
+    <string name="open_account_center">계정 센터</string>
+    <string name="manage_subscription">구독 관리</string>
+
+    <string name="orders_empty_hint">주문 내역이 없습니다\n스토어에서 요금제를 선택하세요</string>
+    <string name="orders_go_store">요금제 보기</string>
+
+    <string name="shortcut_toggle_short">VPN 전환</string>
+    <string name="shortcut_start_short">VPN 시작</string>
+    <string name="shortcut_stop_short">VPN 중지</string>
 </resources>

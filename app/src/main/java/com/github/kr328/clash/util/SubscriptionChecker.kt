@@ -17,6 +17,18 @@ object SubscriptionChecker {
     private const val CHANNEL_ID = "yt_subscription"
 
     /**
+     * Compute the alert level for a given number of days left.
+     * Returns null if no alert is needed, otherwise 0/1/3/7.
+     */
+    internal fun computeAlertLevel(daysLeft: Int): Int? = when {
+        daysLeft < 0 -> 0   // expired
+        daysLeft <= 1 -> 1  // 1 day
+        daysLeft <= 3 -> 3  // 3 days
+        daysLeft <= 7 -> 7  // 7 days
+        else -> null         // no alert needed
+    }
+
+    /**
      * Check subscription expiry and send notification if needed.
      * @param expiredAt Unix timestamp (seconds) of expiry, null = permanent
      */
@@ -26,13 +38,7 @@ object SubscriptionChecker {
         val now = System.currentTimeMillis() / 1000
         val daysLeft = ((expiredAt - now) / 86400).toInt()
 
-        val alertLevel = when {
-            daysLeft < 0 -> 0   // expired
-            daysLeft <= 1 -> 1  // 1 day
-            daysLeft <= 3 -> 3  // 3 days
-            daysLeft <= 7 -> 7  // 7 days
-            else -> return      // no alert needed
-        }
+        val alertLevel = computeAlertLevel(daysLeft) ?: return
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val lastAlert = prefs.getInt(KEY_LAST_ALERT_LEVEL, -1)

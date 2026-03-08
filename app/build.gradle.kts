@@ -27,6 +27,10 @@ dependencies {
     implementation(libs.quickie.bundled)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.work)
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20231013")
 }
 
 tasks.getByName("clean", type = Delete::class) {

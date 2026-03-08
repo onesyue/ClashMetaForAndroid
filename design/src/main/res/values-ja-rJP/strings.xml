@@ -253,4 +253,132 @@
     <string name="override_destination">Override Destination</string>
     <string name="import_from_qr_no_permission">カメラのアクセスが制限されています。設定から有効にしてください。</string>
     <string name="import_from_qr_exception">システムで予期しない例外が発生しました。</string>
+
+    <!-- Widget -->
+    <string name="widget_label">VPN ステータス</string>
+    <string name="widget_description">VPN 接続状態を表示し、タップで切り替え</string>
+
+    <!-- Subscription alerts -->
+    <string name="subscription_alert_title">サブスクリプション通知</string>
+    <string name="subscription_expired_alert">サブスクリプションが期限切れです。更新してください</string>
+    <string name="subscription_expiring_1day">サブスクリプションは 1 日以内に期限切れになります</string>
+    <string name="subscription_expiring_3days">サブスクリプションは 3 日以内に期限切れになります</string>
+    <string name="subscription_expiring_7days">サブスクリプションは 7 日以内に期限切れになります</string>
+
+    <string name="status_connected">接続済み</string>
+    <string name="status_disconnected">未接続</string>
+
+    <string name="language">言語</string>
+    <string name="lang_system">システムに従う</string>
+
+    <!-- Account -->
+    <string name="nav_home">ホーム</string>
+    <string name="nav_account">アカウント</string>
+    <string name="nav_store">ストア</string>
+    <string name="nav_profile">マイページ</string>
+    <string name="nav_settings">設定</string>
+    <string name="account_center">アカウントセンター</string>
+    <string name="sync_subscription">サブスクリプションを同期</string>
+    <string name="subscription_synced">サブスクリプションが同期されました</string>
+    <string name="subscription_sync_failed">同期に失敗しました。ログイン後に再試行してください</string>
+    <string name="not_logged_in">先にページからログインしてください</string>
+
+    <string name="xboard_login">アカウントログイン</string>
+    <string name="xboard_brand_subtitle">AI・ストリーミング向けグローバルアクセラレーションネットワーク</string>
+    <string name="xboard_email">メールアドレス</string>
+    <string name="xboard_password">パスワード</string>
+    <string name="xboard_invite_code">招待コード（任意）</string>
+    <string name="xboard_tab_login">ログイン</string>
+    <string name="xboard_tab_register">登録</string>
+    <string name="xboard_do_login">ログイン</string>
+    <string name="xboard_do_register">登録</string>
+    <string name="xboard_request_failed">リクエストに失敗しました</string>
+
+    <string name="expiry_prefix">有効期限：</string>
+    <string name="expiry_permanent">永久</string>
+    <string name="expiry_expired">期限切れ</string>
+    <string name="traffic_detail_format">使用済み %1$s / 合計 %2$s</string>
+    <string name="unlimited_traffic">無制限</string>
+    <string name="not_used_yet">未使用</string>
+
+    <string name="store_title">ストア</string>
+    <string name="store_empty">利用可能なプランはありません</string>
+    <string name="buy_now">購入する →</string>
+    <string name="price_monthly">月額 ¥%s</string>
+    <string name="price_quarterly">3ヶ月 ¥%s</string>
+    <string name="price_half_year">6ヶ月 ¥%s</string>
+    <string name="price_yearly">年額 ¥%s</string>
+    <string name="price_onetime">一括 ¥%s</string>
+
+    <string name="checkout_title">注文確認</string>
+    <string name="checkout_plan_label">プラン</string>
+    <string name="checkout_period_label">期間</string>
+    <string name="checkout_amount_label">金額</string>
+    <string name="checkout_payment_method">お支払い方法を選択</string>
+    <string name="checkout_confirm_pay">支払いを確認</string>
+    <string name="checkout_success">支払い完了</string>
+    <string name="checkout_no_method">お支払い方法を選択してください</string>
+
+    <string name="notices_title">お知らせ</string>
+    <string name="notices_empty">お知らせはありません</string>
+    <string name="orders_title">注文履歴</string>
+    <string name="orders_empty">注文履歴はありません</string>
+    <string name="order_status_pending">支払い待ち</string>
+    <string name="order_status_processing">処理中</string>
+    <string name="order_status_cancelled">キャンセル済み</string>
+    <string name="order_status_completed">完了</string>
+    <string name="order_cancel_btn">注文をキャンセル</string>
+    <string name="order_cancel_confirm_title">キャンセル確認</string>
+    <string name="order_cancel_confirm_message">この注文をキャンセルしますか？この操作は取り消せません。</string>
+    <string name="period_monthly">月額</string>
+    <string name="period_quarterly">3ヶ月</string>
+    <string name="period_half_yearly">6ヶ月</string>
+    <string name="period_yearly">年額</string>
+    <string name="period_onetime">一括</string>
+
+    <string name="coupon_label">クーポン</string>
+    <string name="coupon_hint">クーポンコードを入力</string>
+    <string name="coupon_verify">確認</string>
+    <string name="coupon_valid">クーポンが適用されました</string>
+    <string name="coupon_invalid">クーポンが無効または期限切れです</string>
+
+    <string name="channel_subscription">サブスクリプション通知</string>
+    <string name="channel_payment">支払い通知</string>
+    <string name="channel_announcement">お知らせ</string>
+
+    <string name="onboarding_title_1">安全に高速化</string>
+    <string name="onboarding_desc_1">ワンタップで接続、スマートルーティング\nネットワークをスムーズに</string>
+    <string name="onboarding_title_2">サブスクリプション管理</string>
+    <string name="onboarding_desc_2">プランの購入、注文の確認\nクーポン対応、いつでも更新</string>
+    <string name="onboarding_title_3">安全・安心</string>
+    <string name="onboarding_desc_3">全経路 HTTPS 暗号化\nあなたのデータの安全が最優先です</string>
+    <string name="onboarding_skip">スキップ</string>
+    <string name="onboarding_next">次へ</string>
+    <string name="onboarding_start">始める</string>
+
+    <string name="about_title">アプリについて</string>
+    <string name="about_version">バージョン %s</string>
+    <string name="about_privacy">プライバシーポリシー</string>
+    <string name="about_licenses">オープンソースライセンス</string>
+    <string name="about_feedback">フィードバック</string>
+
+    <string name="error_no_network">ネットワーク未接続です。ネットワーク設定を確認してください</string>
+    <string name="error_server">サーバーが一時的に応答できません。後でお試しください</string>
+    <string name="error_timeout">リクエストがタイムアウトしました。ネットワークを確認して再試行してください</string>
+
+    <string name="logout">ログアウト</string>
+    <string name="logout_confirm_title">ログアウト確認</string>
+    <string name="logout_confirm_message">ログアウトすると、再度ログインが必要になります</string>
+    <string name="plan_label">プラン</string>
+    <string name="balance_label">アカウント残高</string>
+    <string name="commission_label">リベート残高</string>
+    <string name="open_account_center">アカウントセンター</string>
+    <string name="manage_subscription">サブスクリプション管理</string>
+
+    <string name="orders_empty_hint">注文履歴はまだありません\nストアでプランを選びましょう</string>
+    <string name="orders_go_store">プランを見る</string>
+
+    <string name="shortcut_toggle_short">VPN 切替</string>
+    <string name="shortcut_start_short">VPN 開始</string>
+    <string name="shortcut_stop_short">VPN 停止</string>
 </resources>

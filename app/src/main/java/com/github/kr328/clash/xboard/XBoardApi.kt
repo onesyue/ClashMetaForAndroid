@@ -20,7 +20,7 @@ object XBoardApi {
     class ServerException(message: String) : Exception(message)
 
     /** Enforce HTTPS — reject plain HTTP URLs to prevent token leakage. */
-    private fun requireHttps(baseUrl: String): String {
+    internal fun requireHttps(baseUrl: String): String {
         val url = baseUrl.trimEnd('/')
         if (url.startsWith("http://", ignoreCase = true)) {
             throw Exception("Insecure connection: HTTPS is required")

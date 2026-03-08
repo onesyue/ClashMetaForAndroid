@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
@@ -25,7 +26,6 @@ import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity<MainDesign>() {
 
+    private val viewModel by viewModels<MainViewModel>()
     private var connectStartMs: Long = 0L
     private var lastTrafficRaw: Long = -1L
 
@@ -71,8 +72,9 @@ class MainActivity : BaseActivity<MainDesign>() {
         design.fetch()
         // Apply fixed geo settings silently on every start (CDN URLs accessible in China)
         launch { applyGeoDefaults() }
-        // fetchUserData 放后台，不阻塞事件循环启动（避免 API 延迟导致按钮无响应）
-        launch { design.fetchUserData() }
+        // fetchUserData 通过 ViewModel 管理，配置变更后自动保留数据
+        viewModel.fetchUserData()
+        launch { observeUserState(design) }
 
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
 
@@ -110,7 +112,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                                 AccountActivity::class.intent
                             )
                             design.fetch()
-                            design.fetchUserData()
+                            viewModel.fetchUserData()
                         }
                         MainDesign.Request.OpenProfiles ->
                             startActivity(ProfilesActivity::class.intent)
@@ -241,84 +243,57 @@ class MainActivity : BaseActivity<MainDesign>() {
         else                         -> "${bytes / 1024} KB"
     }
 
-    private suspend fun MainDesign.fetchUserData() {
-        val authData = XBoardSession.getAuthData(this@MainActivity) ?: return
-        val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
-
-        val info: XBoardApi.UserInfo = try {
-            val fetched = XBoardApi.getUserInfo(baseUrl, authData)
-            if (fetched != null) {
-                // Cache for offline use
-                com.github.kr328.clash.util.OfflineCache.put(
-                    this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO, fetched.toJson()
-                )
-                fetched
-            } else {
-                // API returned null — try cached data
-                val cached = com.github.kr328.clash.util.OfflineCache.get(
-                    this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO
-                )
-                cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
+    private suspend fun observeUserState(design: MainDesign) {
+        viewModel.userState.collect { state ->
+            if (state.authExpired) {
+                viewModel.consumeAuthExpired()
+                handleAuthExpired()
+                return@collect
             }
-        } catch (e: XBoardApi.AuthExpiredException) {
-            handleAuthExpired()
-            return
-        } catch (_: Exception) {
-            // Network error — try cached data
-            val cached = com.github.kr328.clash.util.OfflineCache.get(
-                this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO
-            )
-            cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
+
+            val info = state.info ?: return@collect
+
+            design.setUserEmail(info.email.takeIf { it.isNotBlank() })
+
+            val now = System.currentTimeMillis() / 1000
+            val expired = info.expiredAt != null && info.expiredAt > 0 && info.expiredAt < now
+            val expiryDisplay = when {
+                info.expiredAt == null || info.expiredAt == 0L ->
+                    getString(R.string.expiry_permanent)
+                expired -> getString(R.string.expiry_expired)
+                else -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(info.expiredAt * 1000))
+            }
+            design.setExpiryDate(expiryDisplay, expired)
+
+            val usedBytes = info.usedDownload + info.usedUpload
+            val trafficPercent: Float = if (info.transferEnable > 0) {
+                ((usedBytes.toDouble() / info.transferEnable) * 100.0)
+                    .coerceIn(0.0, 100.0).toFloat()
+            } else 0f
+            design.setTrafficPercent(trafficPercent)
+
+            design.setPlanName(info.planName)
+            design.setProfileExpiryDate(expiryDisplay, expired)
+            design.setProfileTrafficPercent(trafficPercent)
+
+            val trafficDetail = when {
+                info.transferEnable == 0L -> getString(R.string.unlimited_traffic)
+                usedBytes == 0L           -> getString(R.string.not_used_yet)
+                else -> getString(
+                    R.string.traffic_detail_format,
+                    formatBytes(usedBytes),
+                    formatBytes(info.transferEnable)
+                )
+            }
+            design.setTrafficDetail(trafficDetail)
+
+            design.setBalance(info.balance)
+            design.setCommissionBalance(info.commissionBalance)
+
+            val inviteInfo = state.inviteInfo
+            design.setInviteLink(inviteInfo?.inviteUrl?.takeIf { it.isNotBlank() })
+            design.setReferralCount(inviteInfo?.referralCount ?: 0)
         }
-
-        setUserEmail(info.email.takeIf { it.isNotBlank() })
-
-        val now = System.currentTimeMillis() / 1000
-        val expired = info.expiredAt != null && info.expiredAt > 0 && info.expiredAt < now
-        val expiryDisplay = when {
-            info.expiredAt == null || info.expiredAt == 0L ->
-                getString(R.string.expiry_permanent)
-            expired -> getString(R.string.expiry_expired)
-            else -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(info.expiredAt * 1000))
-        }
-        setExpiryDate(expiryDisplay, expired)
-
-        val usedBytes = info.usedDownload + info.usedUpload
-        val trafficPercent: Float = if (info.transferEnable > 0) {
-            ((usedBytes.toDouble() / info.transferEnable) * 100.0)
-                .coerceIn(0.0, 100.0).toFloat()
-        } else 0f
-        setTrafficPercent(trafficPercent)
-
-        setPlanName(info.planName)
-        setProfileExpiryDate(expiryDisplay, expired)
-        setProfileTrafficPercent(trafficPercent)
-
-        val trafficDetail = when {
-            info.transferEnable == 0L -> getString(R.string.unlimited_traffic)
-            usedBytes == 0L           -> getString(R.string.not_used_yet)
-            else -> getString(
-                R.string.traffic_detail_format,
-                formatBytes(usedBytes),
-                formatBytes(info.transferEnable)
-            )
-        }
-        setTrafficDetail(trafficDetail)
-
-        setBalance(info.balance)
-        setCommissionBalance(info.commissionBalance)
-
-        val inviteInfo = try {
-            XBoardApi.getInviteInfo(baseUrl, authData)
-        } catch (e: XBoardApi.AuthExpiredException) {
-            handleAuthExpired()
-            return
-        }
-        setInviteLink(inviteInfo?.inviteUrl?.takeIf { it.isNotBlank() })
-        setReferralCount(inviteInfo?.referralCount ?: 0)
-
-        // Check subscription expiry and send notification if needed
-        com.github.kr328.clash.util.SubscriptionChecker.check(this@MainActivity, info.expiredAt)
     }
 
     private suspend fun MainDesign.startClash() {

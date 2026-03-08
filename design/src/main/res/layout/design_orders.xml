@@ -56,23 +56,16 @@
             android:layout_height="match_parent"
             android:visibility="gone">
 
-            <ScrollView
-                android:id="@+id/orders_scroll"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/orders_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/orders_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="72dp"
-                    android:paddingBottom="24dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp" />
-
-            </ScrollView>
+                android:clipToPadding="false"
+                android:paddingTop="72dp"
+                android:paddingBottom="24dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:scrollbars="none" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
