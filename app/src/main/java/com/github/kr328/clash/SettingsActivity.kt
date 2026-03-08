@@ -22,6 +22,8 @@ class SettingsActivity : BaseActivity<SettingsDesign>() {
                             startActivity(AppSettingsActivity::class.intent)
                         SettingsDesign.Request.StartNetwork ->
                             startActivity(NetworkSettingsActivity::class.intent)
+                        SettingsDesign.Request.StartAbout ->
+                            startActivity(AboutActivity::class.intent)
                     }
                 }
             }

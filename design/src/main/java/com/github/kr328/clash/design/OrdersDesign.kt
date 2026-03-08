@@ -51,20 +51,26 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         binding.ordersGoStoreBtn.setOnClickListener {
             requests.trySend(Request.GoStore)
         }
+        binding.ordersSwipeRefresh.setOnRefreshListener {
+            requests.trySend(Request.Refresh)
+        }
+        binding.ordersSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
+        binding.ordersSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
     }
 
     fun showLoading() {
         binding.ordersLoading.visibility = View.VISIBLE
         binding.ordersEmpty.visibility = View.GONE
-        binding.ordersScroll.visibility = View.GONE
+        binding.ordersSwipeRefresh.visibility = View.GONE
     }
 
     fun showOrders(orders: List<Order>) {
         binding.ordersLoading.visibility = View.GONE
+        binding.ordersSwipeRefresh.isRefreshing = false
 
         if (orders.isEmpty()) {
             binding.ordersEmpty.visibility = View.VISIBLE
-            binding.ordersScroll.visibility = View.GONE
+            binding.ordersSwipeRefresh.visibility = View.GONE
             return
         }
 
@@ -74,7 +80,7 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         }
 
         binding.ordersEmpty.visibility = View.GONE
-        binding.ordersScroll.visibility = View.VISIBLE
+        binding.ordersSwipeRefresh.visibility = View.VISIBLE
     }
 
     private fun statusLabel(status: Int): Pair<String, Int> = when (status) {

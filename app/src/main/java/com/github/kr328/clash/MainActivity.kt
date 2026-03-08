@@ -126,7 +126,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                         MainDesign.Request.OpenSettings ->
                             startActivity(SettingsActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
-                            design.showAbout(queryAppVersionName())
+                            startActivity(AboutActivity::class.intent)
                         MainDesign.Request.OpenNotices ->
                             startActivity(NoticesActivity::class.intent)
                         MainDesign.Request.OpenOrders ->

@@ -25,7 +25,9 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
                 events.onReceive { }
                 design.requests.onReceive { request ->
                     when (request) {
-                        is OrdersDesign.Request.Refresh -> loadOrders(design)
+                        is OrdersDesign.Request.Refresh -> {
+                            loadOrders(design)
+                        }
                         is OrdersDesign.Request.GoStore -> {
                             startActivity(StoreActivity::class.intent)
                         }

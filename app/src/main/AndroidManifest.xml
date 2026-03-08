@@ -182,6 +182,12 @@
             android:label="@string/files" />
 
         <activity
+            android:name=".AboutActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/about_title" />
+
+        <activity
             android:name=".OnboardingActivity"
             android:configChanges="uiMode"
             android:exported="false"

@@ -1,41 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable
-            name="versionName"
-            type="String" />
+        <import type="android.view.View" />
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/dialog_padding">
+        android:layout_height="match_parent"
+        android:background="@color/color_background">
 
-        <View
-            android:layout_width="@dimen/about_icon_size"
-            android:layout_height="@dimen/about_icon_size"
-            android:background="@drawable/bg_avatar" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
 
-        <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="100dp"
+                android:paddingBottom="32dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
+
+                <!-- App icon -->
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:contentDescription="@string/application_name"
+                    android:src="@mipmap/ic_launcher" />
+
+                <!-- App name -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/xboard_brand_name"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <!-- Version -->
+                <TextView
+                    android:id="@+id/about_version_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/color_text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Subtitle -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/xboard_brand_subtitle"
+                    android:textColor="@color/color_text_tertiary"
+                    android:textSize="13sp" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/color_divider" />
+
+                <!-- Menu items -->
+                <TextView
+                    android:id="@+id/about_privacy_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/about_privacy"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="16sp"
+                    android:background="?attr/selectableItemBackground" />
+
+                <TextView
+                    android:id="@+id/about_feedback_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/about_feedback"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="16sp"
+                    android:background="?attr/selectableItemBackground" />
+
+                <TextView
+                    android:id="@+id/about_licenses_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/about_licenses"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="16sp"
+                    android:background="?attr/selectableItemBackground" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- Toolbar -->
+        <com.github.kr328.clash.design.view.ActivityBarLayout
+            android:id="@+id/activity_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/about_text_margin"
-            android:orientation="vertical">
+            android:paddingEnd="@dimen/item_tailing_margin">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/application_name"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+            <include layout="@layout/common_activity_bar" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/item_text_margin"
-                android:text="@{versionName}"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-        </LinearLayout>
-    </LinearLayout>
+        </com.github.kr328.clash.design.view.ActivityBarLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
