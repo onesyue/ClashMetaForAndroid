@@ -237,6 +237,17 @@
 
     <string name="dark_mode">深色模式</string>
 
+    <string name="language">语言</string>
+    <string name="lang_system">跟随系统</string>
+    <string name="lang_english">English</string>
+    <string name="lang_chinese_simplified">简体中文</string>
+    <string name="lang_chinese_traditional">繁體中文</string>
+    <string name="lang_chinese_hk">繁體中文（香港）</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_korean">한국어</string>
+    <string name="lang_vietnamese">Tiếng Việt</string>
+    <string name="lang_russian">Русский</string>
+
     <string name="show_traffic">显示流量</string>
     <string name="show_traffic_summary">在通知栏自动刷新流量</string>
 

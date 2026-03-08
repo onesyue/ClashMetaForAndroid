@@ -5,6 +5,7 @@ import android.view.View
 import com.github.kr328.clash.design.databinding.DesignSettingsCommonBinding
 import com.github.kr328.clash.design.model.Behavior
 import com.github.kr328.clash.design.model.DarkMode
+import com.github.kr328.clash.design.model.Language
 import com.github.kr328.clash.design.preference.*
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.util.applyFrom
@@ -22,7 +23,8 @@ class AppSettingsDesign(
     onHideIconChange: (hide: Boolean) -> Unit,
 ) : Design<AppSettingsDesign.Request>(context) {
     enum class Request {
-        ReCreateAllActivities
+        ReCreateAllActivities,
+        ChangeLanguage,
     }
 
     private val binding = DesignSettingsCommonBinding
@@ -63,6 +65,28 @@ class AppSettingsDesign(
             ) {
                 listener = OnChangedListener {
                     requests.trySend(Request.ReCreateAllActivities)
+                }
+            }
+
+            selectableList(
+                value = uiStore::language,
+                values = Language.values(),
+                valuesText = arrayOf(
+                    R.string.lang_system,
+                    R.string.lang_english,
+                    R.string.lang_chinese_simplified,
+                    R.string.lang_chinese_traditional,
+                    R.string.lang_chinese_hk,
+                    R.string.lang_japanese,
+                    R.string.lang_korean,
+                    R.string.lang_vietnamese,
+                    R.string.lang_russian,
+                ),
+                icon = R.drawable.ic_baseline_language,
+                title = R.string.language
+            ) {
+                listener = OnChangedListener {
+                    requests.trySend(Request.ChangeLanguage)
                 }
             }
 

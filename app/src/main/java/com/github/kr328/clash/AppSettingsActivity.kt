@@ -2,9 +2,14 @@ package com.github.kr328.clash
 
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.design.AppSettingsDesign
 import com.github.kr328.clash.design.model.Behavior
+import com.github.kr328.clash.design.model.Language
+import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.util.ApplicationObserver
 import kotlinx.coroutines.isActive
@@ -32,9 +37,16 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
                         else -> Unit
                     }
                 }
-                design.requests.onReceive {
-                    ApplicationObserver.createdActivities.forEach {
-                        it.recreate()
+                design.requests.onReceive { request ->
+                    when (request) {
+                        AppSettingsDesign.Request.ReCreateAllActivities -> {
+                            ApplicationObserver.createdActivities.forEach {
+                                it.recreate()
+                            }
+                        }
+                        AppSettingsDesign.Request.ChangeLanguage -> {
+                            applyLanguage(uiStore.language)
+                        }
                     }
                 }
             }
@@ -61,6 +73,26 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
                 PackageManager.DONT_KILL_APP,
             )
         }
+
+    private fun applyLanguage(language: Language) {
+        val tag = when (language) {
+            Language.System -> ""
+            Language.English -> "en"
+            Language.ChineseSimplified -> "zh"
+            Language.ChineseTraditional -> "zh-TW"
+            Language.ChineseHK -> "zh-HK"
+            Language.Japanese -> "ja-JP"
+            Language.Korean -> "ko-KR"
+            Language.Vietnamese -> "vi"
+            Language.Russian -> "ru"
+        }
+        val locales = if (tag.isEmpty()) {
+            LocaleListCompat.getEmptyLocaleList()
+        } else {
+            LocaleListCompat.forLanguageTags(tag)
+        }
+        AppCompatDelegate.setApplicationLocales(locales)
+    }
 
     private fun onHideIconChange(hide: Boolean) {
         val newState = if (hide) {
