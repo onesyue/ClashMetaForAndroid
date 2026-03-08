@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.intent
@@ -38,7 +39,20 @@ class MainActivity : BaseActivity<MainDesign>() {
     private var connectStartMs: Long = 0L
     private var lastTrafficRaw: Long = -1L
 
+    private fun isOnboardingComplete(): Boolean {
+        return getSharedPreferences("yt_app_prefs", MODE_PRIVATE)
+            .getBoolean("onboarding_complete", false)
+    }
+
     override suspend fun main() {
+        // 首次启动引导页
+        if (!isOnboardingComplete()) {
+            startActivityForResult(
+                ActivityResultContracts.StartActivityForResult(),
+                OnboardingActivity::class.intent
+            )
+        }
+
         // 强制登录：未登录则跳登录页，返回后仍无 auth → 退出
         if (XBoardSession.getAuthData(this) == null) {
             startActivityForResult(
@@ -416,6 +430,7 @@ class MainActivity : BaseActivity<MainDesign>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val requestPermissionLauncher =

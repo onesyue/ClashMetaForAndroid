@@ -5,11 +5,19 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.net.URL
+import java.net.UnknownHostException
 
 object XBoardApi {
     /** Thrown when the server returns 401/403, indicating the token is invalid or expired. */
     class AuthExpiredException(message: String) : Exception(message)
+    /** Thrown when network is unreachable. */
+    class NetworkException(message: String, cause: Throwable? = null) : Exception(message, cause)
+    /** Thrown when request times out. */
+    class TimeoutException(message: String, cause: Throwable? = null) : Exception(message, cause)
+    /** Thrown when server returns 5xx. */
+    class ServerException(message: String) : Exception(message)
 
     /** Enforce HTTPS — reject plain HTTP URLs to prevent token leakage. */
     private fun requireHttps(baseUrl: String): String {
@@ -481,7 +489,11 @@ object XBoardApi {
 
     private fun httpGet(baseUrl: String, path: String, authData: String): JSONObject {
         val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = url.openConnection() as HttpURLConnection
+        val conn = try {
+            url.openConnection() as HttpURLConnection
+        } catch (e: UnknownHostException) {
+            throw NetworkException("网络未连接，请检查网络设置", e)
+        }
         try {
             conn.requestMethod = "GET"
             conn.setRequestProperty("authorization", authData)
@@ -489,14 +501,23 @@ object XBoardApi {
             conn.connectTimeout = 15_000
             conn.readTimeout = 15_000
 
-            val responseCode = conn.responseCode
+            val responseCode = try {
+                conn.responseCode
+            } catch (e: SocketTimeoutException) {
+                throw TimeoutException("请求超时，请检查网络后重试", e)
+            } catch (e: UnknownHostException) {
+                throw NetworkException("网络未连接，请检查网络设置", e)
+            }
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
                 ?.bufferedReader()?.use { it.readText() } ?: ""
 
-            if (responseText.isBlank()) throw Exception("Empty response from server")
+            if (responseText.isBlank()) throw ServerException("Empty response from server")
             val root = JSONObject(responseText)
             if (responseCode == 401 || responseCode == 403) {
                 throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
+            }
+            if (responseCode >= 500) {
+                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
             }
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
@@ -509,19 +530,32 @@ object XBoardApi {
 
     private fun httpGetGuest(baseUrl: String, path: String): JSONObject {
         val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = url.openConnection() as HttpURLConnection
+        val conn = try {
+            url.openConnection() as HttpURLConnection
+        } catch (e: UnknownHostException) {
+            throw NetworkException("网络未连接，请检查网络设置", e)
+        }
         try {
             conn.requestMethod = "GET"
             conn.setRequestProperty("Accept", "application/json")
             conn.connectTimeout = 15_000
             conn.readTimeout = 15_000
 
-            val responseCode = conn.responseCode
+            val responseCode = try {
+                conn.responseCode
+            } catch (e: SocketTimeoutException) {
+                throw TimeoutException("请求超时，请检查网络后重试", e)
+            } catch (e: UnknownHostException) {
+                throw NetworkException("网络未连接，请检查网络设置", e)
+            }
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
                 ?.bufferedReader()?.use { it.readText() } ?: ""
 
-            if (responseText.isBlank()) throw Exception("Empty response from server")
+            if (responseText.isBlank()) throw ServerException("Empty response from server")
             val root = JSONObject(responseText)
+            if (responseCode >= 500) {
+                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
+            }
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
             }
@@ -533,7 +567,11 @@ object XBoardApi {
 
     private fun httpPost(baseUrl: String, path: String, body: JSONObject): JSONObject {
         val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = url.openConnection() as HttpURLConnection
+        val conn = try {
+            url.openConnection() as HttpURLConnection
+        } catch (e: UnknownHostException) {
+            throw NetworkException("网络未连接，请检查网络设置", e)
+        }
         try {
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
@@ -544,12 +582,21 @@ object XBoardApi {
 
             OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
 
-            val responseCode = conn.responseCode
+            val responseCode = try {
+                conn.responseCode
+            } catch (e: SocketTimeoutException) {
+                throw TimeoutException("请求超时，请检查网络后重试", e)
+            } catch (e: UnknownHostException) {
+                throw NetworkException("网络未连接，请检查网络设置", e)
+            }
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
                 ?.bufferedReader()?.use { it.readText() } ?: ""
 
-            if (responseText.isBlank()) throw Exception("Empty response from server")
+            if (responseText.isBlank()) throw ServerException("Empty response from server")
             val root = JSONObject(responseText)
+            if (responseCode >= 500) {
+                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
+            }
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
             }
@@ -561,7 +608,11 @@ object XBoardApi {
 
     private fun httpPostAuth(baseUrl: String, path: String, body: JSONObject, authData: String): JSONObject {
         val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = url.openConnection() as HttpURLConnection
+        val conn = try {
+            url.openConnection() as HttpURLConnection
+        } catch (e: UnknownHostException) {
+            throw NetworkException("网络未连接，请检查网络设置", e)
+        }
         try {
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
@@ -573,14 +624,23 @@ object XBoardApi {
 
             OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
 
-            val responseCode = conn.responseCode
+            val responseCode = try {
+                conn.responseCode
+            } catch (e: SocketTimeoutException) {
+                throw TimeoutException("请求超时，请检查网络后重试", e)
+            } catch (e: UnknownHostException) {
+                throw NetworkException("网络未连接，请检查网络设置", e)
+            }
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
                 ?.bufferedReader()?.use { it.readText() } ?: ""
 
-            if (responseText.isBlank()) throw Exception("Empty response from server")
+            if (responseText.isBlank()) throw ServerException("Empty response from server")
             val root = JSONObject(responseText)
             if (responseCode == 401 || responseCode == 403) {
                 throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
+            }
+            if (responseCode >= 500) {
+                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
             }
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))

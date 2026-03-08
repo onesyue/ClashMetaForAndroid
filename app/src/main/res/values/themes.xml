@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="BootstrapTheme" parent="AppThemeLight" />
+    <style name="BootstrapTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FF0F172A</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="postSplashScreenTheme">@style/AppThemeLight</item>
+    </style>
 </resources>

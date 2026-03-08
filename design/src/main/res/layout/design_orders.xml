@@ -20,15 +20,34 @@
             android:visibility="visible" />
 
         <!-- Empty state -->
-        <TextView
+        <LinearLayout
             android:id="@+id/orders_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/orders_empty"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textColor="?android:attr/textColorSecondary"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.4"
+                android:text="@string/orders_empty_hint"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/color_text_secondary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/orders_go_store_btn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/orders_go_store" />
+
+        </LinearLayout>
 
         <!-- Order list -->
         <ScrollView

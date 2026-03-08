@@ -8,6 +8,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
+import androidx.core.view.WindowCompat
 import com.github.kr328.clash.common.compat.isAllowForceDarkCompat
 import com.github.kr328.clash.common.compat.isLightNavigationBarCompat
 import com.github.kr328.clash.common.compat.isLightStatusBarsCompat
@@ -207,7 +208,10 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
 
         window.isAllowForceDarkCompat = false
         window.isSystemBarsTranslucentCompat = true
-        
+
+        // Edge-to-edge: let content draw behind system bars
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         window.statusBarColor = resolveThemedColor(android.R.attr.statusBarColor)
         window.navigationBarColor = resolveThemedColor(android.R.attr.navigationBarColor)
 

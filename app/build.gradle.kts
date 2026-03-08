@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.quickie.bundled)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.splashscreen)
 }
 
 tasks.getByName("clean", type = Delete::class) {

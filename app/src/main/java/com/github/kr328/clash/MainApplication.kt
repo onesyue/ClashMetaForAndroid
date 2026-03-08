@@ -1,8 +1,11 @@
 package com.github.kr328.clash
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -37,6 +40,7 @@ class MainApplication : Application() {
         if (processName == packageName) {
             Remote.launch()
             setupShortcuts()
+            createNotificationChannels()
         } else {
             sendServiceRecreated()
         }
@@ -85,6 +89,30 @@ class MainApplication : Application() {
             .build()
 
         ShortcutManagerCompat.setDynamicShortcuts(this, listOf(toggle, start, stop))
+    }
+
+    private fun createNotificationChannels() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val manager = getSystemService(NotificationManager::class.java) ?: return
+
+        val channels = listOf(
+            NotificationChannel(
+                "yt_subscription",
+                getString(DesignR.string.channel_subscription),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply { description = getString(DesignR.string.channel_subscription_desc) },
+            NotificationChannel(
+                "yt_payment",
+                getString(DesignR.string.channel_payment),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply { description = getString(DesignR.string.channel_payment_desc) },
+            NotificationChannel(
+                "yt_announcement",
+                getString(DesignR.string.channel_announcement),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply { description = getString(DesignR.string.channel_announcement_desc) }
+        )
+        manager.createNotificationChannels(channels)
     }
 
     private fun extractGeoFiles() {

@@ -25,9 +25,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/notices_empty"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.4"
+            android:text="@string/notices_empty_hint"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="@color/color_text_secondary"
             android:visibility="gone" />
 
         <!-- Notice list with pull-to-refresh -->

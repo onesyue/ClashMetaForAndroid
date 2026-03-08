@@ -1,5 +1,6 @@
 package com.github.kr328.clash
 
+import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.OrdersDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -24,6 +25,10 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
                 events.onReceive { }
                 design.requests.onReceive { request ->
                     when (request) {
+                        is OrdersDesign.Request.Refresh -> loadOrders(design)
+                        is OrdersDesign.Request.GoStore -> {
+                            startActivity(StoreActivity::class.intent)
+                        }
                         is OrdersDesign.Request.CancelOrder -> {
                             val authData = XBoardSession.getAuthData(this@OrdersActivity) ?: return@onReceive
                             val baseUrl = XBoardSession.getBaseUrl(this@OrdersActivity)

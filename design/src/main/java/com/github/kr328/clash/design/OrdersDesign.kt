@@ -22,6 +22,8 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
 
     sealed class Request {
         data class CancelOrder(val tradeNo: String) : Request()
+        object Refresh : Request()
+        object GoStore : Request()
     }
 
     data class Order(
@@ -46,6 +48,9 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
 
     init {
         binding.activityBarLayout.applyFrom(context)
+        binding.ordersGoStoreBtn.setOnClickListener {
+            requests.trySend(Request.GoStore)
+        }
     }
 
     fun showLoading() {
@@ -75,10 +80,10 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
     private fun statusLabel(status: Int): Pair<String, Int> = when (status) {
         0    -> context.getString(R.string.order_status_pending) to 0xFFFBBF24.toInt()
         1    -> context.getString(R.string.order_status_processing) to 0xFF6366F1.toInt()
-        2    -> context.getString(R.string.order_status_cancelled) to 0xFF64748B.toInt()
+        2    -> context.getString(R.string.order_status_cancelled) to 0xFF8494A7.toInt()
         3    -> context.getString(R.string.order_status_completed) to 0xFF10B981.toInt()
         4    -> context.getString(R.string.order_status_discounted) to 0xFF8B5CF6.toInt()
-        else -> context.getString(R.string.order_status_unknown) to 0xFF64748B.toInt()
+        else -> context.getString(R.string.order_status_unknown) to 0xFF8494A7.toInt()
     }
 
     private fun periodLabel(period: String): String = when (period) {
@@ -181,7 +186,7 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         bottomRow.addView(TextView(context).apply {
             text = dateStr
             textSize = 12f
-            setTextColor(0xFF64748B.toInt())
+            setTextColor(0xFF8494A7.toInt())
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
         bottomRow.addView(TextView(context).apply {

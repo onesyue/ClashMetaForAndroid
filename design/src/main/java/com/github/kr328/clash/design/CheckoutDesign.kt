@@ -179,7 +179,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
             hint = context.getString(R.string.coupon_hint)
             textSize = 13f
             setTextColor(0xFFF1F5F9.toInt())
-            setHintTextColor(0xFF64748B.toInt())
+            setHintTextColor(0xFF8494A7.toInt())
             inputType = InputType.TYPE_CLASS_TEXT
             background = null
             setPadding((8 * dp).toInt(), (8 * dp).toInt(), (8 * dp).toInt(), (8 * dp).toInt())

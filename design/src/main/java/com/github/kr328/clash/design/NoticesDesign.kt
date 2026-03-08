@@ -93,7 +93,7 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
         inner.addView(TextView(context).apply {
             text = dateStr
             textSize = 12f
-            setTextColor(0xFF64748B.toInt())
+            setTextColor(0xFF8494A7.toInt())
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
