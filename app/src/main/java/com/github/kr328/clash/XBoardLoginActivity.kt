@@ -90,24 +90,17 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                 // 订阅已下载且 URL 未变 → 直接激活，无需重新下载
                 withProfile { setActive(sameUrlImported) }
             } else {
-                // 删除旧 profile，创建新的，后台 commit
+                // 删除旧 profile，创建新的
                 val uuid = withProfile {
                     allProfiles.forEach { delete(it.uuid) }
                     create(Profile.Type.Url, brandName, result.subscribeUrl)
                 }
 
-                // commit() 后再 setActive；失败时 Toast 告知用户
-                try {
-                    withProfile { commit(uuid, null) }
-                    val imported = withProfile { queryByUUID(uuid) }
-                    if (imported != null) {
-                        withProfile { setActive(imported) }
-                    }
-                } catch (e: Exception) {
-                    design.showToast(
-                        e.message ?: getString(R.string.subscription_commit_failed),
-                        ToastDuration.Long
-                    )
+                // commit 下载订阅，失败则保留 pending 让主页电源按钮重试
+                withProfile { commit(uuid, null) }
+                val imported = withProfile { queryByUUID(uuid) }
+                if (imported != null && imported.imported) {
+                    withProfile { setActive(imported) }
                 }
             }
 
