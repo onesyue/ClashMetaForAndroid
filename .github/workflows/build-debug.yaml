@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA APK (universal) 
+          name: YueTong APK (universal) 
           path: |
             app/build/outputs/apk/alpha/release/*-universal-*.apk
       
@@ -83,7 +83,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA APK (arm64-v8a)
+          name: YueTong APK (arm64-v8a)
           path: |
             app/build/outputs/apk/alpha/release/*-arm64-v8a-*.apk
       
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA APK (armeabi-v7a)
+          name: YueTong APK (armeabi-v7a)
           path: |
             app/build/outputs/apk/alpha/release/*-armeabi-v7a-*.apk
       
@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA APK (x86_64)
+          name: YueTong APK (x86_64)
           path: |
             app/build/outputs/apk/alpha/release/*-x86_64-*.apk
       
@@ -107,6 +107,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{  success() }}
         with:
-          name: CMFA APK (x86)
+          name: YueTong APK (x86)
           path: |
             app/build/outputs/apk/alpha/release/*-x86-*.apk
