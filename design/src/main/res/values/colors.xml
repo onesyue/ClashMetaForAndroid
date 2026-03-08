@@ -35,7 +35,7 @@
     <color name="color_error">#FFEF4444</color>
 
     <!-- Divider / Border -->
-    <color name="color_divider">#1AFFFFFF</color>
+    <color name="color_divider">#26FFFFFF</color>
 
     <!-- Card overlay (glass effect) -->
     <color name="color_card_glass">#CC1E293B</color>

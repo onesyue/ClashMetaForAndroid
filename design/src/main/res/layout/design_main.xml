@@ -78,7 +78,8 @@
                     android:layout_height="match_parent"
                     android:overScrollMode="never"
                     android:clipToPadding="false"
-                    android:fillViewport="false">
+                    android:fillViewport="false"
+                    android:paddingBottom="100dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -240,7 +241,7 @@
                                 android:text="00:00:00"
                                 android:textSize="13sp"
                                 android:textColor="@color/color_text_secondary"
-                                android:fontFamily="monospace"
+                                android:fontFamily="@font/jetbrains_mono_medium"
                                 android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}" />
 
                         </LinearLayout>
@@ -286,7 +287,7 @@
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/color_text_primary"
-                                    android:fontFamily="monospace"
+                                    android:fontFamily="@font/jetbrains_mono_medium"
                                     android:layout_marginTop="2dp" />
 
                             </LinearLayout>
@@ -324,7 +325,7 @@
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/color_text_primary"
-                                    android:fontFamily="monospace"
+                                    android:fontFamily="@font/jetbrains_mono_medium"
                                     android:layout_marginTop="2dp" />
 
                             </LinearLayout>
@@ -468,6 +469,7 @@
                     android:layout_height="match_parent"
                     android:overScrollMode="never"
                     android:clipToPadding="false"
+                    android:paddingBottom="100dp"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -690,7 +692,7 @@
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/color_text_primary"
-                                    android:fontFamily="monospace"
+                                    android:fontFamily="@font/jetbrains_mono_medium"
                                     android:layout_marginTop="4dp" />
 
                             </LinearLayout>
@@ -721,7 +723,7 @@
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/color_text_primary"
-                                    android:fontFamily="monospace"
+                                    android:fontFamily="@font/jetbrains_mono_medium"
                                     android:layout_marginTop="4dp" />
 
                             </LinearLayout>
@@ -781,7 +783,7 @@
                                     android:text="--"
                                     android:textSize="12sp"
                                     android:textColor="@color/color_text_secondary"
-                                    android:fontFamily="monospace"
+                                    android:fontFamily="@font/jetbrains_mono_medium"
                                     android:maxLines="1"
                                     android:ellipsize="end" />
 
@@ -854,16 +856,16 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="@{self.surface.insets.bottom + 8}">
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="@{self.surface.insets.bottom + 12}">
 
                 <com.google.android.material.bottomnavigation.BottomNavigationView
                     android:id="@+id/bottom_nav"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:background="@drawable/bg_bottom_nav"
-                    android:elevation="8dp"
+                    android:elevation="12dp"
                     app:itemIconTint="@color/color_text_secondary"
                     app:itemTextColor="@color/color_text_secondary"
                     app:itemActiveIndicatorStyle="@null"
