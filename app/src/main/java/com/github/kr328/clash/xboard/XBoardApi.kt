@@ -2,12 +2,15 @@ package com.github.kr328.clash.xboard
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
+import java.io.IOException
 import java.net.SocketTimeoutException
-import java.net.URL
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 object XBoardApi {
     /** Thrown when the server returns 401/403, indicating the token is invalid or expired. */
@@ -18,6 +21,14 @@ object XBoardApi {
     class TimeoutException(message: String, cause: Throwable? = null) : Exception(message, cause)
     /** Thrown when server returns 5xx. */
     class ServerException(message: String) : Exception(message)
+
+    private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
+        .build()
 
     /** Enforce HTTPS — reject plain HTTP URLs to prevent token leakage. */
     internal fun requireHttps(baseUrl: String): String {
@@ -167,10 +178,8 @@ object XBoardApi {
      */
     suspend fun forgotPassword(baseUrl: String, email: String) {
         withContext(Dispatchers.IO) {
-            httpPost(
-                baseUrl, "/api/v1/passport/auth/forget",
-                JSONObject().apply { put("email", email) }
-            )
+            httpPost(baseUrl, "/api/v1/passport/auth/forget",
+                JSONObject().apply { put("email", email) })
         }
     }
 
@@ -203,28 +212,19 @@ object XBoardApi {
     suspend fun logout(baseUrl: String, authData: String) {
         try {
             withContext(Dispatchers.IO) {
-                val url = URL("${baseUrl.trimEnd('/')}/api/v1/user/logout")
-                val conn = url.openConnection() as HttpURLConnection
-                try {
-                    conn.requestMethod = "POST"
-                    conn.setRequestProperty("authorization", authData)
-                    conn.setRequestProperty("Content-Type", "application/json")
-                    conn.setRequestProperty("Accept", "application/json")
-                    conn.doOutput = true
-                    conn.connectTimeout = 10_000
-                    conn.readTimeout = 10_000
-                    OutputStreamWriter(conn.outputStream).use { it.write("") }
-                    conn.responseCode
-                } finally {
-                    conn.disconnect()
-                }
+                val request = Request.Builder()
+                    .url("${baseUrl.trimEnd('/')}/api/v1/user/logout")
+                    .post("".toRequestBody(JSON_MEDIA_TYPE))
+                    .addHeader("authorization", authData)
+                    .addHeader("Accept", "application/json")
+                    .build()
+                client.newCall(request).execute().close()
             }
         } catch (_: Exception) { /* silent */ }
     }
 
     /**
-     * 获取邀请信息 + 邀请人数（合并调用 /api/v1/user/invite）
-     * codes[0].code → 邀请码；stat[0] → 已注册用户数
+     * 获取邀请信息 + 邀请人数
      */
     suspend fun getInviteInfo(baseUrl: String, authData: String): InviteInfo? {
         return try {
@@ -273,23 +273,13 @@ object XBoardApi {
 
     /**
      * 获取用户信息
-     *
-     * XBoard API 说明（cedar2025/Xboard）：
-     *  - /api/v1/user/getSubscribe → 返回 u(bytes)、d(bytes)、transfer_enable(bytes)、
-     *    email、expired_at、plan{name}  ← 流量数据的唯一来源
-     *  - /api/v1/user/info         → 返回 balance、commission_balance、uuid，
-     *    不含 u/d 字段
-     *
-     * getSubscribe 必须成功才能得到正确流量，失败时整体返回 null。
      */
     suspend fun getUserInfo(baseUrl: String, authData: String): UserInfo? {
         return try {
             withContext(Dispatchers.IO) {
-                // getSubscribe 是流量数据的唯一权威来源
                 val subData = httpGet(baseUrl, "/api/v1/user/getSubscribe", authData)
                     .getJSONObject("data")
 
-                // info 仅用于 balance / commission_balance / uuid
                 val infoData = try {
                     httpGet(baseUrl, "/api/v1/user/info", authData)
                         .getJSONObject("data")
@@ -306,7 +296,6 @@ object XBoardApi {
                     commissionBalance = infoData?.optLong("commission_balance", 0) ?: 0,
                     expiredAt = if (subData.isNull("expired_at")) null
                                 else subData.optLong("expired_at").takeIf { it > 0 },
-                    // u、d、transfer_enable 全部来自 getSubscribe，单位均为字节
                     transferEnable = subData.optLong("transfer_enable", 0),
                     usedDownload = subData.optLong("d", 0),
                     usedUpload = subData.optLong("u", 0),
@@ -389,7 +378,6 @@ object XBoardApi {
 
     /**
      * 结算订单，返回支付结果
-     * type=-1: 免费/余额支付成功; type=0: 跳转URL; type=1: HTML内容
      */
     suspend fun checkoutOrder(baseUrl: String, authData: String, tradeNo: String, methodId: Int): CheckoutResult {
         return withContext(Dispatchers.IO) {
@@ -408,7 +396,7 @@ object XBoardApi {
     }
 
     /**
-     * 取消订单（仅 status=0 待支付订单可取消）
+     * 取消订单
      */
     suspend fun cancelOrder(baseUrl: String, authData: String, tradeNo: String) {
         withContext(Dispatchers.IO) {
@@ -422,7 +410,6 @@ object XBoardApi {
 
     /**
      * 获取公告列表
-     * 路由：GET /api/v1/user/notice/fetch
      */
     suspend fun getNotices(baseUrl: String, authData: String): List<Notice> {
         return try {
@@ -471,7 +458,37 @@ object XBoardApi {
         catch (_: Exception) { emptyList() }
     }
 
-    // ── Private helpers ────────────────────────────────────────────────────
+    // ── Private helpers (OkHttp) ─────────────────────────────────────────
+
+    private fun executeRequest(request: Request): Pair<Int, String> {
+        try {
+            client.newCall(request).execute().use { response ->
+                val body = response.body?.string() ?: ""
+                return response.code to body
+            }
+        } catch (e: SocketTimeoutException) {
+            throw TimeoutException("请求超时，请检查网络后重试", e)
+        } catch (e: UnknownHostException) {
+            throw NetworkException("网络未连接，请检查网络设置", e)
+        } catch (e: IOException) {
+            throw NetworkException("网络请求失败: ${e.message}", e)
+        }
+    }
+
+    private fun parseResponse(code: Int, body: String, checkAuth: Boolean = true): JSONObject {
+        if (body.isBlank()) throw ServerException("Empty response from server")
+        val root = JSONObject(body)
+        if (checkAuth && (code == 401 || code == 403)) {
+            throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
+        }
+        if (code >= 500) {
+            throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
+        }
+        if (code != 200) {
+            throw Exception(root.optString("message", "Request failed ($code)"))
+        }
+        return root
+    }
 
     private suspend fun postAuth(baseUrl: String, path: String, body: JSONObject): String {
         return withContext(Dispatchers.IO) {
@@ -482,201 +499,64 @@ object XBoardApi {
 
     private suspend fun fetchSubscribeUrl(baseUrl: String, authData: String): String {
         return withContext(Dispatchers.IO) {
-            val url = URL("${requireHttps(baseUrl)}/api/v1/user/getSubscribe")
-            val conn = url.openConnection() as HttpURLConnection
-            try {
-                conn.requestMethod = "GET"
-                conn.setRequestProperty("authorization", authData)
-                conn.setRequestProperty("Accept", "application/json")
-                conn.connectTimeout = 15_000
-                conn.readTimeout = 15_000
+            val request = Request.Builder()
+                .url("${requireHttps(baseUrl)}/api/v1/user/getSubscribe")
+                .get()
+                .addHeader("authorization", authData)
+                .addHeader("Accept", "application/json")
+                .build()
 
-                val responseCode = conn.responseCode
-                val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                    ?.bufferedReader()?.use { it.readText() } ?: ""
+            val (code, body) = executeRequest(request)
+            val root = parseResponse(code, body)
 
-                if (responseText.isBlank()) throw Exception("Empty response from server")
-                val root = JSONObject(responseText)
-                if (responseCode == 401 || responseCode == 403) {
-                    throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
-                }
-                if (responseCode != 200) {
-                    throw Exception(root.optString("message", "Failed to get subscription ($responseCode)"))
-                }
-
-                val data = root.getJSONObject("data")
-                val subscribeUrl = data.optString("subscribe_url", "").trim()
-                if (subscribeUrl.isEmpty()) {
-                    throw Exception("服务器未返回订阅地址，请联系管理员")
-                }
-                subscribeUrl
-            } finally {
-                conn.disconnect()
+            val data = root.getJSONObject("data")
+            val subscribeUrl = data.optString("subscribe_url", "").trim()
+            if (subscribeUrl.isEmpty()) {
+                throw Exception("服务器未返回订阅地址，请联系管理员")
             }
+            subscribeUrl
         }
     }
 
     private fun httpGet(baseUrl: String, path: String, authData: String): JSONObject {
-        val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = try {
-            url.openConnection() as HttpURLConnection
-        } catch (e: UnknownHostException) {
-            throw NetworkException("网络未连接，请检查网络设置", e)
-        }
-        try {
-            conn.requestMethod = "GET"
-            conn.setRequestProperty("authorization", authData)
-            conn.setRequestProperty("Accept", "application/json")
-            conn.connectTimeout = 15_000
-            conn.readTimeout = 15_000
-
-            val responseCode = try {
-                conn.responseCode
-            } catch (e: SocketTimeoutException) {
-                throw TimeoutException("请求超时，请检查网络后重试", e)
-            } catch (e: UnknownHostException) {
-                throw NetworkException("网络未连接，请检查网络设置", e)
-            }
-            val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.use { it.readText() } ?: ""
-
-            if (responseText.isBlank()) throw ServerException("Empty response from server")
-            val root = JSONObject(responseText)
-            if (responseCode == 401 || responseCode == 403) {
-                throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
-            }
-            if (responseCode >= 500) {
-                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
-            }
-            if (responseCode != 200) {
-                throw Exception(root.optString("message", "Request failed ($responseCode)"))
-            }
-            return root
-        } finally {
-            conn.disconnect()
-        }
+        val request = Request.Builder()
+            .url("${requireHttps(baseUrl)}$path")
+            .get()
+            .addHeader("authorization", authData)
+            .addHeader("Accept", "application/json")
+            .build()
+        val (code, body) = executeRequest(request)
+        return parseResponse(code, body)
     }
 
     private fun httpGetGuest(baseUrl: String, path: String): JSONObject {
-        val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = try {
-            url.openConnection() as HttpURLConnection
-        } catch (e: UnknownHostException) {
-            throw NetworkException("网络未连接，请检查网络设置", e)
-        }
-        try {
-            conn.requestMethod = "GET"
-            conn.setRequestProperty("Accept", "application/json")
-            conn.connectTimeout = 15_000
-            conn.readTimeout = 15_000
-
-            val responseCode = try {
-                conn.responseCode
-            } catch (e: SocketTimeoutException) {
-                throw TimeoutException("请求超时，请检查网络后重试", e)
-            } catch (e: UnknownHostException) {
-                throw NetworkException("网络未连接，请检查网络设置", e)
-            }
-            val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.use { it.readText() } ?: ""
-
-            if (responseText.isBlank()) throw ServerException("Empty response from server")
-            val root = JSONObject(responseText)
-            if (responseCode >= 500) {
-                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
-            }
-            if (responseCode != 200) {
-                throw Exception(root.optString("message", "Request failed ($responseCode)"))
-            }
-            return root
-        } finally {
-            conn.disconnect()
-        }
+        val request = Request.Builder()
+            .url("${requireHttps(baseUrl)}$path")
+            .get()
+            .addHeader("Accept", "application/json")
+            .build()
+        val (code, body) = executeRequest(request)
+        return parseResponse(code, body, checkAuth = false)
     }
 
     private fun httpPost(baseUrl: String, path: String, body: JSONObject): JSONObject {
-        val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = try {
-            url.openConnection() as HttpURLConnection
-        } catch (e: UnknownHostException) {
-            throw NetworkException("网络未连接，请检查网络设置", e)
-        }
-        try {
-            conn.requestMethod = "POST"
-            conn.setRequestProperty("Content-Type", "application/json")
-            conn.setRequestProperty("Accept", "application/json")
-            conn.doOutput = true
-            conn.connectTimeout = 15_000
-            conn.readTimeout = 15_000
-
-            OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
-
-            val responseCode = try {
-                conn.responseCode
-            } catch (e: SocketTimeoutException) {
-                throw TimeoutException("请求超时，请检查网络后重试", e)
-            } catch (e: UnknownHostException) {
-                throw NetworkException("网络未连接，请检查网络设置", e)
-            }
-            val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.use { it.readText() } ?: ""
-
-            if (responseText.isBlank()) throw ServerException("Empty response from server")
-            val root = JSONObject(responseText)
-            if (responseCode >= 500) {
-                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
-            }
-            if (responseCode != 200) {
-                throw Exception(root.optString("message", "Request failed ($responseCode)"))
-            }
-            return root
-        } finally {
-            conn.disconnect()
-        }
+        val request = Request.Builder()
+            .url("${requireHttps(baseUrl)}$path")
+            .post(body.toString().toRequestBody(JSON_MEDIA_TYPE))
+            .addHeader("Accept", "application/json")
+            .build()
+        val (code, responseBody) = executeRequest(request)
+        return parseResponse(code, responseBody, checkAuth = false)
     }
 
     private fun httpPostAuth(baseUrl: String, path: String, body: JSONObject, authData: String): JSONObject {
-        val url = URL("${requireHttps(baseUrl)}$path")
-        val conn = try {
-            url.openConnection() as HttpURLConnection
-        } catch (e: UnknownHostException) {
-            throw NetworkException("网络未连接，请检查网络设置", e)
-        }
-        try {
-            conn.requestMethod = "POST"
-            conn.setRequestProperty("Content-Type", "application/json")
-            conn.setRequestProperty("Accept", "application/json")
-            conn.setRequestProperty("authorization", authData)
-            conn.doOutput = true
-            conn.connectTimeout = 15_000
-            conn.readTimeout = 15_000
-
-            OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
-
-            val responseCode = try {
-                conn.responseCode
-            } catch (e: SocketTimeoutException) {
-                throw TimeoutException("请求超时，请检查网络后重试", e)
-            } catch (e: UnknownHostException) {
-                throw NetworkException("网络未连接，请检查网络设置", e)
-            }
-            val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.use { it.readText() } ?: ""
-
-            if (responseText.isBlank()) throw ServerException("Empty response from server")
-            val root = JSONObject(responseText)
-            if (responseCode == 401 || responseCode == 403) {
-                throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
-            }
-            if (responseCode >= 500) {
-                throw ServerException(root.optString("message", "服务器暂时无法响应，请稍后重试"))
-            }
-            if (responseCode != 200) {
-                throw Exception(root.optString("message", "Request failed ($responseCode)"))
-            }
-            return root
-        } finally {
-            conn.disconnect()
-        }
+        val request = Request.Builder()
+            .url("${requireHttps(baseUrl)}$path")
+            .post(body.toString().toRequestBody(JSON_MEDIA_TYPE))
+            .addHeader("authorization", authData)
+            .addHeader("Accept", "application/json")
+            .build()
+        val (code, responseBody) = executeRequest(request)
+        return parseResponse(code, responseBody)
     }
 }

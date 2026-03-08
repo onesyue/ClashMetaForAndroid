@@ -398,6 +398,9 @@ class MainActivity : BaseActivity<MainDesign>() {
     }
 
     private suspend fun applyGeoDefaults() {
+        val prefs = getSharedPreferences("yt_app_prefs", MODE_PRIVATE)
+        if (prefs.getBoolean("geo_defaults_applied", false)) return
+
         withClash {
             val cfg = queryOverride(Clash.OverrideSlot.Persist)
             cfg.geodataMode = true
@@ -409,6 +412,7 @@ class MainActivity : BaseActivity<MainDesign>() {
             cfg.geoxurl.asn = "https://cdn.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
             patchOverride(Clash.OverrideSlot.Persist, cfg)
         }
+        prefs.edit().putBoolean("geo_defaults_applied", true).apply()
     }
 
     private fun formatDuration(ms: Long): String {

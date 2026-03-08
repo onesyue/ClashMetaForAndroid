@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.work)
+    implementation(libs.okhttp)
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20231013")
