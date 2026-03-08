@@ -15,4 +15,18 @@
     <include
         domain="file"
         path="clash/override.json" />
+
+    <!-- Exclude sensitive data from backup -->
+    <exclude
+        domain="sharedpref"
+        path="yt_xboard_session.xml" />
+    <exclude
+        domain="sharedpref"
+        path="yt_offline_cache.xml" />
+    <exclude
+        domain="sharedpref"
+        path="yt_secure_prefs.xml" />
+    <exclude
+        domain="sharedpref"
+        path="yt_subscription_alerts.xml" />
 </full-backup-content>

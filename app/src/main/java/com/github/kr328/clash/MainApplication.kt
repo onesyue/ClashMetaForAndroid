@@ -15,7 +15,9 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
+import com.github.kr328.clash.util.OfflineCache
 import com.github.kr328.clash.util.clashDir
+import com.github.kr328.clash.xboard.XBoardSession
 import java.io.File
 import java.io.FileOutputStream
 import com.github.kr328.clash.design.R as DesignR
@@ -38,6 +40,10 @@ class MainApplication : Application() {
         Log.d("Process $processName started")
 
         if (processName == packageName) {
+            // Migrate plaintext tokens to encrypted storage (one-time)
+            XBoardSession.migrateIfNeeded(this)
+            OfflineCache.migrateIfNeeded(this)
+
             Remote.launch()
             setupShortcuts()
             createNotificationChannels()
