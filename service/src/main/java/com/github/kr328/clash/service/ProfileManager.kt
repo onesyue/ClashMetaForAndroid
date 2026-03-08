@@ -145,7 +145,7 @@ class ProfileManager(private val context: Context) : IProfileManager,
             val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
             val request = Request.Builder()
                 .url(old.source)
-                .header("User-Agent", "YueTong/$versionName")
+                .header("User-Agent", "clash.meta YueTong/$versionName")
                 .build()
 
             client.newCall(request).execute().use { response ->

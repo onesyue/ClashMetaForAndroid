@@ -29,7 +29,7 @@ type Status struct {
 }
 
 func openUrl(ctx context.Context, url string) (io.ReadCloser, error) {
-	response, err := clashHttp.HttpRequest(ctx, url, http.MethodGet, http.Header{"User-Agent": {"YueTong/" + app.VersionName()}}, nil)
+	response, err := clashHttp.HttpRequest(ctx, url, http.MethodGet, http.Header{"User-Agent": {"clash.meta YueTong/" + app.VersionName()}}, nil)
 
 	if err != nil {
 		return nil, err
