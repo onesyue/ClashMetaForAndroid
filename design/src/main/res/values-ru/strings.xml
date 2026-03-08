@@ -92,7 +92,7 @@
     <string name="cancel">Отмена</string>
     <string name="reset">Сброс</string>
 
-    <string name="clash_logcat">Clash Logcat</string>
+    <string name="clash_logcat">Журнал отладки</string>
     <string name="history">История</string>
     <string name="logcat">Logcat</string>
 
@@ -106,7 +106,7 @@
     <string name="override">Переопределение</string>
 
     <string name="auto_restart">Автоматический перезапуск</string>
-    <string name="allow_clash_auto_restart">Разрешить Clash автоматически перезапускаться</string>
+    <string name="allow_clash_auto_restart">Разрешить сервису автоматически перезапускаться</string>
 
     <string name="route_system_traffic">Маршрутизировать системный трафик</string>
     <string name="routing_via_vpn_service">Автоматически маршрутизировать весь системный трафик через VPN</string>
@@ -126,7 +126,7 @@
     <string name="access_control_packages">Приложения с контролируемым доступом</string>
     <string name="access_control_packages_summary">Настройте доступ для приложения</string>
 
-    <string name="options_unavailable">Настройки недоступны, пока Clash не будет остановлен</string>
+    <string name="options_unavailable">Настройки недоступны, пока сервис не будет остановлен</string>
 
     <string name="general">Основные</string>
     <string name="dns">DNS</string>
@@ -199,7 +199,7 @@
     <string name="feedback">Обратная связь</string>
     <string name="sources">Исходный код</string>
     <string name="donate">Сделать пожертвование</string>
-    <string name="clash_wiki">Clash Wiki</string>
+    <string name="clash_wiki">Wiki</string>
     <string name="github_issues">Сообщения об ошибках на GitHub</string>
     <string name="google_play">Google Play</string>
     <string name="clash_meta_core">Ядро YueTong</string>
@@ -207,7 +207,7 @@
     <string name="meta_github_url" translatable="false">https://github.com/MetaCubeX/ClashMetaForAndroid</string>
     <string name="clash_meta_core_url" translatable="false">https://github.com/MetaCubeX/Clash.Meta</string>
 
-    <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг Clash</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
+    <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг YueTong</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
     <string name="tips_help"><![CDATA[YueTong — глобальная сеть ускорения для AI и стриминга]]></string>
 
     <string name="google_play_url" translatable="false">https://play.google.com/store/apps/details?id=com.github.kr328.clash</string>

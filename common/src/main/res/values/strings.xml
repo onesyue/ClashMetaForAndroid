@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="receive_clash_broadcasts">Receive Service Broadcasts</string>
+    <string name="receive_clash_broadcasts">Receive YueTong Broadcasts</string>
     <string name="receive_broadcasts_of_clash">Receive YueTong service broadcasts</string>
 </resources>

@@ -74,7 +74,7 @@
     <string name="ok">確定</string>
     <string name="cancel">キャンセル</string>
     <string name="reset">リセット</string>
-    <string name="clash_logcat">Clash Logcat</string>
+    <string name="clash_logcat">デバッグログ</string>
     <string name="history">履歴</string>
     <string name="logcat">Logcat</string>
     <string name="delete_all_logs">すべてのログを削除</string>
@@ -85,7 +85,7 @@
     <string name="interface_">インターフェイス</string>
     <string name="override">オーバライド</string>
     <string name="auto_restart">自動リスタート</string>
-    <string name="allow_clash_auto_restart">Clashの自動リスタートを許可</string>
+    <string name="allow_clash_auto_restart">サービスの自動リスタートを許可</string>
     <string name="route_system_traffic">ルートシステムトラフィック</string>
     <string name="routing_via_vpn_service">全てのトラフィックをVPNサービス経由でルーティング</string>
     <string name="vpn_service_options">VPNサービスのオプション</string>
@@ -102,7 +102,7 @@
     <string name="access_control_mode">アクセスコントロールモード</string>
     <string name="access_control_packages">アクセスコントロールリスト</string>
     <string name="access_control_packages_summary">アプリプロファイルへのアクセスを許可</string>
-    <string name="options_unavailable">Clash実行時にこのオプションは利用できません</string>
+    <string name="options_unavailable">サービス実行時にこのオプションは利用できません</string>
     <string name="general">一般</string>
     <string name="dns">DNS</string>
     <string name="prefer_h3">Prefer h3</string>
@@ -165,11 +165,11 @@
     <string name="feedback">フィードバック</string>
     <string name="sources">ソース</string>
     <string name="donate">寄付</string>
-    <string name="clash_wiki">Clash Wiki</string>
+    <string name="clash_wiki">Wiki</string>
     <string name="github_issues">Github Issues</string>
     <string name="google_play">Google Play</string>
     <string name="clash_meta_core">YueTong Core</string>
-    <string name="tips_properties"><![CDATA[<strong>Clashプロファイル</strong>のみご利用可能です(<strong>プロキシルール</strong>を含む)]]></string>
+    <string name="tips_properties"><![CDATA[<strong>YueTongプロファイル</strong>のみご利用可能です(<strong>プロキシルール</strong>を含む)]]></string>
     <string name="tips_help"><![CDATA[YueTong — AI・ストリーミング向けグローバルアクセラレーションネットワーク]]></string>
     <string name="app">アプリ</string>
     <string name="service">サービス</string>
