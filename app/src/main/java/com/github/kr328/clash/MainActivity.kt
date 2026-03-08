@@ -148,6 +148,9 @@ class MainActivity : BaseActivity<MainDesign>() {
                                 }
                             }
                             XBoardSession.clear(this@MainActivity)
+                            // Clear WebView storage to remove cached auth tokens
+                            android.webkit.WebStorage.getInstance().deleteAllData()
+                            android.webkit.CookieManager.getInstance().removeAllCookies(null)
                             design.resetUserData()
                             startActivity(
                                 XBoardLoginActivity::class.intent.apply {

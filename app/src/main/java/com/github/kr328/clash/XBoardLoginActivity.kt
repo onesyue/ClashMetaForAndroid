@@ -2,7 +2,6 @@ package com.github.kr328.clash
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.Toast
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.XBoardLoginDesign
 import com.github.kr328.clash.design.R
@@ -12,12 +11,8 @@ import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
-import kotlinx.coroutines.withContext
 
 class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
 
@@ -101,28 +96,18 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
                     create(Profile.Type.Url, brandName, result.subscribeUrl)
                 }
 
-                // 捕获 context 引用（Activity 即将 finish，不能在 GlobalScope 里用 this）
-                val appCtx = applicationContext
-                val commitFailedPrefix = getString(R.string.subscription_commit_failed)
-
                 // commit() 后再 setActive；失败时 Toast 告知用户
-                @Suppress("OPT_IN_USAGE")
-                GlobalScope.launch(Dispatchers.IO) {
-                    try {
-                        withProfile { commit(uuid, null) }
-                        val imported = withProfile { queryByUUID(uuid) }
-                        if (imported != null) {
-                            withProfile { setActive(imported) }
-                        }
-                    } catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                appCtx,
-                                "$commitFailedPrefix: ${e.message ?: "未知错误"}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
+                try {
+                    withProfile { commit(uuid, null) }
+                    val imported = withProfile { queryByUUID(uuid) }
+                    if (imported != null) {
+                        withProfile { setActive(imported) }
                     }
+                } catch (e: Exception) {
+                    design.showToast(
+                        e.message ?: getString(R.string.subscription_commit_failed),
+                        ToastDuration.Long
+                    )
                 }
             }
 

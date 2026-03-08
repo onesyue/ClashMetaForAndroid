@@ -278,6 +278,13 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 .setView(container)
                 .setCancelable(false)
                 .show()
+                .apply {
+                    setOnDismissListener {
+                        syncDialog = null
+                        syncMsgView = null
+                        syncProgressBar = null
+                    }
+                }
         }
     }
 

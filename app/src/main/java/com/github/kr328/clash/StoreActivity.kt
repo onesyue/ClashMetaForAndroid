@@ -1,5 +1,7 @@
 package com.github.kr328.clash
 
+import android.app.Activity
+import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.StoreDesign
 import com.github.kr328.clash.xboard.XBoardApi
@@ -24,7 +26,8 @@ class StoreActivity : BaseActivity<StoreDesign>() {
                 design.requests.onReceive { request ->
                     when (request) {
                         is StoreDesign.Request.BuyPlan -> {
-                            startActivity(
+                            val result = startActivityForResult(
+                                ActivityResultContracts.StartActivityForResult(),
                                 CheckoutActivity::class.intent.apply {
                                     putExtra(CheckoutActivity.EXTRA_PLAN_ID,      request.planId)
                                     putExtra(CheckoutActivity.EXTRA_PLAN_NAME,    request.planName)
@@ -33,6 +36,9 @@ class StoreActivity : BaseActivity<StoreDesign>() {
                                     putExtra(CheckoutActivity.EXTRA_PRICE_CENTS,  request.priceCents)
                                 }
                             )
+                            if (result.resultCode == Activity.RESULT_OK) {
+                                loadPlans(design)
+                            }
                         }
                         is StoreDesign.Request.Retry -> {
                             loadPlans(design)

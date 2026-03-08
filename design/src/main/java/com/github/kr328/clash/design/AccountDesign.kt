@@ -36,13 +36,15 @@ class AccountDesign(context: Context, private val baseUrl: String, initialPath: 
         binding.webView.evaluateJavascript(
             "(function(){ return localStorage.getItem('auth_data') || ''; })()"
         ) { result ->
-            val authData = result?.trim('"')?.takeIf { it.isNotBlank() && it != "null" }
-            requests.trySend(
-                Request.SyncSubscription(
-                    authData = authData ?: "",
-                    baseUrl = baseUrl
+            try {
+                val authData = result?.trim('"')?.takeIf { it.isNotBlank() && it != "null" }
+                requests.trySend(
+                    Request.SyncSubscription(
+                        authData = authData ?: "",
+                        baseUrl = baseUrl
+                    )
                 )
-            )
+            } catch (_: Exception) { /* Design already destroyed */ }
         }
     }
 
@@ -85,11 +87,13 @@ class AccountDesign(context: Context, private val baseUrl: String, initialPath: 
                     view.evaluateJavascript(
                         "(function(){ return localStorage.getItem('auth_data') || ''; })()"
                     ) { result ->
-                        val authData = result?.trim('"')
-                            ?.takeIf { it.isNotBlank() && it != "null" }
-                        if (authData != null) {
-                            requests.trySend(Request.AuthDataChanged(authData, baseUrl))
-                        }
+                        try {
+                            val authData = result?.trim('"')
+                                ?.takeIf { it.isNotBlank() && it != "null" }
+                            if (authData != null) {
+                                requests.trySend(Request.AuthDataChanged(authData, baseUrl))
+                            }
+                        } catch (_: Exception) { /* Design already destroyed */ }
                     }
                 }
 

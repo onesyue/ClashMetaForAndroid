@@ -176,7 +176,7 @@ object XBoardApi {
                     conn.doOutput = true
                     conn.connectTimeout = 10_000
                     conn.readTimeout = 10_000
-                    conn.outputStream.close()
+                    OutputStreamWriter(conn.outputStream).use { it.write("") }
                     conn.responseCode
                 } finally {
                     conn.disconnect()

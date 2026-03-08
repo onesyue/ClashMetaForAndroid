@@ -87,7 +87,10 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
             if (result.valid) {
                 appliedCouponCode = code
                 val discount = when (result.type) {
-                    2 -> (priceCents * result.value + 50) / 100  // percentage, integer rounding
+                    2 -> {
+                        val pct = result.value.coerceIn(0, 100)
+                        (priceCents * pct + 50) / 100  // percentage, integer rounding
+                    }
                     else -> result.value                     // fixed amount
                 }
                 design.applyCoupon(discount.coerceAtMost(priceCents))
@@ -144,6 +147,7 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                             }
                         )
                     }
+                    setResult(RESULT_OK)
                     design.showToast(getString(R.string.checkout_payment_pending), ToastDuration.Long)
                 }
                 1 -> {
@@ -153,6 +157,7 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                             putExtra(AccountActivity.EXTRA_FULL_URL, result.data)
                         }
                     )
+                    setResult(RESULT_OK)
                     design.showToast(getString(R.string.checkout_payment_pending), ToastDuration.Long)
                 }
             }
