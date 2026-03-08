@@ -194,13 +194,15 @@ func FetchAndValid(
 
 				providerDir := P.Join(path, "providers")
 				_ = os.MkdirAll(providerDir, 0700)
-				providerPath := P.Join(providerDir, "subscription.yaml")
+				providerAbsPath := P.Join(providerDir, "subscription.yaml")
 
 				// Move the original content to the provider file
-				_ = os.Rename(configPath, providerPath)
+				_ = os.Rename(configPath, providerAbsPath)
 
-				// Write a proper Clash config referencing the subscription as provider
-				generatedConfig := generateProviderConfig(url, providerPath)
+				// Use relative path in config — Clash resolves it relative to config dir.
+				// Absolute paths break when the profile dir moves (processing → imported).
+				providerRelPath := "providers/subscription.yaml"
+				generatedConfig := generateProviderConfig(url, providerRelPath)
 				_ = os.WriteFile(configPath, generatedConfig, 0600)
 			}
 		}

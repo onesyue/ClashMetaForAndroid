@@ -316,7 +316,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                     return
                 }
             } else {
-                // 有 pending profile — 触发 commit 并显示实时进度
+                // 有 pending profile — 触发 commit（下载订阅）并显示实时进度
                 showSyncDialog()
                 val pendingObserver = buildFetchObserver(this)
                 try {
@@ -330,6 +330,14 @@ class MainActivity : BaseActivity<MainDesign>() {
                     return
                 }
                 dismissSyncDialog()
+
+                // commit 成功后，查找 imported profile 并激活
+                val committed = withProfile { queryByUUID(pending.uuid) }
+                if (committed == null || !committed.imported) {
+                    showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
+                    return
+                }
+                withProfile { setActive(committed) }
                 active = withProfile { queryActive() }
                 if (active == null) {
                     showToast(getString(R.string.subscription_sync_failed), ToastDuration.Long)
