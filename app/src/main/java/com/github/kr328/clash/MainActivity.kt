@@ -419,6 +419,10 @@ class MainActivity : BaseActivity<MainDesign>() {
             cfg.geodataMode = true
             cfg.geoAutoUpdate = true
             cfg.geoUpdateInterval = 24
+            cfg.geoxurl.geoip = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+            cfg.geoxurl.geosite = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+            cfg.geoxurl.mmdb = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+            cfg.geoxurl.asn = "https://cdn.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
 
             // ── 移动端性能优化 ──────────────────────────────────
             cfg.tcpConcurrent = true          // TCP 并发连接，降低首包延迟
