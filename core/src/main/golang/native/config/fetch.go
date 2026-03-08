@@ -42,7 +42,7 @@ func openContent(url string) (io.ReadCloser, error) {
 }
 
 func fetch(url *U.URL, file string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
 
 	var reader io.ReadCloser
