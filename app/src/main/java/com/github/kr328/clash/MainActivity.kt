@@ -22,6 +22,7 @@ import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -44,7 +45,10 @@ class MainActivity : BaseActivity<MainDesign>() {
                 ActivityResultContracts.StartActivityForResult(),
                 XBoardLoginActivity::class.intent
             )
-            if (XBoardSession.getAuthData(this) == null) return
+            if (XBoardSession.getAuthData(this) == null) {
+                finish()
+                return
+            }
         }
 
         val design = MainDesign(this)
@@ -139,7 +143,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                             val authData = XBoardSession.getAuthData(this@MainActivity)
                             val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
                             if (authData != null) {
-                                launch(Dispatchers.IO) {
+                                launch(Dispatchers.IO + NonCancellable) {
                                     XBoardApi.logout(baseUrl, authData)
                                 }
                             }

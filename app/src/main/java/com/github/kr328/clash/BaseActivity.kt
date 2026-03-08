@@ -152,7 +152,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        this.onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 

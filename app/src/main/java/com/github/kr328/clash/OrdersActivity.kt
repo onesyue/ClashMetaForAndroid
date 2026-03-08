@@ -57,7 +57,10 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
         launch(Dispatchers.IO) {
             try {
                 val authData = XBoardSession.getAuthData(this@OrdersActivity)
-                    ?: return@launch
+                    ?: run {
+                        withContext(Dispatchers.Main) { handleAuthExpired() }
+                        return@launch
+                    }
                 val baseUrl = XBoardSession.getBaseUrl(this@OrdersActivity)
                 val orders = XBoardApi.getOrders(baseUrl, authData)
                 val items = orders.map {

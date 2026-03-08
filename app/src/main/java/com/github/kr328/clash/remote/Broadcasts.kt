@@ -9,6 +9,7 @@ import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 class Broadcasts(private val context: Application) {
     interface Observer {
@@ -24,7 +25,7 @@ class Broadcasts(private val context: Application) {
     var clashRunning: Boolean = false
 
     private var registered = false
-    private val receivers = mutableListOf<Observer>()
+    private val receivers = CopyOnWriteArrayList<Observer>()
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.`package` != context?.packageName)

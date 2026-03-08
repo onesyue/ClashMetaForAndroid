@@ -29,7 +29,10 @@ class NoticesActivity : BaseActivity<NoticesDesign>() {
         launch(Dispatchers.IO) {
             try {
                 val authData = XBoardSession.getAuthData(this@NoticesActivity)
-                    ?: return@launch
+                    ?: run {
+                        withContext(Dispatchers.Main) { handleAuthExpired() }
+                        return@launch
+                    }
                 val baseUrl = XBoardSession.getBaseUrl(this@NoticesActivity)
                 val notices = XBoardApi.getNotices(baseUrl, authData)
                 val items = notices.map {

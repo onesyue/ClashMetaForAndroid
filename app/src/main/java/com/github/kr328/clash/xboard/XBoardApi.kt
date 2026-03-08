@@ -447,8 +447,9 @@ object XBoardApi {
 
                 val responseCode = conn.responseCode
                 val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                    ?.bufferedReader()?.readText() ?: ""
+                    ?.bufferedReader()?.use { it.readText() } ?: ""
 
+                if (responseText.isBlank()) throw Exception("Empty response from server")
                 val root = JSONObject(responseText)
                 if (responseCode == 401 || responseCode == 403) {
                     throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
@@ -481,8 +482,9 @@ object XBoardApi {
 
             val responseCode = conn.responseCode
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.readText() ?: ""
+                ?.bufferedReader()?.use { it.readText() } ?: ""
 
+            if (responseText.isBlank()) throw Exception("Empty response from server")
             val root = JSONObject(responseText)
             if (responseCode == 401 || responseCode == 403) {
                 throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
@@ -507,8 +509,9 @@ object XBoardApi {
 
             val responseCode = conn.responseCode
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.readText() ?: ""
+                ?.bufferedReader()?.use { it.readText() } ?: ""
 
+            if (responseText.isBlank()) throw Exception("Empty response from server")
             val root = JSONObject(responseText)
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
@@ -534,8 +537,9 @@ object XBoardApi {
 
             val responseCode = conn.responseCode
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.readText() ?: ""
+                ?.bufferedReader()?.use { it.readText() } ?: ""
 
+            if (responseText.isBlank()) throw Exception("Empty response from server")
             val root = JSONObject(responseText)
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
@@ -562,8 +566,9 @@ object XBoardApi {
 
             val responseCode = conn.responseCode
             val responseText = (if (responseCode == 200) conn.inputStream else conn.errorStream)
-                ?.bufferedReader()?.readText() ?: ""
+                ?.bufferedReader()?.use { it.readText() } ?: ""
 
+            if (responseText.isBlank()) throw Exception("Empty response from server")
             val root = JSONObject(responseText)
             if (responseCode == 401 || responseCode == 403) {
                 throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))

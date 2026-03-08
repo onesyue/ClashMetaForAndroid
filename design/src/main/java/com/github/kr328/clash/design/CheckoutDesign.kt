@@ -34,6 +34,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
 
     private var selectedMethodId: Int = -1
     private val radioGroup = RadioGroup(context)
+    private val viewIdToMethodId = mutableMapOf<Int, Int>()
 
     private val dp = context.resources.displayMetrics.density
     private var couponEdit: EditText? = null
@@ -77,19 +78,26 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
         container.removeAllViews()
 
         radioGroup.removeAllViews()
+        viewIdToMethodId.clear()
         radioGroup.orientation = RadioGroup.VERTICAL
         radioGroup.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        if (methods.isEmpty()) {
+        if (methods.isEmpty() && originalPriceCents == 0L) {
+            // Free order with no payment methods needed
             selectedMethodId = 0
             binding.checkoutPayBtn.isEnabled = true
+        } else if (methods.isEmpty()) {
+            // Non-free order but no methods available — keep button disabled
+            binding.checkoutPayBtn.isEnabled = false
         } else {
             methods.forEach { method ->
+                val viewId = View.generateViewId()
+                viewIdToMethodId[viewId] = method.id
                 val rb = RadioButton(context).apply {
-                    id = method.id
+                    id = viewId
                     text = method.name
                     textSize = 14f
                     setTextColor(0xFFF1F5F9.toInt())
@@ -99,8 +107,8 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
             }
 
             radioGroup.setOnCheckedChangeListener { _, checkedId ->
-                selectedMethodId = checkedId
-                binding.checkoutPayBtn.isEnabled = true
+                selectedMethodId = viewIdToMethodId[checkedId] ?: -1
+                binding.checkoutPayBtn.isEnabled = selectedMethodId >= 0
             }
 
             container.addView(radioGroup)
