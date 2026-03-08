@@ -70,8 +70,8 @@ class MainActivity : BaseActivity<MainDesign>() {
         setContentDesign(design)
 
         design.fetch()
-        // Apply fixed geo settings silently on every start (CDN URLs accessible in China)
-        launch { applyGeoDefaults() }
+        // 每次启动叠加网络优化（通过 Override 机制，不修改订阅源配置）
+        launch { applyNetworkOptimizations() }
         // fetchUserData 通过 ViewModel 管理，配置变更后自动保留数据
         viewModel.fetchUserData()
         launch { observeUserState(design) }
@@ -397,12 +397,16 @@ class MainActivity : BaseActivity<MainDesign>() {
         this@MainActivity.launch { design.updateSyncProgress(current, total, msg) }
     }
 
-    private suspend fun applyGeoDefaults() {
-        val prefs = getSharedPreferences("yt_app_prefs", MODE_PRIVATE)
-        if (prefs.getBoolean("geo_defaults_applied", false)) return
-
+    /**
+     * 通过 Override 叠加网络优化。
+     * 这些设置会覆盖订阅下发的值，确保移动端始终处于最优配置。
+     * Override 是 Clash Meta 的标准机制：订阅配置 + Override = 最终配置。
+     */
+    private suspend fun applyNetworkOptimizations() {
         withClash {
             val cfg = queryOverride(Clash.OverrideSlot.Persist)
+
+            // ── Geo 数据源（CDN 国内可达）──────────────────────
             cfg.geodataMode = true
             cfg.geoAutoUpdate = true
             cfg.geoUpdateInterval = 24
@@ -410,9 +414,55 @@ class MainActivity : BaseActivity<MainDesign>() {
             cfg.geoxurl.geosite = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
             cfg.geoxurl.mmdb = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
             cfg.geoxurl.asn = "https://cdn.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
+
+            // ── 移动端性能优化 ──────────────────────────────────
+            cfg.tcpConcurrent = true          // TCP 并发连接，降低首包延迟
+            cfg.unifiedDelay = true           // 统一延迟计算，选节点更准
+            cfg.findProcessMode = com.github.kr328.clash.core.model.ConfigurationOverride.FindProcessMode.Off  // 关闭进程匹配，省电省 CPU
+            cfg.ipv6 = true                   // 2026 年双栈应默认开启
+
+            // ── DNS 优化 ───────────────────────────────────────
+            cfg.dns.enable = true
+            cfg.dns.ipv6 = true
+            cfg.dns.enhancedMode = com.github.kr328.clash.core.model.ConfigurationOverride.DnsEnhancedMode.FakeIp
+            cfg.dns.useHosts = true
+            // 国内 DoH 作为默认 nameserver
+            cfg.dns.defaultServer = listOf("223.5.5.5", "119.29.29.29")
+            cfg.dns.nameServer = listOf(
+                "https://doh.pub/dns-query",
+                "https://dns.alidns.com/dns-query"
+            )
+            // 海外 fallback DNS
+            cfg.dns.fallback = listOf(
+                "https://cloudflare-dns.com/dns-query",
+                "https://dns.google/dns-query",
+                "https://dns.quad9.net/dns-query"
+            )
+            // Fallback 触发条件：非中国 IP
+            cfg.dns.fallbackFilter.geoIp = true
+            cfg.dns.fallbackFilter.geoIpCode = "CN"
+            cfg.dns.fallbackFilter.ipcidr = listOf(
+                "240.0.0.0/4", "0.0.0.0/32",
+                "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"
+            )
+
+            // ── Sniffer 嗅探 ──────────────────────────────────
+            cfg.sniffer.enable = true
+            cfg.sniffer.parsePureIp = true
+            cfg.sniffer.forceDnsMapping = false
+            cfg.sniffer.overrideDestination = false
+            cfg.sniffer.sniff.http.ports = listOf("80", "8080-8880")
+            cfg.sniffer.sniff.tls.ports = listOf("443", "8443")
+            cfg.sniffer.sniff.quic.ports = listOf("443", "8443")
+            // 跳过国内常见域名的嗅探
+            cfg.sniffer.skipDomain = listOf(
+                "+.push.apple.com", "+.icloud.com",
+                "connectivitycheck.gstatic.com", "connectivitycheck.android.com",
+                "+.market.xiaomi.com", "localhost.ptlogin2.qq.com"
+            )
+
             patchOverride(Clash.OverrideSlot.Persist, cfg)
         }
-        prefs.edit().putBoolean("geo_defaults_applied", true).apply()
     }
 
     private fun formatDuration(ms: Long): String {
