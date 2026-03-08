@@ -74,8 +74,7 @@ jobs:
           echo key.password="$SIGNING_KEY_PASSWORD" >> signing.properties
           echo "remove.suffix=true" >> local.properties
 
-          echo "cat signing.properties"
-          cat signing.properties
+          echo "Signing properties configured"
 
       - name: Pre-release Build
         if: success()
