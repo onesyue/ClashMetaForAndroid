@@ -391,6 +391,7 @@
     <string name="account_center">账号中心</string>
     <string name="sync_subscription">同步订阅</string>
     <string name="subscription_synced">订阅已同步</string>
+    <string name="login_success">登录成功</string>
     <string name="subscription_sync_failed">同步失败，请登录后重试</string>
     <string name="subscription_sync_timeout">同步超时，配置已保存，稍后将自动完成</string>
     <string name="not_logged_in">请先在页面中登录</string>

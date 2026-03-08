@@ -81,30 +81,14 @@ class XBoardLoginActivity : BaseActivity<XBoardLoginDesign>() {
             // 查找已有的同名 profile
             val allProfiles = withProfile { queryAll() }.filter { it.name == brandName }
 
-            // 关键优化：如果已有相同 URL 的 imported profile，直接激活，跳过重新下载
-            val sameUrlImported = allProfiles.firstOrNull {
-                it.imported && it.source == result.subscribeUrl
+            // 删除旧 profile，创建新的 pending profile（只保存订阅地址，不下载）
+            // 下载在主页点电源按钮时触发，带进度提示
+            withProfile {
+                allProfiles.forEach { delete(it.uuid) }
+                create(Profile.Type.Url, brandName, result.subscribeUrl)
             }
 
-            if (sameUrlImported != null) {
-                // 订阅已下载且 URL 未变 → 直接激活，无需重新下载
-                withProfile { setActive(sameUrlImported) }
-            } else {
-                // 删除旧 profile，创建新的
-                val uuid = withProfile {
-                    allProfiles.forEach { delete(it.uuid) }
-                    create(Profile.Type.Url, brandName, result.subscribeUrl)
-                }
-
-                // commit 下载订阅，失败则保留 pending 让主页电源按钮重试
-                withProfile { commit(uuid, null) }
-                val imported = withProfile { queryByUUID(uuid) }
-                if (imported != null && imported.imported) {
-                    withProfile { setActive(imported) }
-                }
-            }
-
-            design.showToast(getString(R.string.subscription_synced), ToastDuration.Short)
+            design.showToast(getString(R.string.login_success), ToastDuration.Short)
 
             // 若是从退出登录后以根 Activity 启动，则重新拉起主界面
             if (isTaskRoot) {

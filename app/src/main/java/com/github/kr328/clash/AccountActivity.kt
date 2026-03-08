@@ -10,7 +10,6 @@ import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.selects.select
 
 class AccountActivity : BaseActivity<AccountDesign>() {
@@ -65,7 +64,9 @@ class AccountActivity : BaseActivity<AccountDesign>() {
 
                                 val brandName = getString(R.string.xboard_brand_name)
 
-                                val uuid = withProfile {
+                                // 只创建 pending profile，不下载
+                                // 下载在主页点电源按钮时触发，带进度提示
+                                withProfile {
                                     queryAll()
                                         .filter { it.name == brandName }
                                         .forEach { delete(it.uuid) }
@@ -77,32 +78,10 @@ class AccountActivity : BaseActivity<AccountDesign>() {
                                     )
                                 }
 
-                                withProfile { commit(uuid, null) }
-
-                                // commit() 是异步的，轮询等待实际下载完成（最长 120s，含 40+ rule-providers）
-                                var imported = false
-                                for (retry in 1..120) {
-                                    delay(1_000L)
-                                    val p = withProfile { queryByUUID(uuid) }
-                                    if (p?.imported == true) { imported = true; break }
-                                }
-
-                                val profile = withProfile { queryByUUID(uuid) }
-                                if (profile != null) {
-                                    withProfile { setActive(profile) }
-                                }
-
-                                if (imported) {
-                                    design.showToast(
-                                        getString(R.string.subscription_synced),
-                                        ToastDuration.Short
-                                    )
-                                } else {
-                                    design.showToast(
-                                        getString(R.string.subscription_sync_timeout),
-                                        ToastDuration.Long
-                                    )
-                                }
+                                design.showToast(
+                                    getString(R.string.subscription_synced),
+                                    ToastDuration.Short
+                                )
 
                                 setResult(Activity.RESULT_OK)
                             } catch (e: Exception) {

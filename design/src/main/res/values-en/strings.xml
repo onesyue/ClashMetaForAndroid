@@ -359,6 +359,7 @@
     <string name="account_center">Account Center</string>
     <string name="sync_subscription">Sync subscription</string>
     <string name="subscription_synced">Subscription synced</string>
+    <string name="login_success">Login successful</string>
     <string name="subscription_sync_failed">Sync failed. Please login and retry.</string>
     <string name="subscription_sync_timeout">Sync timed out. Config saved, will complete later.</string>
     <string name="not_logged_in">Please login first</string>
