@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   BuildDebug:
@@ -13,9 +14,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       
       - name: Checkout submodules
         run: git submodule update --init --recursive --force
+
+      - name: Fetch submodule tags
+        run: git -C core/src/foss/golang/clash fetch --force --tags origin
 
       - name: Setup Java
         uses: actions/setup-java@v4
