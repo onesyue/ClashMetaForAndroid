@@ -5,13 +5,14 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.core.Clash
+import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.design.MainDesign
 import com.github.kr328.clash.design.R
@@ -373,7 +374,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                     startClashService()
             }
         } catch (e: Exception) {
-            design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
+            design.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
         }
     }
 
@@ -418,13 +419,13 @@ class MainActivity : BaseActivity<MainDesign>() {
             // ── 移动端性能优化 ──────────────────────────────────
             cfg.tcpConcurrent = true          // TCP 并发连接，降低首包延迟
             cfg.unifiedDelay = true           // 统一延迟计算，选节点更准
-            cfg.findProcessMode = com.github.kr328.clash.core.model.ConfigurationOverride.FindProcessMode.Off  // 关闭进程匹配，省电省 CPU
+            cfg.findProcessMode = ConfigurationOverride.FindProcessMode.Off  // 关闭进程匹配，省电省 CPU
             cfg.ipv6 = true                   // 2026 年双栈应默认开启
 
             // ── DNS 优化 ───────────────────────────────────────
             cfg.dns.enable = true
             cfg.dns.ipv6 = true
-            cfg.dns.enhancedMode = com.github.kr328.clash.core.model.ConfigurationOverride.DnsEnhancedMode.FakeIp
+            cfg.dns.enhancedMode = ConfigurationOverride.DnsEnhancedMode.FakeIp
             cfg.dns.useHosts = true
             // 国内 DoH 作为默认 nameserver
             cfg.dns.defaultServer = listOf("223.5.5.5", "119.29.29.29")
@@ -471,12 +472,6 @@ class MainActivity : BaseActivity<MainDesign>() {
         val m = (totalSeconds % 3600) / 60
         val s = totalSeconds % 60
         return "%02d:%02d:%02d".format(h, m, s)
-    }
-
-    private suspend fun queryAppVersionName(): String {
-        return withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0).versionName ?: "1.0"
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
