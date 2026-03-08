@@ -40,7 +40,36 @@ object XBoardApi {
         val usedUpload: Long,         // bytes uploaded
         val uuid: String,
         val planName: String?
-    )
+    ) {
+        fun toJson(): String = JSONObject().apply {
+            put("email", email)
+            put("balance", balance)
+            put("commissionBalance", commissionBalance)
+            put("expiredAt", expiredAt ?: JSONObject.NULL)
+            put("transferEnable", transferEnable)
+            put("usedDownload", usedDownload)
+            put("usedUpload", usedUpload)
+            put("uuid", uuid)
+            put("planName", planName ?: JSONObject.NULL)
+        }.toString()
+
+        companion object {
+            fun fromJson(json: String): UserInfo? = try {
+                val o = JSONObject(json)
+                UserInfo(
+                    email = o.optString("email", ""),
+                    balance = o.optLong("balance", 0),
+                    commissionBalance = o.optLong("commissionBalance", 0),
+                    expiredAt = if (o.isNull("expiredAt")) null else o.optLong("expiredAt"),
+                    transferEnable = o.optLong("transferEnable", 0),
+                    usedDownload = o.optLong("usedDownload", 0),
+                    usedUpload = o.optLong("usedUpload", 0),
+                    uuid = o.optString("uuid", ""),
+                    planName = if (o.isNull("planName")) null else o.optString("planName")
+                )
+            } catch (_: Exception) { null }
+        }
+    }
 
     data class InviteInfo(
         val inviteUrl: String,

@@ -247,10 +247,29 @@ class MainActivity : BaseActivity<MainDesign>() {
 
         val info: XBoardApi.UserInfo
         try {
-            info = XBoardApi.getUserInfo(baseUrl, authData) ?: return
+            val fetched = XBoardApi.getUserInfo(baseUrl, authData)
+            if (fetched != null) {
+                info = fetched
+                // Cache for offline use
+                com.github.kr328.clash.util.OfflineCache.put(
+                    this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO, info.toJson()
+                )
+            } else {
+                // Try cached data
+                val cached = com.github.kr328.clash.util.OfflineCache.get(
+                    this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO
+                )
+                info = cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
+            }
         } catch (e: XBoardApi.AuthExpiredException) {
             handleAuthExpired()
             return
+        } catch (_: Exception) {
+            // Network error — try cached data
+            val cached = com.github.kr328.clash.util.OfflineCache.get(
+                this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO
+            )
+            info = cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
         }
 
         setUserEmail(info.email.takeIf { it.isNotBlank() })
