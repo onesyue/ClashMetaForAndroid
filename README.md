@@ -1,23 +1,23 @@
-## YueTong VPN
+## YueTong
 
-A deeply customized Android VPN client based on [Clash Meta for Android](https://github.com/MetaCubeX/ClashMetaForAndroid), integrated with the [YueTong](https://yue.to) XBoard subscription panel.
+A global acceleration network built for AI and streaming — Android VPN client based on [Clash Meta](https://github.com/MetaCubeX/ClashMetaForAndroid), integrated with [XBoard](https://github.com/cedar2025/Xboard) subscription management.
 
 ### Features
 
-- Native login / registration with one-tap WebView fallback for Cloudflare challenges
-- Auto-sync subscriptions (background download after login, supports hysteria2 / vless / reality protocols)
-- VPN dashboard: real-time traffic, speed, and connection duration
-- Account center: plan expiry, data usage, balance, referral link
-- Store: plan listing (Markdown descriptions), one-tap purchase
-- My Orders: order history, cancel pending orders
-- Announcements: panel notifications (Markdown rendering)
-- GeoIP / GeoSite databases delivered via jsDelivr CDN (accessible in mainland China)
-- Auto-update Geo databases every 24 hours
+- **Account System** — Native login/registration with WebView fallback for Cloudflare challenges; automatic session recovery on token expiry
+- **Subscription Sync** — Background download after login with progress dialog; supports hysteria2, vless, reality protocols
+- **VPN Dashboard** — Real-time upload/download speed, traffic usage, connection duration
+- **Account Center** — Plan details, expiry date, data usage, balance, referral link with one-tap copy
+- **Store** — Browse plans with Markdown descriptions, multiple billing periods, coupon code support at checkout
+- **Orders** — Full order history with status tracking, discount/surplus details, cancel pending orders
+- **Announcements** — Panel notifications with Markdown rendering
+- **Cyberpunk Dark Theme** — Glass-effect cards, gradient accents, consistent dark UI across all screens
+- **Geo Databases** — GeoIP/GeoSite delivered via jsDelivr CDN with auto-update every 24 hours
 
 ### Requirements
 
 - Android 5.0+ (7.0+ recommended)
-- Supported architectures: `armeabi-v7a`, `arm64-v8a`, `x86`, `x86_64`
+- Architectures: `armeabi-v7a`, `arm64-v8a`, `x86`, `x86_64`
 
 ### Build
 
@@ -63,11 +63,11 @@ git push origin alpha -f
 
 | Layer | Description |
 |-------|-------------|
-| Core | [mihomo (Clash.Meta)](https://github.com/MetaCubeX/Clash.Meta) Go native library |
-| Service | Android Foreground Service, manages VPN tunnel and profile downloads |
-| Panel | [XBoard (cedar2025)](https://github.com/cedar2025/Xboard) API integration |
-| UI | Material Design 3, DataBinding, Kotlin Coroutines |
+| Core | [mihomo (Clash.Meta)](https://github.com/MetaCubeX/Clash.Meta) — Go native tunnel library |
+| Service | Android Foreground Service — VPN tunnel and profile management |
+| Panel | [XBoard](https://github.com/cedar2025/Xboard) — Subscription, store, orders, announcements API |
+| UI | Material Design 3, DataBinding, Kotlin Coroutines, dark theme |
 
-### Subscription Download
+### License
 
-After first login, subscriptions are downloaded in the background (non-blocking). The subscription includes 40+ rule-providers served from jsDelivr CDN. Initial download takes ~1-2 minutes; subsequent launches are instant.
+Licensed under [GPLv3](LICENSE).

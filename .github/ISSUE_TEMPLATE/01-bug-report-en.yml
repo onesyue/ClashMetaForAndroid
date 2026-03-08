@@ -10,7 +10,7 @@ body:
 
         NOTE: Be sure to put a clear and concise title **AFTER** `[BUG]` in the text box above.
 
-        NOTE: We do not provide any services such as proxies, DO NOT feedback any problems not caused by this application here.
+        NOTE: We do not provide proxy services. Please only report issues caused by the YueTong application itself.
 
         <!-- template -->
   - type: textarea

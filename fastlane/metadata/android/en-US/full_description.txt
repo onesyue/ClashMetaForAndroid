@@ -2,10 +2,14 @@ YueTong — Global acceleration network for AI and streaming.
 
 <h3>Features</h3>
 <ul>
-<li>Local HTTP/HTTPS/SOCKS server</li>
-<li>VMess, Shadowsocks, Trojan, Snell protocol support for remote connections</li>
-<li>Built-in DNS server that aims to minimize DNS pollution attack impact, supports DoH/DoT upstream and fake IP</li>
-<li>Rules based off domains, GEOIP, IPCIDR or Process to forward packets to different nodes</li>
-<li>Remote groups allow users to implement powerful rules. Supports automatic fallback, load balancing or auto select node based off latency</li>
-<li>Remote providers, allowing users to get node lists remotely instead of hardcoding in config</li>
+<li>Native login and registration with XBoard panel integration</li>
+<li>Auto-sync subscriptions with support for hysteria2, vless, and reality protocols</li>
+<li>Real-time VPN dashboard: upload/download speed, traffic usage, connection duration</li>
+<li>Account center: plan details, expiry, balance, referral link</li>
+<li>In-app store with coupon support and multiple billing periods</li>
+<li>Order history with status tracking and cancellation</li>
+<li>Panel announcements with Markdown rendering</li>
+<li>Built-in DNS server with DoH/DoT support and fake IP</li>
+<li>Rules based on domains, GEOIP, IPCIDR, or process name</li>
+<li>Remote groups with automatic fallback, load balancing, and latency-based selection</li>
 </ul>
