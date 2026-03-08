@@ -52,22 +52,28 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         binding.storeRetryBtn.setOnClickListener {
             requests.trySend(Request.Retry)
         }
+        binding.storeSwipeRefresh.setOnRefreshListener {
+            requests.trySend(Request.Retry)
+        }
+        binding.storeSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
+        binding.storeSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
     }
 
     fun showLoading() {
         binding.storeLoading.visibility = View.VISIBLE
         binding.storeErrorView.visibility = View.GONE
         binding.storeEmptyView.visibility = View.GONE
-        binding.storeScroll.visibility = View.GONE
+        binding.storeSwipeRefresh.visibility = View.GONE
     }
 
     fun showPlans(plans: List<Plan>) {
         binding.storeLoading.visibility = View.GONE
         binding.storeErrorView.visibility = View.GONE
+        binding.storeSwipeRefresh.isRefreshing = false
 
         if (plans.isEmpty()) {
             binding.storeEmptyView.visibility = View.VISIBLE
-            binding.storeScroll.visibility = View.GONE
+            binding.storeSwipeRefresh.visibility = View.GONE
             return
         }
 
@@ -77,14 +83,15 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         }
 
         binding.storeEmptyView.visibility = View.GONE
-        binding.storeScroll.visibility = View.VISIBLE
+        binding.storeSwipeRefresh.visibility = View.VISIBLE
     }
 
     fun showError() {
         binding.storeLoading.visibility = View.GONE
         binding.storeErrorView.visibility = View.VISIBLE
         binding.storeEmptyView.visibility = View.GONE
-        binding.storeScroll.visibility = View.GONE
+        binding.storeSwipeRefresh.visibility = View.GONE
+        binding.storeSwipeRefresh.isRefreshing = false
     }
 
     private fun createPlanCard(plan: Plan): View {

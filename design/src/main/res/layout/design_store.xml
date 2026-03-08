@@ -60,25 +60,32 @@
             android:textColor="@color/color_text_secondary"
             android:visibility="gone" />
 
-        <!-- Plan list -->
-        <ScrollView
-            android:id="@+id/store_scroll"
+        <!-- Plan list with pull-to-refresh -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/store_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/store_plans_container"
+            <ScrollView
+                android:id="@+id/store_scroll"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="72dp"
-                android:paddingBottom="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-        </ScrollView>
+                <LinearLayout
+                    android:id="@+id/store_plans_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="72dp"
+                    android:paddingBottom="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <!-- Toolbar -->
         <com.github.kr328.clash.design.view.ActivityBarLayout

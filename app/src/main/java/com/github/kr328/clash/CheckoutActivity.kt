@@ -86,7 +86,7 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
             if (result.valid) {
                 appliedCouponCode = code
                 val discount = when (result.type) {
-                    2 -> (priceCents * result.value / 100)  // percentage
+                    2 -> ((priceCents.toDouble() * result.value / 100.0) + 0.5).toLong()  // percentage, rounded
                     else -> result.value                     // fixed amount
                 }
                 design.applyCoupon(discount.coerceAtMost(priceCents))

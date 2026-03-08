@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.coordinator)
+    implementation(libs.androidx.swiperefresh)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.viewpager)
