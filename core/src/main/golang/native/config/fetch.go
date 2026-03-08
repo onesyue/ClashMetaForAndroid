@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -14,7 +15,9 @@ import (
 
 	"cfa/native/app"
 
+	"github.com/metacubex/mihomo/common/convert"
 	clashHttp "github.com/metacubex/mihomo/component/http"
+	"github.com/metacubex/mihomo/log"
 )
 
 type Status struct {
@@ -77,6 +80,80 @@ func fetch(url *U.URL, file string) error {
 	return err
 }
 
+// isClashYAML checks if the content looks like a valid Clash YAML config.
+// It checks for common top-level keys that indicate Clash format.
+func isClashYAML(data []byte) bool {
+	// Quick check: YAML configs typically start with a key or comment
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return false
+	}
+
+	// If it starts with '{' it's likely JSON (which YAML can parse), allow it
+	if trimmed[0] == '{' {
+		return true
+	}
+
+	// Check for common Clash YAML top-level keys
+	clashKeys := []string{
+		"proxies:", "proxy-groups:", "proxy-providers:",
+		"rules:", "mixed-port:", "port:", "socks-port:",
+		"dns:", "tun:", "listeners:", "mode:",
+	}
+	for _, key := range clashKeys {
+		if bytes.Contains(trimmed, []byte(key)) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// generateProviderConfig creates a standard Clash YAML config that uses
+// the original subscription URL as a proxy-provider. This follows the
+// upstream mihomo pattern where format conversion (Base64/URI → proxies)
+// is handled by the provider parser (provider.go:371).
+func generateProviderConfig(subscriptionURL string, providerPath string) []byte {
+	cfg := fmt.Sprintf(`# Auto-generated config for non-YAML subscription
+# Original URL: %s
+
+mixed-port: 7890
+mode: rule
+log-level: info
+
+proxy-providers:
+  subscription:
+    type: http
+    url: "%s"
+    path: "%s"
+    interval: 3600
+    health-check:
+      enable: true
+      url: "https://www.gstatic.com/generate_204"
+      interval: 300
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    use:
+      - subscription
+    proxies:
+      - auto
+
+  - name: auto
+    type: url-test
+    use:
+      - subscription
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
+
+rules:
+  - MATCH,PROXY
+`, subscriptionURL, subscriptionURL, providerPath)
+
+	return []byte(cfg)
+}
+
 func FetchAndValid(
 	path string,
 	url string,
@@ -86,22 +163,46 @@ func FetchAndValid(
 	configPath := P.Join(path, "config.yaml")
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) || force {
-		url, err := U.Parse(url)
+		parsedURL, err := U.Parse(url)
 		if err != nil {
 			return err
 		}
 
 		bytes, _ := json.Marshal(&Status{
 			Action:      "FetchConfiguration",
-			Args:        []string{url.Host},
+			Args:        []string{parsedURL.Host},
 			Progress:    -1,
 			MaxProgress: -1,
 		})
 
 		reportStatus(string(bytes))
 
-		if err := fetch(url, configPath); err != nil {
+		if err := fetch(parsedURL, configPath); err != nil {
 			return err
+		}
+
+		// Check if the downloaded content is valid Clash YAML.
+		// If not (e.g. Base64-encoded proxy URIs), generate a config
+		// that uses the URL as a proxy-provider, letting the upstream
+		// provider parser handle the format conversion.
+		configData, readErr := os.ReadFile(configPath)
+		if readErr == nil && !isClashYAML(configData) {
+			// Verify the content is actually convertible
+			proxies, convErr := convert.ConvertsV2Ray(configData)
+			if convErr == nil && len(proxies) > 0 {
+				log.Infoln("Subscription returned %d proxies in URI format, generating provider-based config", len(proxies))
+
+				providerDir := P.Join(path, "providers")
+				_ = os.MkdirAll(providerDir, 0700)
+				providerPath := P.Join(providerDir, "subscription.yaml")
+
+				// Move the original content to the provider file
+				_ = os.Rename(configPath, providerPath)
+
+				// Write a proper Clash config referencing the subscription as provider
+				generatedConfig := generateProviderConfig(url, providerPath)
+				_ = os.WriteFile(configPath, generatedConfig, 0600)
+			}
 		}
 	}
 
