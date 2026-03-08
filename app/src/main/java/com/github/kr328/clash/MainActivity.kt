@@ -416,11 +416,9 @@ class MainActivity : BaseActivity<MainDesign>() {
             val cfg = queryOverride(Clash.OverrideSlot.Persist)
 
             // ── Geo 数据 ─────────────────────────────────────
-            // 使用 dat 格式（与 APK 内置的 geoip.metadb/geosite.dat 匹配）
             cfg.geodataMode = true
-            // 关闭自动更新：geo 文件随 APK 打包内置，由 extractGeoFiles() 释放
-            // 避免代理未启动时尝试从外网 CDN 下载导致失败
-            cfg.geoAutoUpdate = false
+            cfg.geoAutoUpdate = true
+            cfg.geoUpdateInterval = 24
 
             // ── 移动端性能优化 ──────────────────────────────────
             cfg.tcpConcurrent = true          // TCP 并发连接，降低首包延迟

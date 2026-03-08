@@ -16,10 +16,7 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.util.OfflineCache
-import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.xboard.XBoardSession
-import java.io.File
-import java.io.FileOutputStream
 import com.github.kr328.clash.design.R as DesignR
 
 
@@ -35,7 +32,6 @@ class MainApplication : Application() {
         super.onCreate()
 
         val processName = currentProcessName
-        extractGeoFiles()
 
         Log.d("Process $processName started")
 
@@ -120,41 +116,6 @@ class MainApplication : Application() {
             ).apply { description = getString(DesignR.string.channel_announcement_desc) }
         )
         manager.createNotificationChannels(channels)
-    }
-
-    private fun extractGeoFiles() {
-        clashDir.mkdirs()
-
-        val updateDate = packageManager.getPackageInfo(packageName, 0).lastUpdateTime
-        val geoipFile = File(clashDir, "geoip.metadb")
-        if (geoipFile.exists() && geoipFile.lastModified() < updateDate) {
-            geoipFile.delete()
-        }
-        if (!geoipFile.exists()) {
-            FileOutputStream(geoipFile).use {
-                assets.open("geoip.metadb").copyTo(it)
-            }
-        }
-
-        val geositeFile = File(clashDir, "geosite.dat")
-        if (geositeFile.exists() && geositeFile.lastModified() < updateDate) {
-            geositeFile.delete()
-        }
-        if (!geositeFile.exists()) {
-            FileOutputStream(geositeFile).use {
-                assets.open("geosite.dat").copyTo(it)
-            }
-        }
-
-        val asnFile = File(clashDir, "ASN.mmdb")
-        if (asnFile.exists() && asnFile.lastModified() < updateDate) {
-            asnFile.delete()
-        }
-        if (!asnFile.exists()) {
-            FileOutputStream(asnFile).use {
-                assets.open("ASN.mmdb").copyTo(it)
-            }
-        }
     }
 
     fun finalize() {
