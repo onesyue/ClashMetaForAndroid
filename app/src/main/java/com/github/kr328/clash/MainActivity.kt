@@ -374,7 +374,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                     startClashService()
             }
         } catch (e: Exception) {
-            design.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
+            design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
         }
     }
 
