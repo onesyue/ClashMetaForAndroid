@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	P "path"
 	"runtime"
@@ -8,6 +9,7 @@ import (
 
 	"cfa/native/app"
 
+	"github.com/metacubex/mihomo/common/convert"
 	"github.com/metacubex/mihomo/common/yaml"
 	"github.com/metacubex/mihomo/config"
 	"github.com/metacubex/mihomo/hub"
@@ -39,7 +41,48 @@ func UnmarshalAndPatch(profilePath string) (*config.RawConfig, error) {
 
 	rawConfig, err := config.UnmarshalRawConfig(configData)
 	if err != nil {
-		return nil, err
+		// YAML parsing failed — try converting as Base64/URI subscription
+		// (e.g. hysteria2://, vless://, ss:// links, possibly Base64-encoded)
+		log.Infoln("YAML unmarshal failed, trying V2Ray subscription conversion")
+
+		proxies, convErr := convert.ConvertsV2Ray(configData)
+		if convErr != nil || len(proxies) == 0 {
+			// Conversion also failed — return original YAML error
+			return nil, fmt.Errorf("not a valid Clash config or subscription: %w", err)
+		}
+
+		log.Infoln("Converted %d proxies from subscription format", len(proxies))
+
+		// Build a minimal Clash config with the converted proxies and a
+		// default proxy group so the config is usable out of the box.
+		proxyNames := make([]any, 0, len(proxies))
+		for _, p := range proxies {
+			if name, ok := p["name"].(string); ok {
+				proxyNames = append(proxyNames, name)
+			}
+		}
+
+		rawConfig = config.DefaultRawConfig()
+		rawConfig.Proxy = proxies
+		rawConfig.ProxyGroup = []map[string]any{
+			{
+				"name":     "PROXY",
+				"type":     "select",
+				"proxies":  proxyNames,
+			},
+			{
+				"name":     "auto",
+				"type":     "url-test",
+				"proxies":  proxyNames,
+				"url":      "https://www.gstatic.com/generate_204",
+				"interval": 300,
+			},
+		}
+
+		// Write the converted YAML back so subsequent loads don't need conversion
+		if yamlData, marshalErr := yaml.Marshal(rawConfig); marshalErr == nil {
+			_ = os.WriteFile(configPath, yamlData, 0600)
+		}
 	}
 
 	if err := process(rawConfig, profilePath); err != nil {
