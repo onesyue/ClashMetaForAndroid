@@ -407,14 +407,12 @@ class MainActivity : BaseActivity<MainDesign>() {
         withClash {
             val cfg = queryOverride(Clash.OverrideSlot.Persist)
 
-            // ── Geo 数据源（CDN 国内可达）──────────────────────
+            // ── Geo 数据 ─────────────────────────────────────
+            // 使用 dat 格式（与 APK 内置的 geoip.metadb/geosite.dat 匹配）
             cfg.geodataMode = true
-            cfg.geoAutoUpdate = true
-            cfg.geoUpdateInterval = 24
-            cfg.geoxurl.geoip = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
-            cfg.geoxurl.geosite = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
-            cfg.geoxurl.mmdb = "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
-            cfg.geoxurl.asn = "https://cdn.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
+            // 关闭自动更新：geo 文件随 APK 打包内置，由 extractGeoFiles() 释放
+            // 避免代理未启动时尝试从外网 CDN 下载导致失败
+            cfg.geoAutoUpdate = false
 
             // ── 移动端性能优化 ──────────────────────────────────
             cfg.tcpConcurrent = true          // TCP 并发连接，降低首包延迟
