@@ -1,4 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+    <!-- Widget -->
+    <string name="widget_label">VPN 状态</string>
+    <string name="widget_description">显示 VPN 连接状态，点击快速切换</string>
+
+    <!-- Subscription alerts -->
+    <string name="subscription_alert_title">订阅提醒</string>
+    <string name="subscription_expired_alert">您的订阅已过期，请及时续费</string>
+    <string name="subscription_expiring_1day">您的订阅将在 1 天内到期</string>
+    <string name="subscription_expiring_3days">您的订阅将在 3 天内到期</string>
+    <string name="subscription_expiring_7days">您的订阅将在 7 天内到期</string>
+
     <!-- Brand name -->
     <string name="launch_name_meta">悦通</string>
     <string name="launch_name_alpha">悦通</string>

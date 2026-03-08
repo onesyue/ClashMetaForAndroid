@@ -298,6 +298,9 @@ class MainActivity : BaseActivity<MainDesign>() {
         }
         setInviteLink(inviteInfo?.inviteUrl?.takeIf { it.isNotBlank() })
         setReferralCount(inviteInfo?.referralCount ?: 0)
+
+        // Check subscription expiry and send notification if needed
+        com.github.kr328.clash.util.SubscriptionChecker.check(this@MainActivity, info.expiredAt)
     }
 
     private suspend fun MainDesign.startClash() {
