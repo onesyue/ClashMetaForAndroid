@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.github.kr328.clash.design.databinding.DesignOrdersBinding
 import com.github.kr328.clash.design.util.applyFrom
 import com.github.kr328.clash.design.util.createGlassCard
@@ -206,7 +207,14 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
                     (40 * dp).toInt()
                 ).apply { topMargin = (8 * dp).toInt() }
                 setOnClickListener {
-                    requests.trySend(Request.CancelOrder(order.tradeNo))
+                    AlertDialog.Builder(context)
+                        .setTitle(R.string.order_cancel_confirm_title)
+                        .setMessage(R.string.order_cancel_confirm_message)
+                        .setPositiveButton(R.string.ok) { _, _ ->
+                            requests.trySend(Request.CancelOrder(order.tradeNo))
+                        }
+                        .setNegativeButton(R.string.cancel, null)
+                        .show()
                 }
             })
         }

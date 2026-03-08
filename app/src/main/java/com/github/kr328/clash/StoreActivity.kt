@@ -2,8 +2,8 @@ package com.github.kr328.clash
 
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.StoreDesign
-import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.xboard.XBoardApi
+import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ class StoreActivity : BaseActivity<StoreDesign>() {
         design.showLoading()
         launch(Dispatchers.IO) {
             try {
-                val baseUrl = RemoteConfig.getXboardUrl(this@StoreActivity)
+                val baseUrl = XBoardSession.getBaseUrl(this@StoreActivity)
                 val apiPlans = XBoardApi.getPlans(baseUrl)
                 val plans = apiPlans.map { p ->
                     StoreDesign.Plan(

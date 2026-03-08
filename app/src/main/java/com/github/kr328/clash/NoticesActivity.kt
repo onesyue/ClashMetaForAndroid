@@ -20,6 +20,11 @@ class NoticesActivity : BaseActivity<NoticesDesign>() {
         while (isActive) {
             select<Unit> {
                 events.onReceive { }
+                design.requests.onReceive { request ->
+                    when (request) {
+                        is NoticesDesign.Request.Refresh -> loadNotices(design)
+                    }
+                }
             }
         }
     }

@@ -2,6 +2,7 @@ package com.github.kr328.clash
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.CheckoutDesign
 import com.github.kr328.clash.design.R
@@ -86,7 +87,7 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
             if (result.valid) {
                 appliedCouponCode = code
                 val discount = when (result.type) {
-                    2 -> ((priceCents.toDouble() * result.value / 100.0) + 0.5).toLong()  // percentage, rounded
+                    2 -> (priceCents * result.value + 50) / 100  // percentage, integer rounding
                     else -> result.value                     // fixed amount
                 }
                 design.applyCoupon(discount.coerceAtMost(priceCents))
@@ -136,19 +137,23 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                     if (scheme in listOf("alipay", "alipays", "weixin", "wxpay")) {
                         startActivity(Intent(Intent.ACTION_VIEW, uri))
                     } else {
-                        startActivity(
+                        startActivityForResult(
+                            ActivityResultContracts.StartActivityForResult(),
                             AccountActivity::class.intent.apply {
                                 putExtra(AccountActivity.EXTRA_FULL_URL, result.data)
                             }
                         )
                     }
+                    design.showToast(getString(R.string.checkout_payment_pending), ToastDuration.Long)
                 }
                 1 -> {
-                    startActivity(
+                    startActivityForResult(
+                        ActivityResultContracts.StartActivityForResult(),
                         AccountActivity::class.intent.apply {
                             putExtra(AccountActivity.EXTRA_FULL_URL, result.data)
                         }
                     )
+                    design.showToast(getString(R.string.checkout_payment_pending), ToastDuration.Long)
                 }
             }
         } catch (e: XBoardApi.AuthExpiredException) {

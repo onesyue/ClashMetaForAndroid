@@ -11,6 +11,15 @@ object XBoardApi {
     /** Thrown when the server returns 401/403, indicating the token is invalid or expired. */
     class AuthExpiredException(message: String) : Exception(message)
 
+    /** Enforce HTTPS — reject plain HTTP URLs to prevent token leakage. */
+    private fun requireHttps(baseUrl: String): String {
+        val url = baseUrl.trimEnd('/')
+        if (url.startsWith("http://", ignoreCase = true)) {
+            throw Exception("Insecure connection: HTTPS is required")
+        }
+        return url
+    }
+
     data class AuthResult(val subscribeUrl: String, val authData: String = "")
 
     data class UserInfo(
@@ -436,7 +445,7 @@ object XBoardApi {
 
     private suspend fun fetchSubscribeUrl(baseUrl: String, authData: String): String {
         return withContext(Dispatchers.IO) {
-            val url = URL("${baseUrl.trimEnd('/')}/api/v1/user/getSubscribe")
+            val url = URL("${requireHttps(baseUrl)}/api/v1/user/getSubscribe")
             val conn = url.openConnection() as HttpURLConnection
             try {
                 conn.requestMethod = "GET"
@@ -471,7 +480,7 @@ object XBoardApi {
     }
 
     private fun httpGet(baseUrl: String, path: String, authData: String): JSONObject {
-        val url = URL("${baseUrl.trimEnd('/')}$path")
+        val url = URL("${requireHttps(baseUrl)}$path")
         val conn = url.openConnection() as HttpURLConnection
         try {
             conn.requestMethod = "GET"
@@ -499,7 +508,7 @@ object XBoardApi {
     }
 
     private fun httpGetGuest(baseUrl: String, path: String): JSONObject {
-        val url = URL("${baseUrl.trimEnd('/')}$path")
+        val url = URL("${requireHttps(baseUrl)}$path")
         val conn = url.openConnection() as HttpURLConnection
         try {
             conn.requestMethod = "GET"
@@ -523,7 +532,7 @@ object XBoardApi {
     }
 
     private fun httpPost(baseUrl: String, path: String, body: JSONObject): JSONObject {
-        val url = URL("${baseUrl.trimEnd('/')}$path")
+        val url = URL("${requireHttps(baseUrl)}$path")
         val conn = url.openConnection() as HttpURLConnection
         try {
             conn.requestMethod = "POST"
@@ -551,7 +560,7 @@ object XBoardApi {
     }
 
     private fun httpPostAuth(baseUrl: String, path: String, body: JSONObject, authData: String): JSONObject {
-        val url = URL("${baseUrl.trimEnd('/')}$path")
+        val url = URL("${requireHttps(baseUrl)}$path")
         val conn = url.openConnection() as HttpURLConnection
         try {
             conn.requestMethod = "POST"

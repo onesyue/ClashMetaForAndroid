@@ -15,7 +15,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class NoticesDesign(context: Context) : Design<Unit>(context) {
+class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
+
+    sealed class Request {
+        object Refresh : Request()
+    }
 
     data class Notice(
         val id: Int,
@@ -34,20 +38,26 @@ class NoticesDesign(context: Context) : Design<Unit>(context) {
 
     init {
         binding.activityBarLayout.applyFrom(context)
+        binding.noticesSwipeRefresh.setOnRefreshListener {
+            requests.trySend(Request.Refresh)
+        }
+        binding.noticesSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
+        binding.noticesSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
     }
 
     fun showLoading() {
         binding.noticesLoading.visibility = View.VISIBLE
         binding.noticesEmpty.visibility = View.GONE
-        binding.noticesScroll.visibility = View.GONE
+        binding.noticesSwipeRefresh.visibility = View.GONE
     }
 
     fun showNotices(notices: List<Notice>) {
         binding.noticesLoading.visibility = View.GONE
+        binding.noticesSwipeRefresh.isRefreshing = false
 
         if (notices.isEmpty()) {
             binding.noticesEmpty.visibility = View.VISIBLE
-            binding.noticesScroll.visibility = View.GONE
+            binding.noticesSwipeRefresh.visibility = View.GONE
             return
         }
 
@@ -57,7 +67,7 @@ class NoticesDesign(context: Context) : Design<Unit>(context) {
         }
 
         binding.noticesEmpty.visibility = View.GONE
-        binding.noticesScroll.visibility = View.VISIBLE
+        binding.noticesSwipeRefresh.visibility = View.VISIBLE
     }
 
     private fun createNoticeCard(notice: Notice): View {
