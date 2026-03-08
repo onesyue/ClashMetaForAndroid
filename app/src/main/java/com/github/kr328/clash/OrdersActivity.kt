@@ -1,5 +1,7 @@
 package com.github.kr328.clash
 
+import android.content.Intent
+import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.OrdersDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -34,6 +36,8 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
                                         design.showToast(getString(R.string.order_cancelled), ToastDuration.Short)
                                         loadOrders(design)
                                     }
+                                } catch (e: XBoardApi.AuthExpiredException) {
+                                    withContext(Dispatchers.Main) { handleAuthExpired() }
                                 } catch (e: Exception) {
                                     withContext(Dispatchers.Main) {
                                         design.showToast(
@@ -69,9 +73,20 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
                     )
                 }
                 withContext(Dispatchers.Main) { design.showOrders(items) }
+            } catch (e: XBoardApi.AuthExpiredException) {
+                withContext(Dispatchers.Main) { handleAuthExpired() }
             } catch (_: Exception) {
                 withContext(Dispatchers.Main) { design.showOrders(emptyList()) }
             }
         }
+    }
+
+    private fun handleAuthExpired() {
+        XBoardSession.clear(this)
+        startActivity(
+            XBoardLoginActivity::class.intent.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
     }
 }

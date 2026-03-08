@@ -1,5 +1,7 @@
 package com.github.kr328.clash
 
+import android.content.Intent
+import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.NoticesDesign
 import com.github.kr328.clash.xboard.XBoardApi
 import com.github.kr328.clash.xboard.XBoardSession
@@ -41,9 +43,20 @@ class NoticesActivity : BaseActivity<NoticesDesign>() {
                     )
                 }
                 withContext(Dispatchers.Main) { design.showNotices(items) }
+            } catch (e: XBoardApi.AuthExpiredException) {
+                withContext(Dispatchers.Main) { handleAuthExpired() }
             } catch (_: Exception) {
                 withContext(Dispatchers.Main) { design.showNotices(emptyList()) }
             }
         }
+    }
+
+    private fun handleAuthExpired() {
+        XBoardSession.clear(this)
+        startActivity(
+            XBoardLoginActivity::class.intent.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
     }
 }

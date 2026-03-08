@@ -8,6 +8,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object XBoardApi {
+    /** Thrown when the server returns 401/403, indicating the token is invalid or expired. */
+    class AuthExpiredException(message: String) : Exception(message)
+
     data class AuthResult(val subscribeUrl: String, val authData: String = "")
 
     data class UserInfo(
@@ -180,7 +183,8 @@ object XBoardApi {
                 val referralCount = stat?.optInt(0, 0) ?: 0
                 InviteInfo(url, referralCount)
             }
-        } catch (_: Exception) { null }
+        } catch (e: AuthExpiredException) { throw e }
+        catch (_: Exception) { null }
     }
 
     /**
@@ -232,7 +236,8 @@ object XBoardApi {
                 val infoData = try {
                     httpGet(baseUrl, "/api/v1/user/info", authData)
                         .getJSONObject("data")
-                } catch (_: Exception) { null }
+                } catch (e: AuthExpiredException) { throw e }
+                catch (_: Exception) { null }
 
                 val planName = subData.optJSONObject("plan")
                     ?.optString("name")?.takeIf { it.isNotBlank() }
@@ -252,7 +257,8 @@ object XBoardApi {
                     planName = planName
                 )
             }
-        } catch (_: Exception) { null }
+        } catch (e: AuthExpiredException) { throw e }
+        catch (_: Exception) { null }
     }
 
     /**
@@ -272,7 +278,8 @@ object XBoardApi {
                     )
                 }
             }
-        } catch (_: Exception) { emptyList() }
+        } catch (e: AuthExpiredException) { throw e }
+        catch (_: Exception) { emptyList() }
     }
 
     /**
@@ -344,7 +351,8 @@ object XBoardApi {
                     )
                 }
             }
-        } catch (_: Exception) { emptyList() }
+        } catch (e: AuthExpiredException) { throw e }
+        catch (_: Exception) { emptyList() }
     }
 
     /**
@@ -368,7 +376,8 @@ object XBoardApi {
                     )
                 }
             }
-        } catch (_: Exception) { emptyList() }
+        } catch (e: AuthExpiredException) { throw e }
+        catch (_: Exception) { emptyList() }
     }
 
     // ── Private helpers ────────────────────────────────────────────────────
@@ -396,6 +405,9 @@ object XBoardApi {
                     ?.bufferedReader()?.readText() ?: ""
 
                 val root = JSONObject(responseText)
+                if (responseCode == 401 || responseCode == 403) {
+                    throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
+                }
                 if (responseCode != 200) {
                     throw Exception(root.optString("message", "Failed to get subscription ($responseCode)"))
                 }
@@ -427,6 +439,9 @@ object XBoardApi {
                 ?.bufferedReader()?.readText() ?: ""
 
             val root = JSONObject(responseText)
+            if (responseCode == 401 || responseCode == 403) {
+                throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
+            }
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
             }
@@ -505,6 +520,9 @@ object XBoardApi {
                 ?.bufferedReader()?.readText() ?: ""
 
             val root = JSONObject(responseText)
+            if (responseCode == 401 || responseCode == 403) {
+                throw AuthExpiredException(root.optString("message", "登录已过期，请重新登录"))
+            }
             if (responseCode != 200) {
                 throw Exception(root.optString("message", "Request failed ($responseCode)"))
             }

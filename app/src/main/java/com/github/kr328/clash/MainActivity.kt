@@ -125,6 +125,8 @@ class MainActivity : BaseActivity<MainDesign>() {
                                         getString(R.string.password_changed),
                                         ToastDuration.Short
                                     )
+                                } catch (e: XBoardApi.AuthExpiredException) {
+                                    withContext(Dispatchers.Main) { handleAuthExpired() }
                                 } catch (e: Exception) {
                                     design.showToast(
                                         e.message ?: getString(R.string.xboard_request_failed),
@@ -222,7 +224,13 @@ class MainActivity : BaseActivity<MainDesign>() {
         val authData = XBoardSession.getAuthData(this@MainActivity) ?: return
         val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
 
-        val info = XBoardApi.getUserInfo(baseUrl, authData) ?: return
+        val info: XBoardApi.UserInfo
+        try {
+            info = XBoardApi.getUserInfo(baseUrl, authData) ?: return
+        } catch (e: XBoardApi.AuthExpiredException) {
+            handleAuthExpired()
+            return
+        }
 
         setUserEmail(info.email.takeIf { it.isNotBlank() })
 
@@ -261,7 +269,12 @@ class MainActivity : BaseActivity<MainDesign>() {
         setBalance(info.balance)
         setCommissionBalance(info.commissionBalance)
 
-        val inviteInfo = XBoardApi.getInviteInfo(baseUrl, authData)
+        val inviteInfo = try {
+            XBoardApi.getInviteInfo(baseUrl, authData)
+        } catch (e: XBoardApi.AuthExpiredException) {
+            handleAuthExpired()
+            return
+        }
         setInviteLink(inviteInfo?.inviteUrl?.takeIf { it.isNotBlank() })
         setReferralCount(inviteInfo?.referralCount ?: 0)
     }
@@ -387,6 +400,15 @@ class MainActivity : BaseActivity<MainDesign>() {
         val m = (totalSeconds % 3600) / 60
         val s = totalSeconds % 60
         return "%02d:%02d:%02d".format(h, m, s)
+    }
+
+    private fun handleAuthExpired() {
+        XBoardSession.clear(this)
+        startActivity(
+            XBoardLoginActivity::class.intent.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
     }
 
     private suspend fun queryAppVersionName(): String {

@@ -47,6 +47,8 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                         methods.map { CheckoutDesign.PaymentMethod(it.id, it.name) }
                     )
                 }
+            } catch (e: XBoardApi.AuthExpiredException) {
+                withContext(Dispatchers.Main) { handleAuthExpired() }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     design.showToast(
@@ -119,6 +121,8 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                     )
                 }
             }
+        } catch (e: XBoardApi.AuthExpiredException) {
+            handleAuthExpired()
         } catch (e: Exception) {
             design.showToast(
                 e.message ?: getString(R.string.xboard_request_failed),
@@ -127,5 +131,14 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
         } finally {
             design.setLoading(false)
         }
+    }
+
+    private fun handleAuthExpired() {
+        XBoardSession.clear(this)
+        startActivity(
+            XBoardLoginActivity::class.intent.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
     }
 }
