@@ -3,7 +3,6 @@ package com.github.kr328.clash.xboard
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.CertificatePinner
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -26,22 +25,10 @@ object XBoardApi {
 
     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
 
-    // Certificate pinning for API domains — pins both leaf and intermediate CA.
-    // If certificates rotate, update these pins accordingly.
-    private val certificatePinner = CertificatePinner.Builder()
-        .add("sso.yuetoto.com",
-            "sha256/n80tyoDLDjNg+AlKcaCrfoLgrMyIyibcwNYK+aWeqqA=",  // leaf
-            "sha256/kIdp6NNEd8wsugYyyIYFsi1ylMCED3hZbSR8ZFsa/A4=")  // intermediate CA
-        .add("my.yue.to",
-            "sha256/1WhyO/ZyMYwSqjAAW2uNscOXcjWH+PURo1FJnk/J3Vg=",  // leaf
-            "sha256/kIdp6NNEd8wsugYyyIYFsi1ylMCED3hZbSR8ZFsa/A4=")  // intermediate CA
-        .build()
-
     private val client = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
-        .certificatePinner(certificatePinner)
         .build()
 
     /** Enforce HTTPS — reject plain HTTP URLs to prevent token leakage. */
