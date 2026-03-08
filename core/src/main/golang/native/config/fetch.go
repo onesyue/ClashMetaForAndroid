@@ -199,10 +199,9 @@ func FetchAndValid(
 				// Move the original content to the provider file
 				_ = os.Rename(configPath, providerAbsPath)
 
-				// Use relative path in config — Clash resolves it relative to config dir.
-				// Absolute paths break when the profile dir moves (processing → imported).
-				providerRelPath := "providers/subscription.yaml"
-				generatedConfig := generateProviderConfig(url, providerRelPath)
+				// Use filename only — patchProviders() in process.go will prepend
+				// "profileDir/providers/" to the path automatically.
+				generatedConfig := generateProviderConfig(url, "subscription.yaml")
 				_ = os.WriteFile(configPath, generatedConfig, 0600)
 			}
 		}
