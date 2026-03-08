@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-    <!-- 品牌名称 -->
-    <string name="launch_name_meta">悦通</string>
-    <string name="launch_name_alpha">悦通</string>
-    <string name="application_name_meta">悦通</string>
-    <string name="application_name_alpha">悦通</string>
-    <string name="launch_name">悦通</string>
-    <string name="application_name">悦通</string>
+    <!-- Brand name -->
+    <string name="launch_name_meta">YueTong</string>
+    <string name="launch_name_alpha">YueTong</string>
+    <string name="application_name_meta">YueTong</string>
+    <string name="application_name_alpha">YueTong</string>
+    <string name="launch_name">YueTong</string>
+    <string name="application_name">YueTong</string>
 
     <string name="stopped">未连接</string>
     <string name="tap_to_start">点击连接</string>
@@ -213,7 +213,7 @@
     <string name="import_from_clipboard">从剪贴板导入</string>
     <string name="export_to_clipboard">导出到剪贴板</string>
 
-    <string name="clash_meta_for_android">悦通</string>
+    <string name="clash_meta_for_android">YueTong</string>
 
     <string name="document">文档</string>
     <string name="feedback">反馈</string>
@@ -228,7 +228,7 @@
     <string name="clash_meta_core_url" translatable="false">https://my.yue.to</string>
 
     <string name="tips_properties"><![CDATA[订阅链接需为有效的代理配置文件]]></string>
-    <string name="tips_help"><![CDATA[悦通 — 专为 AI 与流媒体打造的全球加速网络]]></string>
+    <string name="tips_help"><![CDATA[YueTong — Global acceleration network for AI & streaming]]></string>
 
     <string name="google_play_url" translatable="false">https://my.yue.to</string>
 
@@ -298,7 +298,7 @@
 
     <string name="mode_switch_tips">仅对当前会话有效</string>
 
-    <string name="clash_meta_wiki">悦通帮助中心</string>
+    <string name="clash_meta_wiki">YueTong Help Center</string>
     <string name="clash_meta_wiki_url" translatable="false">https://my.yue.to</string>
 
     <string name="meta_features">高级功能</string>
@@ -343,8 +343,8 @@
     <string name="toast_profile_updated_complete">订阅 %s 更新完成</string>
     <string name="toast_profile_updated_failed">订阅 %1$s 更新失败：%2$s</string>
     <string name="external_control_activity">外部控制</string>
-    <string name="external_control_started">悦通服务已启动</string>
-    <string name="external_control_stopped">悦通服务已停止</string>
+    <string name="external_control_started">YueTong service started</string>
+    <string name="external_control_stopped">YueTong service stopped</string>
 
     <string name="hide_app_icon_title">隐藏应用图标</string>
     <string name="hide_app_icon_desc">可拨号 *#*#252746382#*#* 重新打开</string>
@@ -375,8 +375,8 @@
     <!-- XBoard 登录（保留供兼容） -->
     <string name="xboard_login">账号登录</string>
     <string name="xboard_login_summary">点击登录以导入订阅</string>
-    <string name="xboard_brand_name">悦通</string>
-    <string name="xboard_brand_subtitle">专为 AI 与流媒体打造的全球加速网络</string>
+    <string name="xboard_brand_name">YueTong</string>
+    <string name="xboard_brand_subtitle">Global acceleration network for AI &amp; streaming</string>
     <string name="xboard_site_url">网站地址</string>
     <string name="xboard_email">邮箱</string>
     <string name="xboard_password">密码</string>
