@@ -11,6 +11,7 @@ import (
 	"os"
 	P "path"
 	"runtime"
+	"strings"
 	"time"
 
 	"cfa/native/app"
@@ -81,20 +82,17 @@ func fetch(url *U.URL, file string) error {
 }
 
 // isClashYAML checks if the content looks like a valid Clash YAML config.
-// It checks for common top-level keys that indicate Clash format.
 func isClashYAML(data []byte) bool {
-	// Quick check: YAML configs typically start with a key or comment
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
 		return false
 	}
 
-	// If it starts with '{' it's likely JSON (which YAML can parse), allow it
+	// JSON is valid YAML
 	if trimmed[0] == '{' {
 		return true
 	}
 
-	// Check for common Clash YAML top-level keys
 	clashKeys := []string{
 		"proxies:", "proxy-groups:", "proxy-providers:",
 		"rules:", "mixed-port:", "port:", "socks-port:",
@@ -109,49 +107,103 @@ func isClashYAML(data []byte) bool {
 	return false
 }
 
-// generateProviderConfig creates a standard Clash YAML config that uses
-// the original subscription URL as a proxy-provider. This follows the
-// upstream mihomo pattern where format conversion (Base64/URI → proxies)
-// is handled by the provider parser (provider.go:371).
-func generateProviderConfig(subscriptionURL string, providerPath string) []byte {
-	cfg := fmt.Sprintf(`# Auto-generated config for non-YAML subscription
-# Original URL: %s
+// convertToClashConfig converts Base64/URI proxy list to a full Clash YAML config
+// with proxies inline. No proxy-provider indirection, no runtime re-download.
+func convertToClashConfig(proxies []map[string]any) []byte {
+	var b strings.Builder
 
-mixed-port: 7890
-mode: rule
-log-level: info
+	b.WriteString("mixed-port: 7890\n")
+	b.WriteString("mode: rule\n")
+	b.WriteString("log-level: info\n\n")
 
-proxy-providers:
-  subscription:
-    type: http
-    url: "%s"
-    path: "%s"
-    interval: 3600
-    health-check:
-      enable: true
-      url: "https://www.gstatic.com/generate_204"
-      interval: 300
+	// proxies section
+	b.WriteString("proxies:\n")
+	var names []string
+	for _, proxy := range proxies {
+		name, _ := proxy["name"].(string)
+		if name == "" {
+			continue
+		}
+		names = append(names, name)
 
-proxy-groups:
-  - name: PROXY
-    type: select
-    use:
-      - subscription
-    proxies:
-      - auto
+		b.WriteString("  - {")
+		first := true
+		// name and type first
+		for _, key := range []string{"name", "type"} {
+			if val, ok := proxy[key]; ok {
+				if !first {
+					b.WriteString(", ")
+				}
+				b.WriteString(fmt.Sprintf("%s: %s", key, yamlValue(val)))
+				first = false
+			}
+		}
+		// rest of fields
+		for key, val := range proxy {
+			if key == "name" || key == "type" {
+				continue
+			}
+			b.WriteString(fmt.Sprintf(", %s: %s", key, yamlValue(val)))
+		}
+		b.WriteString("}\n")
+	}
 
-  - name: auto
-    type: url-test
-    use:
-      - subscription
-    url: "https://www.gstatic.com/generate_204"
-    interval: 300
+	// proxy-groups
+	b.WriteString("\nproxy-groups:\n")
+	b.WriteString("  - name: PROXY\n")
+	b.WriteString("    type: select\n")
+	b.WriteString("    proxies:\n")
+	b.WriteString("      - auto\n")
+	for _, name := range names {
+		b.WriteString(fmt.Sprintf("      - \"%s\"\n", strings.ReplaceAll(name, "\"", "\\\"")))
+	}
 
-rules:
-  - MATCH,PROXY
-`, subscriptionURL, subscriptionURL, providerPath)
+	b.WriteString("\n  - name: auto\n")
+	b.WriteString("    type: url-test\n")
+	b.WriteString("    url: \"https://www.gstatic.com/generate_204\"\n")
+	b.WriteString("    interval: 300\n")
+	b.WriteString("    proxies:\n")
+	for _, name := range names {
+		b.WriteString(fmt.Sprintf("      - \"%s\"\n", strings.ReplaceAll(name, "\"", "\\\"")))
+	}
 
-	return []byte(cfg)
+	// rules
+	b.WriteString("\nrules:\n")
+	b.WriteString("  - MATCH,PROXY\n")
+
+	return []byte(b.String())
+}
+
+// yamlValue formats a Go value for inline YAML output.
+func yamlValue(v any) string {
+	switch val := v.(type) {
+	case string:
+		// Quote strings that contain special chars
+		if strings.ContainsAny(val, ":{}[],&*#?|-<>=!%@`\"'\n") || val == "" || val == "true" || val == "false" {
+			return fmt.Sprintf("\"%s\"", strings.ReplaceAll(val, "\"", "\\\""))
+		}
+		return val
+	case bool:
+		if val {
+			return "true"
+		}
+		return "false"
+	case []string:
+		items := make([]string, len(val))
+		for i, s := range val {
+			items[i] = fmt.Sprintf("\"%s\"", s)
+		}
+		return "[" + strings.Join(items, ", ") + "]"
+	case map[string]any:
+		// Nested map — serialize as JSON-like inline
+		data, err := json.Marshal(val)
+		if err != nil {
+			return "{}"
+		}
+		return string(data)
+	default:
+		return fmt.Sprintf("%v", val)
+	}
 }
 
 func FetchAndValid(
@@ -181,27 +233,14 @@ func FetchAndValid(
 			return err
 		}
 
-		// Check if the downloaded content is valid Clash YAML.
-		// If not (e.g. Base64-encoded proxy URIs), generate a config
-		// that uses the URL as a proxy-provider, letting the upstream
-		// provider parser handle the format conversion.
+		// If downloaded content is not Clash YAML (e.g. Base64 proxy URIs),
+		// convert it directly to a Clash config with proxies inline.
 		configData, readErr := os.ReadFile(configPath)
 		if readErr == nil && !isClashYAML(configData) {
-			// Verify the content is actually convertible
 			proxies, convErr := convert.ConvertsV2Ray(configData)
 			if convErr == nil && len(proxies) > 0 {
-				log.Infoln("Subscription returned %d proxies in URI format, generating provider-based config", len(proxies))
-
-				providerDir := P.Join(path, "providers")
-				_ = os.MkdirAll(providerDir, 0700)
-				providerAbsPath := P.Join(providerDir, "subscription.yaml")
-
-				// Move the original content to the provider file
-				_ = os.Rename(configPath, providerAbsPath)
-
-				// Use filename only — patchProviders() in process.go will prepend
-				// "profileDir/providers/" to the path automatically.
-				generatedConfig := generateProviderConfig(url, "subscription.yaml")
+				log.Infoln("Subscription returned %d proxies in URI format, converting to inline config", len(proxies))
+				generatedConfig := convertToClashConfig(proxies)
 				_ = os.WriteFile(configPath, generatedConfig, 0600)
 			}
 		}
