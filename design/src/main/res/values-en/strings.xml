@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+    <!-- Widget -->
+    <string name="widget_label">VPN Status</string>
+    <string name="widget_description">Shows VPN connection status with quick toggle</string>
+
+    <!-- Subscription alerts -->
+    <string name="subscription_alert_title">Subscription Reminder</string>
+    <string name="subscription_expired_alert">Your subscription has expired. Please renew.</string>
+    <string name="subscription_expiring_1day">Your subscription expires in 1 day</string>
+    <string name="subscription_expiring_3days">Your subscription expires in 3 days</string>
+    <string name="subscription_expiring_7days">Your subscription expires in 7 days</string>
+
+    <!-- Brand name -->
+    <string name="launch_name_meta">YueTong</string>
+    <string name="launch_name_alpha">YueTong</string>
+    <string name="application_name_meta">YueTong</string>
+    <string name="application_name_alpha">YueTong</string>
+    <string name="launch_name">YueTong</string>
+    <string name="application_name">YueTong</string>
+
+    <string name="stopped">Disconnected</string>
+    <string name="tap_to_start">Tap to connect</string>
+    <string name="running">Connected</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="format_traffic_forwarded">%s forwarded</string>
+
+    <string name="proxy">Proxy</string>
+    <string name="direct_mode">Direct</string>
+    <string name="rule_mode">Rule</string>
+    <string name="global_mode">Global</string>
+    <string name="proxy_empty_tips">No proxy groups to display</string>
+
+    <string name="profiles">Profiles</string>
+    <string name="not_selected">Not selected</string>
+
+    <string name="logs">Logs</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+
+    <string name="copied">Copied</string>
+    <string name="recently">Recently</string>
+
+    <string name="format_minutes">%d min</string>
+    <string name="format_elements">%d items</string>
+    <string name="format_minutes_ago">%d min ago</string>
+    <string name="format_hours_ago">%d hours ago</string>
+    <string name="format_days_ago">%d days ago</string>
+    <string name="format_months_ago">%d months ago</string>
+    <string name="format_years_ago">%d years ago</string>
+
+    <string name="create_profile">New Profile</string>
+    <string name="file">File</string>
+    <string name="import_from_file">Import from file</string>
+    <string name="url">URL</string>
+    <string name="import_from_url">Import from URL</string>
+    <string name="import_from_qr">Scan QR code</string>
+    <string name="external">External</string>
+    <string name="format_type_unsaved">%s (unsaved)</string>
+
+    <string name="application_broken">Application Broken</string>
+    <string name="application_crashed">Application Crashed</string>
+    <string name="application_broken_tips">The app is missing required components, usually caused by an incomplete APK.</string>
+    <string name="reinstall">Reinstall</string>
+
+    <string name="profile">Profile</string>
+    <string name="name">Name</string>
+    <string name="profile_name">Profile name</string>
+    <string name="profile_url">Profile URL</string>
+    <string name="auto_update">Auto update</string>
+    <string name="auto_update_minutes">Auto update (minutes)</string>
+
+    <string name="accept_http_content">Accept http(s) only</string>
+    <string name="at_least_15_minutes">At least 15 min or leave empty</string>
+    <string name="should_not_be_blank">Cannot be empty</string>
+    <string name="detail">Detail</string>
+    <string name="update">Update</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="export">Export</string>
+    <string name="import_">Import</string>
+    <string name="properties">Properties</string>
+    <string name="duplicate">Duplicate</string>
+    <string name="active_unsaved_tips">Save the profile before activating</string>
+
+    <string name="exit_without_save">Exit without saving</string>
+    <string name="exit_without_save_warning">All changes will be lost</string>
+
+    <string name="disabled">Disabled</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="empty_name">Name is empty</string>
+    <string name="invalid_url">Invalid URL</string>
+    <string name="loading">Loading</string>
+
+    <string name="format_fetching_configuration">Fetching config \'%s\'</string>
+    <string name="format_fetching_provider">Fetching \'%s\'</string>
+    <string name="initializing">Initializing</string>
+    <string name="verifying">Verifying</string>
+
+    <string name="new_profile">New Profile</string>
+
+    <string name="delay">Delay</string>
+    <string name="sort">Sort</string>
+    <string name="default_">Default</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset">Reset</string>
+
+    <string name="clash_logcat">Debug Log</string>
+    <string name="history">History</string>
+
+    <string name="delete_all_logs">Delete all logs</string>
+    <string name="delete_all_logs_warn">All log history will be cleared</string>
+    <string name="file_exported">File exported</string>
+
+    <string name="behavior">Behavior</string>
+    <string name="network">Network</string>
+    <string name="interface_">Interface</string>
+    <string name="override">Override</string>
+
+    <string name="auto_restart">Auto restart</string>
+    <string name="allow_clash_auto_restart">Allow service to restart automatically on failure</string>
+
+    <string name="route_system_traffic">Route all traffic</string>
+    <string name="routing_via_vpn_service">Route all system traffic automatically</string>
+
+    <string name="vpn_service_options">VPN Options</string>
+    <string name="bypass_private_network">Bypass private network</string>
+    <string name="bypass_private_network_summary">Bypass private network addresses</string>
+    <string name="dns_hijacking">DNS hijacking</string>
+    <string name="dns_hijacking_summary">Handle all DNS packets</string>
+    <string name="block_loopback">Block loopback</string>
+    <string name="block_loopback_summary">Block loopback connections</string>
+    <string name="allow_bypass">Allow bypass</string>
+    <string name="allow_bypass_summary">Allow apps to bypass this proxy</string>
+    <string name="allow_ipv6">Allow IPv6</string>
+    <string name="allow_ipv6_summary">Allow IPv6 traffic</string>
+    <string name="system_proxy">System proxy</string>
+    <string name="system_proxy_summary">Attach HTTP access for proxy</string>
+    <string name="access_control_mode">Access control mode</string>
+    <string name="access_control_packages">Access control apps</string>
+    <string name="access_control_packages_summary">Configure app access permissions</string>
+
+    <string name="options_unavailable">Stop the service to modify</string>
+
+    <string name="general">General</string>
+    <string name="dns">DNS</string>
+    <string name="prefer_h3">Prefer H3</string>
+    <string name="http_port">HTTP port</string>
+    <string name="socks_port">Socks port</string>
+    <string name="redirect_port">Redirect port</string>
+    <string name="mixed_port">Mixed port</string>
+    <string name="tproxy_port">TProxy port</string>
+    <string name="authentication">Authentication</string>
+    <string name="allow_lan">Allow LAN</string>
+    <string name="bind_address">Bind address</string>
+    <string name="mode">Mode</string>
+    <string name="log_level">Log level</string>
+    <string name="ipv6">IPv6</string>
+    <string name="external_controller">External controller</string>
+    <string name="external_controller_tls">External controller TLS</string>
+    <string name="allow_origins">Allowed origins</string>
+    <string name="allow_private_network">Allow private network</string>
+    <string name="secret">Secret</string>
+    <string name="hosts">Hosts</string>
+    <string name="_new">New</string>
+    <string name="value">Value</string>
+
+    <string name="strategy">Strategy</string>
+    <string name="listen">Listen</string>
+    <string name="append_system_dns">Append system DNS</string>
+    <string name="use_hosts">Use Hosts</string>
+    <string name="enhanced_mode">Enhanced mode</string>
+    <string name="name_server">Name server</string>
+    <string name="fallback">Fallback</string>
+    <string name="default_name_server">Default name server</string>
+    <string name="fakeip_filter">Fake-IP filter</string>
+    <string name="fakeip_filter_mode">Fake-IP filter mode</string>
+    <string name="geoip_fallback">GeoIP fallback</string>
+    <string name="geoip_fallback_code">GeoIP fallback code</string>
+    <string name="ipcidr_fallback">IPCIDR fallback</string>
+    <string name="domain_fallback">Domain fallback</string>
+    <string name="name_server_policy">Name server policy</string>
+
+    <string name="dont_modify">Don\'t modify</string>
+    <string name="empty">Empty</string>
+    <string name="enabled">Enabled</string>
+
+    <string name="info">Info</string>
+    <string name="warning">Warning</string>
+    <string name="error">Error</string>
+    <string name="debug">Debug</string>
+    <string name="silent">Silent</string>
+
+    <string name="force_enable">Force enable</string>
+
+    <string name="mapping">Real IP to domain mapping</string>
+    <string name="fakeip">Fake-IP to domain mapping</string>
+
+    <string name="blacklist">Blacklist</string>
+    <string name="whitelist">Whitelist</string>
+
+    <string name="off">Off</string>
+    <string name="strict">Strict</string>
+    <string name="always">Always</string>
+
+    <string name="system_apps">System apps</string>
+    <string name="filter">Filter</string>
+    <string name="package_name">Package name</string>
+    <string name="update_time">Update time</string>
+    <string name="install_time">Install time</string>
+    <string name="reverse">Reverse</string>
+    <string name="search">Search</string>
+    <string name="select_all">Select all</string>
+    <string name="select_invert">Invert selection</string>
+    <string name="select_none">Deselect all</string>
+    <string name="import_from_clipboard">Import from clipboard</string>
+    <string name="export_to_clipboard">Export to clipboard</string>
+
+    <string name="clash_meta_for_android">YueTong</string>
+
+    <string name="document">Documentation</string>
+    <string name="feedback">Feedback</string>
+    <string name="sources">Source code</string>
+    <string name="donate">Donate</string>
+    <string name="clash_wiki">Wiki</string>
+    <string name="clash_meta_core">Core version</string>
+
+    <string name="tips_properties"><![CDATA[Profile URL must be a valid proxy configuration file]]></string>
+    <string name="tips_help"><![CDATA[YueTong — Global acceleration for AI and streaming]]></string>
+
+    <string name="app">App</string>
+    <string name="service">Service</string>
+
+    <string name="dark_mode">Dark mode</string>
+
+    <string name="language">Language</string>
+    <string name="lang_system">Follow system</string>
+
+    <string name="show_traffic">Show traffic</string>
+    <string name="show_traffic_summary">Auto-refresh traffic in notification bar</string>
+
+    <string name="follow_system_android_10">Follow system (Android 10+)</string>
+    <string name="always_dark">Always dark</string>
+    <string name="always_light">Always light</string>
+
+    <string name="allow_all_apps">Allow all apps</string>
+    <string name="allow_selected_apps">Allow selected apps</string>
+    <string name="deny_selected_apps">Deny selected apps</string>
+
+    <string name="no_profile_selected">No subscription added. Go to Account Center.</string>
+
+    <string name="layout">Layout</string>
+    <string name="single">Single</string>
+    <string name="doubles">Double</string>
+    <string name="multiple">Multiple</string>
+    <string name="not_selectable">Not selectable</string>
+
+    <string name="providers">Providers</string>
+
+    <string name="files">Files</string>
+    <string name="browse_files">Browse files</string>
+    <string name="browse_configuration_providers"><![CDATA[Browse configurations and rules]]></string>
+    <string name="rename">Rename</string>
+    <string name="file_name">File name</string>
+    <string name="invalid_file_name">Invalid file name</string>
+
+    <string name="reset_override_settings">Reset override settings</string>
+    <string name="reset_override_settings_message">All override settings will be discarded</string>
+    <string name="key">Key</string>
+
+    <string name="use_built_in">Use built-in</string>
+    <string name="more">More</string>
+    <string name="save">Save</string>
+    <string name="delay_test">Speed test</string>
+
+    <string name="format_provider_type">%1$s (%2$s)</string>
+    <string name="rule">Rule</string>
+    <string name="http">HTTP</string>
+    <string name="inline">Inline</string>
+    <string name="compatible">Compatible</string>
+    <string name="format_update_provider_failure">Failed to update %1$s: %2$s</string>
+    <string name="update_all">Update all</string>
+
+    <string name="close">Close</string>
+    <string name="keyword">Keyword</string>
+
+    <string name="invalid_log_file">Invalid log file</string>
+    <string name="unable_to_start_vpn">Unable to connect. Please try again.</string>
+
+    <string name="version_updated">App updated</string>
+    <string name="version_updated_tips">Settings have been reset. Old profiles need to be re-saved.</string>
+
+    <string name="mode_switch_tips">Only effective for current session</string>
+
+    <string name="meta_features">Advanced</string>
+    <string name="unified_delay">Unified delay</string>
+    <string name="geodata_mode">Geodata mode</string>
+    <string name="tcp_concurrent">TCP concurrent</string>
+    <string name="find_process_mode">Process match mode</string>
+
+    <string name="sniffer_setting">Sniffer settings</string>
+    <string name="sniffer">Sniffer</string>
+    <string name="force_dns_mapping">Force DNS mapping</string>
+    <string name="parse_pure_ip">Parse pure IP</string>
+    <string name="override_destination">Override destination</string>
+    <string name="force_domain">Force domain</string>
+    <string name="skip_domain">Skip domain</string>
+    <string name="skip_src_address">Skip source address</string>
+    <string name="skip_dst_address">Skip destination address</string>
+    <string name="sniff_http_ports">HTTP sniff ports</string>
+    <string name="sniff_tls_ports">TLS sniff ports</string>
+    <string name="sniff_quic_ports">QUIC sniff ports</string>
+    <string name="sniff_http_override_destination">HTTP sniff override dest</string>
+    <string name="sniff_tls_override_destination">TLS sniff override dest</string>
+    <string name="sniff_quic_override_destination">QUIC sniff override dest</string>
+
+    <string name="geox_url_setting">GeoX URL settings</string>
+    <string name="geox_geoip">GeoIP URL</string>
+    <string name="geox_mmdb">MMDB URL</string>
+    <string name="geox_geosite">Geosite URL</string>
+    <string name="geox_files">Geo files</string>
+    <string name="import_geoip_file">Import GeoIP database</string>
+    <string name="import_geosite_file">Import GeoSite database</string>
+    <string name="import_country_file">Import Country database</string>
+    <string name="import_asn_file">Import ASN database</string>
+    <string name="press_to_import">Tap to import…</string>
+    <string name="geofile_import_failed">Import failed</string>
+    <string name="geofile_unknown_db_format">Unknown database format</string>
+    <string name="geofile_unknown_db_format_message">Only %1$s is supported</string>
+    <string name="geofile_imported">%1$s imported</string>
+    <string name="toast_profile_updated_complete">Profile %s updated</string>
+    <string name="toast_profile_updated_failed">Profile %1$s update failed: %2$s</string>
+    <string name="external_control_activity">External Control</string>
+
+    <string name="hide_app_icon_title">Hide app icon</string>
+    <string name="hide_app_icon_desc">Dial *#*#252746382#*#* to reopen</string>
+    <string name="hide_from_recents_title">Hide from recents</string>
+    <string name="hide_from_recents_desc">Hide this app from recent apps</string>
+    <string name="import_from_qr_no_permission">Camera permission denied. Please enable in Settings.</string>
+    <string name="import_from_qr_exception">An unhandled system error occurred.</string>
+
+    <string name="shortcut_toggle_short">Toggle VPN</string>
+    <string name="shortcut_toggle_long">Toggle VPN service on/off</string>
+    <string name="shortcut_start_short">Start VPN</string>
+    <string name="shortcut_start_long">Start VPN service</string>
+    <string name="shortcut_stop_short">Stop VPN</string>
+    <string name="shortcut_stop_long">Stop VPN service</string>
+
+    <!-- Account -->
+    <string name="nav_home">Home</string>
+    <string name="nav_account">Account</string>
+    <string name="nav_store">Store</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_settings">Settings</string>
+    <string name="account_center">Account Center</string>
+    <string name="sync_subscription">Sync subscription</string>
+    <string name="subscription_synced">Subscription synced</string>
+    <string name="subscription_sync_failed">Sync failed. Please login and retry.</string>
+    <string name="subscription_sync_timeout">Sync timed out. Config saved, will complete later.</string>
+    <string name="not_logged_in">Please login first</string>
+
+    <string name="xboard_login">Login</string>
+    <string name="xboard_login_summary">Login to import subscription</string>
+    <string name="xboard_brand_name">YueTong</string>
+    <string name="xboard_brand_subtitle">Global acceleration for AI and streaming</string>
+    <string name="xboard_site_url">Server URL</string>
+    <string name="xboard_email">Email</string>
+    <string name="xboard_password">Password</string>
+    <string name="xboard_invite_code">Invite code (optional)</string>
+    <string name="xboard_tab_login">Login</string>
+    <string name="xboard_tab_register">Register</string>
+    <string name="xboard_do_login">Login</string>
+    <string name="xboard_do_register">Register</string>
+    <string name="xboard_request_failed">Request failed</string>
+
+    <!-- Dashboard -->
+    <string name="vpn_subtitle">VPN Connection Center</string>
+    <string name="click_to_connect_hint">Tap the button above to connect</string>
+    <string name="renew_button">Renew</string>
+    <string name="expiry_prefix">Expires: </string>
+    <string name="expiry_unknown">Expires: --</string>
+    <string name="traffic_usage_label">Traffic %s</string>
+    <string name="node_selection_title">Node Selection</string>
+    <string name="view_all_nodes">View all ›</string>
+    <string name="download_label">↓ Download</string>
+    <string name="upload_label">↑ Upload</string>
+    <string name="store_coming_soon">Store coming soon</string>
+
+    <!-- Profile tab -->
+    <string name="plan_label">Plan</string>
+    <string name="plan_unknown">No plan</string>
+    <string name="balance_label">Balance</string>
+    <string name="commission_label">Commission</string>
+    <string name="invite_link_label">Invite link</string>
+    <string name="referral_count_format">%d referrals</string>
+    <string name="copy_text">Copy</string>
+    <string name="balance_format">¥ %s</string>
+    <string name="manage_subscription">Manage subscription</string>
+    <string name="open_account_center">Account Center</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirm_title">Confirm logout</string>
+    <string name="logout_confirm_message">You will need to login again to continue</string>
+    <string name="expiry_permanent">Permanent</string>
+    <string name="expiry_expired">Expired</string>
+    <string name="traffic_detail_format">Used %1$s / Total %2$s</string>
+    <string name="store_title">Store</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="forgot_password_email_hint">Enter your registered email</string>
+    <string name="forgot_password_sent">Reset email sent. Please check your inbox.</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="password_changed">Password changed</string>
+    <string name="store_empty">No plans available</string>
+    <string name="store_error">Failed to load. Please retry.</string>
+    <string name="store_retry">Retry</string>
+    <string name="buy_now">Buy now →</string>
+    <string name="unlimited_traffic">Unlimited traffic</string>
+    <string name="traffic_gb_format">%d GB traffic</string>
+    <string name="not_used_yet">Not used yet</string>
+    <string name="price_monthly">Monthly ¥%s</string>
+    <string name="price_quarterly">Quarterly ¥%s</string>
+    <string name="price_half_year">Semi-annual ¥%s</string>
+    <string name="price_yearly">Annual ¥%s</string>
+    <string name="price_onetime">One-time ¥%s</string>
+
+    <!-- Checkout -->
+    <string name="checkout_title">Checkout</string>
+    <string name="checkout_plan_label">Plan</string>
+    <string name="checkout_period_label">Period</string>
+    <string name="checkout_amount_label">Amount</string>
+    <string name="checkout_payment_method">Payment method</string>
+    <string name="checkout_confirm_pay">Confirm payment</string>
+    <string name="checkout_success">Payment successful</string>
+    <string name="checkout_creating_order">Creating order…</string>
+    <string name="checkout_no_method">Please select a payment method</string>
+    <string name="checkout_free">Free</string>
+    <string name="syncing_subscription">Syncing subscription…</string>
+    <string name="syncing_subscription_progress">Syncing subscription, %d seconds elapsed…</string>
+    <string name="subscription_sync_success">Subscription synced</string>
+    <string name="no_subscription_hint">No subscription. Go to store to purchase a plan.</string>
+    <string name="syncing_subscription_title">Syncing subscription</string>
+    <string name="syncing_subscription_detail">Downloading subscription config. First time may take 1-2 minutes.\nPlease keep network connected.</string>
+    <string name="syncing_subscription_elapsed">%d seconds elapsed, downloading…</string>
+    <string name="subscription_commit_failed">Subscription download failed</string>
+    <string name="sync_fetching_config">Fetching subscription config…</string>
+    <string name="sync_fetching_provider">Downloading rules %1$d / %2$d: %3$s</string>
+    <string name="sync_verifying">Verifying config…</string>
+
+    <!-- Notices -->
+    <string name="notices_title">Notices</string>
+    <string name="notices_empty">No notices</string>
+
+    <!-- Orders -->
+    <string name="orders_title">My Orders</string>
+    <string name="orders_empty">No orders</string>
+    <string name="order_status_pending">Pending</string>
+    <string name="order_cancel_btn">Cancel order</string>
+    <string name="order_cancel_confirm_title">Confirm cancellation</string>
+    <string name="order_cancel_confirm_message">Are you sure you want to cancel this order? This cannot be undone.</string>
+    <string name="order_cancelled">Order cancelled</string>
+    <string name="checkout_payment_pending">Order created. Please complete payment.</string>
+    <string name="web_login_hint">CAPTCHA required? Use web login</string>
+    <string name="order_status_processing">Processing</string>
+    <string name="order_status_cancelled">Cancelled</string>
+    <string name="order_status_completed">Completed</string>
+    <string name="order_status_discounted">Discounted</string>
+    <string name="order_status_unknown">Unknown</string>
+    <string name="order_plan_unknown">Unknown plan</string>
+    <string name="period_monthly">Monthly</string>
+    <string name="period_quarterly">Quarterly</string>
+    <string name="period_half_yearly">Semi-annual</string>
+    <string name="period_yearly">Annual</string>
+    <string name="period_onetime">One-time</string>
+
+    <!-- Coupon -->
+    <string name="coupon_label">Coupon</string>
+    <string name="coupon_hint">Enter coupon code</string>
+    <string name="coupon_verify">Verify</string>
+    <string name="coupon_verifying">Verifying…</string>
+    <string name="coupon_valid">Coupon applied</string>
+    <string name="coupon_invalid">Invalid or expired coupon</string>
+    <string name="checkout_discount_label">Discount</string>
+    <string name="checkout_actual_label">Total</string>
+
+    <string name="order_discount_format">Discount ¥%s</string>
+    <string name="order_surplus_format">Credit ¥%s</string>
+
+    <!-- Notification channels -->
+    <string name="channel_subscription">Subscription</string>
+    <string name="channel_subscription_desc">Subscription expiry and traffic alerts</string>
+    <string name="channel_payment">Payment</string>
+    <string name="channel_payment_desc">Payment result notifications</string>
+    <string name="channel_announcement">Announcements</string>
+    <string name="channel_announcement_desc">Site announcements and events</string>
+
+    <!-- Empty states -->
+    <string name="orders_empty_hint">No orders yet.\nBrowse plans in the store.</string>
+    <string name="orders_go_store">Browse plans</string>
+    <string name="notices_empty_hint">No notices.\nPull to refresh.</string>
+    <string name="store_empty_hint">No plans available.\nCheck back later.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">Secure &amp; Fast</string>
+    <string name="onboarding_desc_1">One-tap connect with smart routing.\nKeep your network smooth.</string>
+    <string name="onboarding_title_2">Subscription</string>
+    <string name="onboarding_desc_2">Purchase plans, view orders.\nCoupons supported, renew anytime.</string>
+    <string name="onboarding_title_3">Secure &amp; Reliable</string>
+    <string name="onboarding_desc_3">Full HTTPS encryption.\nYour data security is our top priority.</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_start">Get Started</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %s</string>
+    <string name="about_privacy">Privacy Policy</string>
+    <string name="about_licenses">Open Source Licenses</string>
+    <string name="about_feedback">Feedback</string>
+
+    <!-- Error messages -->
+    <string name="error_no_network">No network connection. Please check settings.</string>
+    <string name="error_server">Server temporarily unavailable. Please try later.</string>
+    <string name="error_timeout">Request timed out. Please check network.</string>
+
+    <!-- Tun stack -->
+    <string name="tun_stack_mode">Stack mode</string>
+</resources>

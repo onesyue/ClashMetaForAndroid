@@ -245,21 +245,20 @@ class MainActivity : BaseActivity<MainDesign>() {
         val authData = XBoardSession.getAuthData(this@MainActivity) ?: return
         val baseUrl = XBoardSession.getBaseUrl(this@MainActivity)
 
-        val info: XBoardApi.UserInfo
-        try {
+        val info: XBoardApi.UserInfo = try {
             val fetched = XBoardApi.getUserInfo(baseUrl, authData)
             if (fetched != null) {
-                info = fetched
                 // Cache for offline use
                 com.github.kr328.clash.util.OfflineCache.put(
-                    this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO, info.toJson()
+                    this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO, fetched.toJson()
                 )
+                fetched
             } else {
-                // Try cached data
+                // API returned null — try cached data
                 val cached = com.github.kr328.clash.util.OfflineCache.get(
                     this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO
                 )
-                info = cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
+                cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
             }
         } catch (e: XBoardApi.AuthExpiredException) {
             handleAuthExpired()
@@ -269,7 +268,7 @@ class MainActivity : BaseActivity<MainDesign>() {
             val cached = com.github.kr328.clash.util.OfflineCache.get(
                 this@MainActivity, com.github.kr328.clash.util.OfflineCache.KEY_USER_INFO
             )
-            info = cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
+            cached?.let { XBoardApi.UserInfo.fromJson(it) } ?: return
         }
 
         setUserEmail(info.email.takeIf { it.isNotBlank() })
