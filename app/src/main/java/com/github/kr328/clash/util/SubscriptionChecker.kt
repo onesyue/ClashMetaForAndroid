@@ -7,6 +7,7 @@ import com.github.kr328.clash.MainActivity
 import android.app.PendingIntent
 import android.content.Intent
 import com.github.kr328.clash.design.R as DesignR
+import com.github.kr328.clash.service.R as ServiceR
 
 object SubscriptionChecker {
 
@@ -58,7 +59,7 @@ object SubscriptionChecker {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(DesignR.drawable.ic_logo_service)
+            .setSmallIcon(ServiceR.drawable.ic_logo_service)
             .setContentTitle(context.getString(DesignR.string.subscription_alert_title))
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
