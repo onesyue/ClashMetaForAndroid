@@ -1,6 +1,9 @@
 name: Build Release
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       release-tag:
@@ -55,30 +58,39 @@ jobs:
       - name: Convert and set version env
         id: process-version
         run: |
-          VERSION_TAG=${{ inputs.release-tag }}
+          if [ -n "${{ inputs.release-tag }}" ]; then
+            # Manual trigger: use the provided tag
+            VERSION_TAG=${{ inputs.release-tag }}
+          else
+            # Push trigger: read version from build.gradle.kts
+            VERSION_TAG="v$(grep 'versionName' build.gradle.kts | head -1 | sed 's/.*"\(.*\)".*/\1/')"
+          fi
           VERSION_TAG=${VERSION_TAG#v}                              # remove the 'v' prefix
           IFS='.' read -ra VERSION_PARTS <<< "$VERSION_TAG"         # split into array
           VERSION_CODE=$(printf "%1d%02d%03d" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")
-          
-          echo "versonName=$VERSION_TAG" >> $GITHUB_OUTPUT          # "1.2.3"
-          echo "versonCode=$VERSION_CODE" >> $GITHUB_OUTPUT         # "102003"
-      
-      # Re-write version in build.gradle.kts
+
+          echo "versionName=$VERSION_TAG" >> $GITHUB_OUTPUT         # "1.2.3"
+          echo "versionCode=$VERSION_CODE" >> $GITHUB_OUTPUT        # "102003"
+          echo "versionTag=v$VERSION_TAG" >> $GITHUB_OUTPUT         # "v1.2.3"
+
+      # Re-write version in build.gradle.kts (only for manual trigger with new tag)
       - name: Re-write version
+        if: ${{ inputs.release-tag != '' }}
         uses: Devofure/advance-android-version-actions@v1.5
         with:
           gradlePath: build.gradle.kts
-          versionCode: ${{ steps.process-version.outputs.versonCode }}
-          versionName: ${{ steps.process-version.outputs.versonName }}
-      
+          versionCode: ${{ steps.process-version.outputs.versionCode }}
+          versionName: ${{ steps.process-version.outputs.versionName }}
+
       # If any change found, commit it and push
       - name: Commit and push if changes
+        if: ${{ inputs.release-tag != '' }}
         run: |
-          changes=$(git diff --name-only origin/main | wc -l)
+          changes=$(git diff --name-only | wc -l)
           if [ $changes -gt 0 ]
           then
-            newVersionName=${{ steps.process-version.outputs.versonName }}
-            newVersionCode=${{ steps.process-version.outputs.versonCode }}
+            newVersionName=${{ steps.process-version.outputs.versionName }}
+            newVersionCode=${{ steps.process-version.outputs.versionCode }}
             git config --global user.name 'GitHub Action'
             git config --global user.email 'action@github.com'
             git add build.gradle.kts
@@ -121,7 +133,7 @@ jobs:
       - name: Tag Repo
         uses: richardsimko/update-tag@v1
         with:
-          tag_name: ${{ inputs.release-tag }}
+          tag_name: ${{ steps.process-version.outputs.versionTag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -129,7 +141,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ success() }}
         with:
-          tag_name: ${{ inputs.release-tag }}
+          tag_name: ${{ steps.process-version.outputs.versionTag }}
           files: app/build/outputs/apk/meta/release/*
           generate_release_notes: true
 
