@@ -108,11 +108,26 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     }
 
     suspend fun setDownloadSpeed(speed: String) {
-        withContext(Dispatchers.Main) { binding.downloadSpeedText.text = speed }
+        withContext(Dispatchers.Main) {
+            val parts = splitSpeedValueUnit(speed)
+            binding.downloadSpeedValue.text = parts.first
+            binding.downloadSpeedUnit.text = " ${parts.second}"
+        }
     }
 
     suspend fun setUploadSpeed(speed: String) {
-        withContext(Dispatchers.Main) { binding.uploadSpeedText.text = speed }
+        withContext(Dispatchers.Main) {
+            val parts = splitSpeedValueUnit(speed)
+            binding.uploadSpeedValue.text = parts.first
+            binding.uploadSpeedUnit.text = " ${parts.second}"
+        }
+    }
+
+    /** Split "123.4 MB/s" → Pair("123.4", "MB/s") */
+    private fun splitSpeedValueUnit(speed: String): Pair<String, String> {
+        val idx = speed.indexOfFirst { it == ' ' }
+        return if (idx > 0) Pair(speed.substring(0, idx), speed.substring(idx + 1))
+        else Pair(speed, "")
     }
 
     // ── Profile tab ────────────────────────────────────────────────────────
@@ -148,15 +163,13 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     suspend fun setBalance(cents: Long) {
         withContext(Dispatchers.Main) {
-            binding.profileBalanceText.text =
-                context.getString(R.string.balance_format, "%.2f".format(cents / 100.0))
+            binding.profileBalanceText.text = "%.2f".format(cents / 100.0)
         }
     }
 
     suspend fun setCommissionBalance(cents: Long) {
         withContext(Dispatchers.Main) {
-            binding.profileCommissionText.text =
-                context.getString(R.string.balance_format, "%.2f".format(cents / 100.0))
+            binding.profileCommissionText.text = "%.2f".format(cents / 100.0)
         }
     }
 
@@ -208,8 +221,8 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.profileTrafficProgress.progress = 0
             binding.profileTrafficDetailText.text = ""
-            binding.profileBalanceText.text = "¥ --"
-            binding.profileCommissionText.text = "¥ --"
+            binding.profileBalanceText.text = "--"
+            binding.profileCommissionText.text = "--"
             binding.profileInviteCard.visibility = View.GONE
         }
     }

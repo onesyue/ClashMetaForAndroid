@@ -246,18 +246,19 @@
 
                         </LinearLayout>
 
-                        <!-- ── Speed Cards (Bento 2-col) ── -->
+                        <!-- ── Speed Cards (Bento 2-col, equal height) ── -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
+                            android:baselineAligned="true"
                             android:layout_marginTop="12dp"
                             android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}">
 
                             <!-- Download -->
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:background="@drawable/bg_card_surface_small"
                                 android:orientation="vertical"
@@ -279,23 +280,42 @@
                                     android:textColor="@color/color_text_tertiary"
                                     android:layout_marginTop="4dp" />
 
-                                <TextView
-                                    android:id="@+id/download_speed_text"
+                                <!-- Speed value + unit baseline-aligned -->
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="0 B/s"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/color_text_primary"
-                                    android:fontFamily="@font/jetbrains_mono_medium"
-                                    android:layout_marginTop="2dp" />
+                                    android:orientation="horizontal"
+                                    android:baselineAligned="true"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:id="@+id/download_speed_value"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0"
+                                        android:textSize="22sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/color_text_primary"
+                                        android:fontFamily="@font/jetbrains_mono_medium" />
+
+                                    <TextView
+                                        android:id="@+id/download_speed_unit"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" B/s"
+                                        android:textSize="12sp"
+                                        android:textColor="@color/color_text_tertiary"
+                                        android:fontFamily="@font/jetbrains_mono_regular"
+                                        android:layout_marginStart="2dp" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
                             <!-- Upload -->
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:background="@drawable/bg_card_surface_small"
                                 android:orientation="vertical"
@@ -317,16 +337,35 @@
                                     android:textColor="@color/color_text_tertiary"
                                     android:layout_marginTop="4dp" />
 
-                                <TextView
-                                    android:id="@+id/upload_speed_text"
+                                <!-- Speed value + unit baseline-aligned -->
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="0 B/s"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/color_text_primary"
-                                    android:fontFamily="@font/jetbrains_mono_medium"
-                                    android:layout_marginTop="2dp" />
+                                    android:orientation="horizontal"
+                                    android:baselineAligned="true"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:id="@+id/upload_speed_value"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0"
+                                        android:textSize="22sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/color_text_primary"
+                                        android:fontFamily="@font/jetbrains_mono_medium" />
+
+                                    <TextView
+                                        android:id="@+id/upload_speed_unit"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" B/s"
+                                        android:textSize="12sp"
+                                        android:textColor="@color/color_text_tertiary"
+                                        android:fontFamily="@font/jetbrains_mono_regular"
+                                        android:layout_marginStart="2dp" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -659,17 +698,18 @@
 
                         </LinearLayout>
 
-                        <!-- Balance cards (Bento 2-col) -->
+                        <!-- Balance cards (Bento 2-col, equal height) -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
+                            android:baselineAligned="true"
                             android:layout_marginBottom="12dp">
 
                             <!-- Balance -->
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:background="@drawable/bg_card_surface_small"
                                 android:orientation="vertical"
@@ -684,23 +724,41 @@
                                     android:textSize="11sp"
                                     android:textColor="@color/color_text_tertiary" />
 
-                                <TextView
-                                    android:id="@+id/profile_balance_text"
+                                <!-- ¥ + amount baseline-aligned -->
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="¥ --"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/color_text_primary"
-                                    android:fontFamily="@font/jetbrains_mono_medium"
-                                    android:layout_marginTop="4dp" />
+                                    android:orientation="horizontal"
+                                    android:baselineAligned="true"
+                                    android:gravity="center_horizontal"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="¥"
+                                        android:textSize="12sp"
+                                        android:textColor="@color/color_text_tertiary"
+                                        android:layout_marginEnd="3dp" />
+
+                                    <TextView
+                                        android:id="@+id/profile_balance_text"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textSize="20sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/color_text_primary"
+                                        android:fontFamily="@font/jetbrains_mono_medium" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
                             <!-- Commission -->
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:background="@drawable/bg_card_surface_small"
                                 android:orientation="vertical"
@@ -715,16 +773,34 @@
                                     android:textSize="11sp"
                                     android:textColor="@color/color_text_tertiary" />
 
-                                <TextView
-                                    android:id="@+id/profile_commission_text"
+                                <!-- ¥ + amount baseline-aligned -->
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="¥ --"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/color_text_primary"
-                                    android:fontFamily="@font/jetbrains_mono_medium"
-                                    android:layout_marginTop="4dp" />
+                                    android:orientation="horizontal"
+                                    android:baselineAligned="true"
+                                    android:gravity="center_horizontal"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="¥"
+                                        android:textSize="12sp"
+                                        android:textColor="@color/color_text_tertiary"
+                                        android:layout_marginEnd="3dp" />
+
+                                    <TextView
+                                        android:id="@+id/profile_commission_text"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textSize="20sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/color_text_primary"
+                                        android:fontFamily="@font/jetbrains_mono_medium" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
