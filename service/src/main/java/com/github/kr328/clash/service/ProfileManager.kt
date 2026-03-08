@@ -39,12 +39,15 @@ class ProfileManager(private val context: Context) : IProfileManager,
 
     override suspend fun create(type: Profile.Type, name: String, source: String): UUID {
         val uuid = generateProfileUUID()
+        // URL profiles auto-update every 60 minutes by default
+        val defaultInterval = if (type == Profile.Type.Url)
+            java.util.concurrent.TimeUnit.MINUTES.toMillis(60) else 0L
         val pending = Pending(
             uuid = uuid,
             name = name,
             type = type,
             source = source,
-            interval = 0,
+            interval = defaultInterval,
             upload = 0,
             total = 0,
             download = 0,
