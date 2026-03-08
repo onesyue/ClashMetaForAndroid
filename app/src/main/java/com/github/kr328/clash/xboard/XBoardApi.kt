@@ -64,9 +64,20 @@ object XBoardApi {
         val tradeNo: String,
         val planName: String,
         val period: String,
-        val totalAmount: Long,      // cents
+        val totalAmount: Long,      // cents (final amount after discount)
+        val discountAmount: Long,   // cents
+        val surplusAmount: Long,    // cents (balance credit applied)
+        val couponCode: String?,
         val status: Int,            // 0=pending, 1=processing, 2=cancelled, 3=completed, 4=discounted
         val createdAt: Long         // Unix timestamp
+    )
+
+    data class CouponResult(
+        val valid: Boolean,
+        val name: String,
+        val value: Long,            // discount amount in cents, or percentage
+        val type: Int,              // 1=fixed amount, 2=percentage
+        val message: String
     )
 
     /**
@@ -283,15 +294,46 @@ object XBoardApi {
     }
 
     /**
+     * 验证优惠券
+     */
+    suspend fun verifyCoupon(baseUrl: String, authData: String, couponCode: String): CouponResult {
+        return withContext(Dispatchers.IO) {
+            try {
+                val root = httpPostAuth(
+                    baseUrl, "/api/v1/user/coupon/check",
+                    JSONObject().apply { put("code", couponCode) },
+                    authData
+                )
+                val data = root.optJSONObject("data")
+                if (data != null) {
+                    CouponResult(
+                        valid = true,
+                        name = data.optString("name", couponCode),
+                        value = data.optLong("value", 0),
+                        type = data.optInt("type", 1),
+                        message = root.optString("message", "")
+                    )
+                } else {
+                    CouponResult(true, couponCode, 0, 1, root.optString("message", ""))
+                }
+            } catch (e: AuthExpiredException) { throw e }
+            catch (e: Exception) {
+                CouponResult(false, "", 0, 1, e.message ?: "验证失败")
+            }
+        }
+    }
+
+    /**
      * 创建订单，返回 trade_no
      */
-    suspend fun createOrder(baseUrl: String, authData: String, planId: Int, period: String): String {
+    suspend fun createOrder(baseUrl: String, authData: String, planId: Int, period: String, couponCode: String? = null): String {
         return withContext(Dispatchers.IO) {
             val root = httpPostAuth(
                 baseUrl, "/api/v1/user/order/save",
                 JSONObject().apply {
                     put("plan_id", planId)
                     put("period", period)
+                    if (!couponCode.isNullOrBlank()) put("coupon_code", couponCode)
                 },
                 authData
             )
@@ -367,12 +409,15 @@ object XBoardApi {
                     val obj = arr.optJSONObject(i) ?: return@mapNotNull null
                     val planObj = obj.optJSONObject("plan")
                     Order(
-                        tradeNo     = obj.optString("trade_no", ""),
-                        planName    = planObj?.optString("name", "") ?: obj.optString("plan_name", ""),
-                        period      = obj.optString("period", ""),
-                        totalAmount = obj.optLong("total_amount", 0),
-                        status      = obj.optInt("status", 0),
-                        createdAt   = obj.optLong("created_at", 0)
+                        tradeNo        = obj.optString("trade_no", ""),
+                        planName       = planObj?.optString("name", "") ?: obj.optString("plan_name", ""),
+                        period         = obj.optString("period", ""),
+                        totalAmount    = obj.optLong("total_amount", 0),
+                        discountAmount = obj.optLong("discount_amount", 0),
+                        surplusAmount  = obj.optLong("surplus_amount", 0),
+                        couponCode     = obj.optString("coupon_code", "").takeIf { it.isNotBlank() },
+                        status         = obj.optInt("status", 0),
+                        createdAt      = obj.optLong("created_at", 0)
                     )
                 }
             }

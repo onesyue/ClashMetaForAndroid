@@ -370,6 +370,7 @@
     <string name="sync_subscription">同步订阅</string>
     <string name="subscription_synced">订阅已同步</string>
     <string name="subscription_sync_failed">同步失败，请登录后重试</string>
+    <string name="subscription_sync_timeout">同步超时，配置已保存，稍后将自动完成</string>
     <string name="not_logged_in">请先在页面中登录</string>
 
     <!-- XBoard 登录（保留供兼容） -->
@@ -489,4 +490,18 @@
     <string name="period_half_yearly">半年付</string>
     <string name="period_yearly">年付</string>
     <string name="period_onetime">一次性</string>
+
+    <!-- 优惠券 -->
+    <string name="coupon_label">优惠券</string>
+    <string name="coupon_hint">请输入优惠券码</string>
+    <string name="coupon_verify">验证</string>
+    <string name="coupon_verifying">验证中…</string>
+    <string name="coupon_valid">优惠券有效，已折扣</string>
+    <string name="coupon_invalid">优惠券无效或已过期</string>
+    <string name="checkout_discount_label">优惠</string>
+    <string name="checkout_actual_label">实付</string>
+
+    <!-- 订单详情补充 -->
+    <string name="order_discount_format">优惠 ¥%s</string>
+    <string name="order_surplus_format">抵扣 ¥%s</string>
 </resources>

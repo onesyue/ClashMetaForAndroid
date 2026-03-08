@@ -281,12 +281,6 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         }
     }
 
-    suspend fun updateSyncDialog(elapsed: Int) {
-        withContext(Dispatchers.Main) {
-            syncMsgView?.text = context.getString(R.string.syncing_subscription_elapsed, elapsed)
-        }
-    }
-
     suspend fun updateSyncProgress(current: Int, total: Int, message: String) {
         withContext(Dispatchers.Main) {
             syncMsgView?.text = message

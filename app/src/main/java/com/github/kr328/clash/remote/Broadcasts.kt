@@ -56,17 +56,18 @@ class Broadcasts(private val context: Application) {
                     receivers.forEach {
                         it.onProfileChanged()
                     }
-                Intents.ACTION_PROFILE_UPDATE_COMPLETED ->
+                Intents.ACTION_PROFILE_UPDATE_COMPLETED -> {
+                    val uuid = intent.getStringExtra(Intents.EXTRA_UUID)
+                        ?.runCatching { UUID.fromString(this) }?.getOrNull()
+                    receivers.forEach { it.onProfileUpdateCompleted(uuid) }
+                }
+                Intents.ACTION_PROFILE_UPDATE_FAILED -> {
+                    val uuid = intent.getStringExtra(Intents.EXTRA_UUID)
+                        ?.runCatching { UUID.fromString(this) }?.getOrNull()
                     receivers.forEach {
-                        it.onProfileUpdateCompleted(
-                            UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID)))
+                        it.onProfileUpdateFailed(uuid, intent.getStringExtra(Intents.EXTRA_FAIL_REASON))
                     }
-                Intents.ACTION_PROFILE_UPDATE_FAILED ->
-                    receivers.forEach {
-                        it.onProfileUpdateFailed(
-                            UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID)),
-                            intent.getStringExtra(Intents.EXTRA_FAIL_REASON))
-                    }
+                }
                 Intents.ACTION_PROFILE_LOADED -> {
                     receivers.forEach {
                         it.onProfileLoaded()
@@ -99,6 +100,8 @@ class Broadcasts(private val context: Application) {
                 addAction(Intents.ACTION_PROFILE_LOADED)
             })
 
+            registered = true
+
             clashRunning = StatusClient(context).currentProfile() != null
         } catch (e: Exception) {
             Log.w("Register global receiver: $e", e)
@@ -108,6 +111,8 @@ class Broadcasts(private val context: Application) {
     fun unregister() {
         if (!registered)
             return
+
+        registered = false
 
         try {
             context.unregisterReceiver(broadcastReceiver)

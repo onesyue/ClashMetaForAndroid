@@ -24,6 +24,8 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
         const val EXTRA_PRICE_CENTS   = "price_cents"
     }
 
+    private var appliedCouponCode: String? = null
+
     override suspend fun main() {
         val planId      = intent.getIntExtra(EXTRA_PLAN_ID, 0)
         val planName    = intent.getStringExtra(EXTRA_PLAN_NAME) ?: ""
@@ -64,11 +66,44 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                 events.onReceive { }
                 design.requests.onReceive { request ->
                     when (request) {
+                        is CheckoutDesign.Request.VerifyCoupon ->
+                            verifyCoupon(design, priceCents, request.code)
                         is CheckoutDesign.Request.Pay ->
                             processPay(design, planId, period, request.methodId)
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun verifyCoupon(design: CheckoutDesign, priceCents: Long, code: String) {
+        if (code.isBlank()) return
+        design.setCouponLoading(true)
+        try {
+            val authData = XBoardSession.getAuthData(this) ?: return
+            val baseUrl = XBoardSession.getBaseUrl(this)
+            val result = XBoardApi.verifyCoupon(baseUrl, authData, code)
+            if (result.valid) {
+                appliedCouponCode = code
+                val discount = when (result.type) {
+                    2 -> (priceCents * result.value / 100)  // percentage
+                    else -> result.value                     // fixed amount
+                }
+                design.applyCoupon(discount.coerceAtMost(priceCents))
+                design.showToast(getString(R.string.coupon_valid), ToastDuration.Short)
+            } else {
+                appliedCouponCode = null
+                design.clearCoupon()
+                design.showToast(result.message.ifBlank { getString(R.string.coupon_invalid) }, ToastDuration.Long)
+            }
+        } catch (e: XBoardApi.AuthExpiredException) {
+            handleAuthExpired()
+        } catch (e: Exception) {
+            appliedCouponCode = null
+            design.clearCoupon()
+            design.showToast(e.message ?: getString(R.string.coupon_invalid), ToastDuration.Long)
+        } finally {
+            design.setCouponLoading(false)
         }
     }
 
@@ -86,25 +121,21 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
             }
             val baseUrl = XBoardSession.getBaseUrl(this)
 
-            val tradeNo = XBoardApi.createOrder(baseUrl, authData, planId, period)
+            val tradeNo = XBoardApi.createOrder(baseUrl, authData, planId, period, appliedCouponCode)
             val result  = XBoardApi.checkoutOrder(baseUrl, authData, tradeNo, methodId)
 
             when (result.type) {
                 -1 -> {
-                    // Free / balance paid — success
                     design.showToast(getString(R.string.checkout_success), ToastDuration.Short)
                     setResult(RESULT_OK)
                     finish()
                 }
                 0 -> {
-                    // URL redirect
                     val uri = Uri.parse(result.data)
                     val scheme = uri.scheme ?: ""
                     if (scheme in listOf("alipay", "alipays", "weixin", "wxpay")) {
-                        // Open payment app natively
                         startActivity(Intent(Intent.ACTION_VIEW, uri))
                     } else {
-                        // Open payment page in in-app WebView
                         startActivity(
                             AccountActivity::class.intent.apply {
                                 putExtra(AccountActivity.EXTRA_FULL_URL, result.data)
@@ -113,7 +144,6 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
                     }
                 }
                 1 -> {
-                    // HTML — open in WebView (pass as data URI or temp URL)
                     startActivity(
                         AccountActivity::class.intent.apply {
                             putExtra(AccountActivity.EXTRA_FULL_URL, result.data)
@@ -133,12 +163,4 @@ class CheckoutActivity : BaseActivity<CheckoutDesign>() {
         }
     }
 
-    private fun handleAuthExpired() {
-        XBoardSession.clear(this)
-        startActivity(
-            XBoardLoginActivity::class.intent.apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-        )
-    }
 }

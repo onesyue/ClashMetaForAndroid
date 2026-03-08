@@ -1,14 +1,16 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.github.kr328.clash.design.databinding.DesignNoticesBinding
 import com.github.kr328.clash.design.util.MarkdownRenderer
 import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.createGlassCard
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
-import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -27,6 +29,8 @@ class NoticesDesign(context: Context) : Design<Unit>(context) {
 
     override val root: View
         get() = binding.root
+
+    private val dp = context.resources.displayMetrics.density
 
     init {
         binding.activityBarLayout.applyFrom(context)
@@ -57,16 +61,7 @@ class NoticesDesign(context: Context) : Design<Unit>(context) {
     }
 
     private fun createNoticeCard(notice: Notice): View {
-        val dp = context.resources.displayMetrics.density
-        val card = MaterialCardView(context).apply {
-            radius = 12 * dp
-            cardElevation = 2 * dp
-            strokeWidth = 0
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = (12 * dp).toInt() }
-        }
+        val card = context.createGlassCard()
 
         val inner = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -75,20 +70,20 @@ class NoticesDesign(context: Context) : Design<Unit>(context) {
         }
 
         // Title
-        inner.addView(android.widget.TextView(context).apply {
+        inner.addView(TextView(context).apply {
             text = notice.title
             textSize = 16f
-            android.graphics.Typeface.DEFAULT_BOLD.also { setTypeface(it) }
-            setTextColor(0xFF1A237E.toInt())
+            setTypeface(Typeface.DEFAULT_BOLD)
+            setTextColor(0xFFF1F5F9.toInt())
         })
 
         // Date
         val dateStr = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             .format(Date(notice.createdAt * 1000))
-        inner.addView(android.widget.TextView(context).apply {
+        inner.addView(TextView(context).apply {
             text = dateStr
             textSize = 12f
-            setTextColor(0xFF9E9E9E.toInt())
+            setTextColor(0xFF64748B.toInt())
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -97,18 +92,18 @@ class NoticesDesign(context: Context) : Design<Unit>(context) {
 
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0xFFEEEEEE.toInt())
+            setBackgroundColor(0x26FFFFFF)
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1
+                LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (10 * dp).toInt(); bottomMargin = (10 * dp).toInt() }
         })
 
         // Content (Markdown)
         if (notice.content.isNotBlank()) {
-            inner.addView(android.widget.TextView(context).apply {
+            inner.addView(TextView(context).apply {
                 text = MarkdownRenderer.render(notice.content)
                 textSize = 14f
-                setTextColor(0xFF424242.toInt())
+                setTextColor(0xFFCBD5E1.toInt())
                 setLineSpacing(0f, 1.5f)
             })
         }

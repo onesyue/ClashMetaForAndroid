@@ -92,10 +92,17 @@ class AccountActivity : BaseActivity<AccountDesign>() {
                                     withProfile { setActive(profile) }
                                 }
 
-                                design.showToast(
-                                    getString(R.string.subscription_synced),
-                                    ToastDuration.Short
-                                )
+                                if (imported) {
+                                    design.showToast(
+                                        getString(R.string.subscription_synced),
+                                        ToastDuration.Short
+                                    )
+                                } else {
+                                    design.showToast(
+                                        getString(R.string.subscription_sync_timeout),
+                                        ToastDuration.Long
+                                    )
+                                }
 
                                 setResult(Activity.RESULT_OK)
                             } catch (e: Exception) {

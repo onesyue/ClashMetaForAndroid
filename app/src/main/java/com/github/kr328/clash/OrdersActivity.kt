@@ -1,7 +1,5 @@
 package com.github.kr328.clash
 
-import android.content.Intent
-import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.OrdersDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -64,12 +62,15 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
                 val orders = XBoardApi.getOrders(baseUrl, authData)
                 val items = orders.map {
                     OrdersDesign.Order(
-                        tradeNo     = it.tradeNo,
-                        planName    = it.planName,
-                        period      = it.period,
-                        totalAmount = it.totalAmount,
-                        status      = it.status,
-                        createdAt   = it.createdAt
+                        tradeNo        = it.tradeNo,
+                        planName       = it.planName,
+                        period         = it.period,
+                        totalAmount    = it.totalAmount,
+                        discountAmount = it.discountAmount,
+                        surplusAmount  = it.surplusAmount,
+                        couponCode     = it.couponCode,
+                        status         = it.status,
+                        createdAt      = it.createdAt
                     )
                 }
                 withContext(Dispatchers.Main) { design.showOrders(items) }
@@ -81,12 +82,4 @@ class OrdersActivity : BaseActivity<OrdersDesign>() {
         }
     }
 
-    private fun handleAuthExpired() {
-        XBoardSession.clear(this)
-        startActivity(
-            XBoardLoginActivity::class.intent.apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-        )
-    }
 }

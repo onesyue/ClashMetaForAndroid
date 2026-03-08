@@ -20,10 +20,12 @@ import com.github.kr328.clash.design.ui.DayNight
 import com.github.kr328.clash.design.util.resolveThemedBoolean
 import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.showExceptionToast
+import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.util.ActivityResultLifecycle
 import com.github.kr328.clash.util.ApplicationObserver
+import com.github.kr328.clash.xboard.XBoardSession
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import java.util.*
@@ -218,6 +220,16 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         }
 
         this.dayNight = dayNight
+    }
+
+    protected fun handleAuthExpired() {
+        XBoardSession.clear(this)
+        startActivity(
+            XBoardLoginActivity::class.intent.apply {
+                flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or
+                        android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
     }
 
     enum class Event {

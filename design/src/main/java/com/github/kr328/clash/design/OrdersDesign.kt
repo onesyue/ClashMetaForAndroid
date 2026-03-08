@@ -1,13 +1,18 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Typeface
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.github.kr328.clash.design.databinding.DesignOrdersBinding
 import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.createGlassCard
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
-import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,6 +28,9 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         val planName: String,
         val period: String,
         val totalAmount: Long,
+        val discountAmount: Long,
+        val surplusAmount: Long,
+        val couponCode: String?,
         val status: Int,
         val createdAt: Long
     )
@@ -32,6 +40,8 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
 
     override val root: View
         get() = binding.root
+
+    private val dp = context.resources.displayMetrics.density
 
     init {
         binding.activityBarLayout.applyFrom(context)
@@ -62,22 +72,20 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
     }
 
     private fun statusLabel(status: Int): Pair<String, Int> = when (status) {
-        0    -> context.getString(R.string.order_status_pending) to 0xFFF57F17.toInt()
-        1    -> context.getString(R.string.order_status_processing) to 0xFF1565C0.toInt()
-        2    -> context.getString(R.string.order_status_cancelled) to 0xFF757575.toInt()
-        3    -> context.getString(R.string.order_status_completed) to 0xFF2E7D32.toInt()
-        4    -> context.getString(R.string.order_status_discounted) to 0xFF6A1B9A.toInt()
-        else -> context.getString(R.string.order_status_unknown) to 0xFF757575.toInt()
+        0    -> context.getString(R.string.order_status_pending) to 0xFFFBBF24.toInt()
+        1    -> context.getString(R.string.order_status_processing) to 0xFF6366F1.toInt()
+        2    -> context.getString(R.string.order_status_cancelled) to 0xFF64748B.toInt()
+        3    -> context.getString(R.string.order_status_completed) to 0xFF10B981.toInt()
+        4    -> context.getString(R.string.order_status_discounted) to 0xFF8B5CF6.toInt()
+        else -> context.getString(R.string.order_status_unknown) to 0xFF64748B.toInt()
     }
 
     private fun periodLabel(period: String): String = when (period) {
-        // 新格式（新版 Xboard 订单返回）
-        "monthly"     -> context.getString(R.string.period_monthly)
-        "quarterly"   -> context.getString(R.string.period_quarterly)
-        "half_yearly" -> context.getString(R.string.period_half_yearly)
-        "yearly"      -> context.getString(R.string.period_yearly)
-        "onetime"     -> context.getString(R.string.period_onetime)
-        // 旧格式（OrderResource::getLegacyPeriod 转换后）
+        "monthly"         -> context.getString(R.string.period_monthly)
+        "quarterly"       -> context.getString(R.string.period_quarterly)
+        "half_yearly"     -> context.getString(R.string.period_half_yearly)
+        "yearly"          -> context.getString(R.string.period_yearly)
+        "onetime"         -> context.getString(R.string.period_onetime)
         "month_price"     -> context.getString(R.string.period_monthly)
         "quarter_price"   -> context.getString(R.string.period_quarterly)
         "half_year_price" -> context.getString(R.string.period_half_yearly)
@@ -87,16 +95,7 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
     }
 
     private fun createOrderCard(order: Order): View {
-        val dp = context.resources.displayMetrics.density
-        val card = MaterialCardView(context).apply {
-            radius = 12 * dp
-            cardElevation = 2 * dp
-            strokeWidth = 0
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = (12 * dp).toInt() }
-        }
+        val card = context.createGlassCard()
 
         val inner = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -107,72 +106,99 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         // Header row: plan name + status badge
         val headerRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            gravity = android.view.Gravity.CENTER_VERTICAL
+            gravity = Gravity.CENTER_VERTICAL
         }
         val (statusText, statusColor) = statusLabel(order.status)
-        headerRow.addView(android.widget.TextView(context).apply {
+        headerRow.addView(TextView(context).apply {
             text = order.planName.ifBlank { context.getString(R.string.order_plan_unknown) }
             textSize = 15f
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
-            setTextColor(0xFF1A237E.toInt())
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(0xFFF1F5F9.toInt())
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
-        headerRow.addView(android.widget.TextView(context).apply {
+        headerRow.addView(TextView(context).apply {
             text = statusText
             textSize = 12f
             setTextColor(statusColor)
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTypeface(typeface, Typeface.BOLD)
         })
         inner.addView(headerRow)
 
         // Period
-        inner.addView(android.widget.TextView(context).apply {
+        inner.addView(TextView(context).apply {
             text = periodLabel(order.period)
             textSize = 13f
-            setTextColor(0xFF616161.toInt())
+            setTextColor(0xFF94A3B8.toInt())
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { topMargin = (4 * dp).toInt() }
         })
 
+        // Coupon code (if applied)
+        if (!order.couponCode.isNullOrBlank()) {
+            inner.addView(TextView(context).apply {
+                text = "🎫 ${order.couponCode}"
+                textSize = 12f
+                setTextColor(0xFF8B5CF6.toInt())
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { topMargin = (2 * dp).toInt() }
+            })
+        }
+
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0xFFEEEEEE.toInt())
+            setBackgroundColor(0x26FFFFFF)
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1
+                LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (10 * dp).toInt(); bottomMargin = (10 * dp).toInt() }
         })
+
+        // Discount / surplus info
+        if (order.discountAmount > 0) {
+            inner.addView(createInfoRow(
+                context.getString(R.string.order_discount_format, "%.2f".format(order.discountAmount / 100.0)),
+                0xFF10B981.toInt()
+            ))
+        }
+        if (order.surplusAmount > 0) {
+            inner.addView(createInfoRow(
+                context.getString(R.string.order_surplus_format, "%.2f".format(order.surplusAmount / 100.0)),
+                0xFF6366F1.toInt()
+            ))
+        }
 
         // Bottom row: date + amount
         val bottomRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            gravity = android.view.Gravity.CENTER_VERTICAL
+            gravity = Gravity.CENTER_VERTICAL
         }
         val dateStr = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             .format(Date(order.createdAt * 1000))
-        bottomRow.addView(android.widget.TextView(context).apply {
+        bottomRow.addView(TextView(context).apply {
             text = dateStr
             textSize = 12f
-            setTextColor(0xFF9E9E9E.toInt())
+            setTextColor(0xFF64748B.toInt())
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
-        bottomRow.addView(android.widget.TextView(context).apply {
+        bottomRow.addView(TextView(context).apply {
             text = "¥%.2f".format(order.totalAmount / 100.0)
             textSize = 16f
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
-            setTextColor(0xFF1A237E.toInt())
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(0xFFF1F5F9.toInt())
         })
         inner.addView(bottomRow)
 
-        // 待支付订单（status=0）显示取消按钮
+        // Cancel button for pending orders
         if (order.status == 0) {
             inner.addView(com.google.android.material.button.MaterialButton(context).apply {
                 text = context.getString(R.string.order_cancel_btn)
                 textSize = 13f
-                setTextColor(0xFFB71C1C.toInt())
-                strokeColor = android.content.res.ColorStateList.valueOf(0xFFB71C1C.toInt())
-                backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
+                setTextColor(0xFFEF4444.toInt())
+                strokeColor = ColorStateList.valueOf(0xFFEF4444.toInt())
+                backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
                 val btnPad = (12 * dp).toInt()
                 setPadding(btnPad, 0, btnPad, 0)
                 layoutParams = LinearLayout.LayoutParams(
@@ -187,5 +213,17 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
 
         card.addView(inner)
         return card
+    }
+
+    private fun createInfoRow(text: String, color: Int): View {
+        return TextView(context).apply {
+            this.text = text
+            textSize = 12f
+            setTextColor(color)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { bottomMargin = (4 * dp).toInt() }
+        }
     }
 }

@@ -1,14 +1,18 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Typeface
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.github.kr328.clash.design.databinding.DesignStoreBinding
 import com.github.kr328.clash.design.util.MarkdownRenderer
 import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.createGlassCard
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
-import com.google.android.material.card.MaterialCardView
 
 class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
@@ -40,6 +44,8 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
     override val root: View
         get() = binding.root
+
+    private val dp = context.resources.displayMetrics.density
 
     init {
         binding.activityBarLayout.applyFrom(context)
@@ -82,15 +88,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
     }
 
     private fun createPlanCard(plan: Plan): View {
-        val dp = context.resources.displayMetrics.density
-        val card = MaterialCardView(context).apply {
-            radius = 12 * dp
-            cardElevation = 2 * dp
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = (12 * dp).toInt() }
-        }
+        val card = context.createGlassCard()
 
         val inner = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -99,11 +97,11 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         }
 
         // Plan name
-        inner.addView(android.widget.TextView(context).apply {
+        inner.addView(TextView(context).apply {
             text = plan.name
             textSize = 18f
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
-            setTextColor(0xFF1A237E.toInt())
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(0xFFF1F5F9.toInt())
         })
 
         // Traffic
@@ -111,22 +109,22 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             context.getString(R.string.unlimited_traffic)
         else
             context.getString(R.string.traffic_gb_format, plan.transferGb)
-        inner.addView(android.widget.TextView(context).apply {
+        inner.addView(TextView(context).apply {
             text = trafficText
             textSize = 14f
-            setTextColor(0xFF5C7CAB.toInt())
+            setTextColor(0xFF94A3B8.toInt())
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { topMargin = (4 * dp).toInt() }
         })
 
-        // Description (Markdown rendered)
+        // Description (Markdown)
         if (plan.content.isNotBlank()) {
-            inner.addView(android.widget.TextView(context).apply {
+            inner.addView(TextView(context).apply {
                 text = MarkdownRenderer.render(plan.content)
                 textSize = 13f
-                setTextColor(0xFF616161.toInt())
+                setTextColor(0xFFCBD5E1.toInt())
                 setLineSpacing(0f, 1.3f)
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -137,22 +135,22 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0xFFEEEEEE.toInt())
+            setBackgroundColor(0x26FFFFFF)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (12 * dp).toInt(); bottomMargin = (8 * dp).toInt() }
         })
 
-        // Period rows — period 使用服务端 OrderSave 验证接受的 legacy 格式
+        // Period rows
         listOf(
-            Triple("month_price",     "月付",   plan.monthPrice),
-            Triple("quarter_price",   "季付",   plan.quarterPrice),
-            Triple("half_year_price", "半年付", plan.halfYearPrice),
-            Triple("year_price",      "年付",   plan.yearPrice),
-            Triple("onetime_price",   "一次性", plan.onetimePrice)
+            Triple("month_price",     context.getString(R.string.period_monthly),     plan.monthPrice),
+            Triple("quarter_price",   context.getString(R.string.period_quarterly),   plan.quarterPrice),
+            Triple("half_year_price", context.getString(R.string.period_half_yearly), plan.halfYearPrice),
+            Triple("year_price",      context.getString(R.string.period_yearly),      plan.yearPrice),
+            Triple("onetime_price",   context.getString(R.string.period_onetime),     plan.onetimePrice)
         ).forEach { (period, label, cents) ->
             if (cents != null && cents > 0) {
-                inner.addView(createPeriodRow(plan, period, label, cents, dp))
+                inner.addView(createPeriodRow(plan, period, label, cents))
             }
         }
 
@@ -164,11 +162,11 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         plan: Plan,
         period: String,
         label: String,
-        priceCents: Long,
-        dp: Float
+        priceCents: Long
     ): View {
         val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -176,28 +174,23 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         }
 
         // Period label
-        row.addView(android.widget.TextView(context).apply {
+        row.addView(TextView(context).apply {
             text = label
             textSize = 14f
-            setTextColor(0xFF424242.toInt())
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                gravity = android.view.Gravity.CENTER_VERTICAL
-            }
+            setTextColor(0xFF94A3B8.toInt())
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
 
         // Price
-        row.addView(android.widget.TextView(context).apply {
+        row.addView(TextView(context).apply {
             text = "¥%.2f".format(priceCents / 100.0)
             textSize = 15f
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
-            setTextColor(0xFF1A237E.toInt())
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(0xFFF1F5F9.toInt())
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                gravity = android.view.Gravity.CENTER_VERTICAL
-                marginEnd = (12 * dp).toInt()
-            }
+            ).apply { marginEnd = (12 * dp).toInt() }
         })
 
         // Buy button
@@ -209,7 +202,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 (32 * dp).toInt()
-            ).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
+            )
             setOnClickListener {
                 requests.trySend(
                     Request.BuyPlan(plan.id, plan.name, period, label, priceCents)

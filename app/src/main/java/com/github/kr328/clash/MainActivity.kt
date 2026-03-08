@@ -402,15 +402,6 @@ class MainActivity : BaseActivity<MainDesign>() {
         return "%02d:%02d:%02d".format(h, m, s)
     }
 
-    private fun handleAuthExpired() {
-        XBoardSession.clear(this)
-        startActivity(
-            XBoardLoginActivity::class.intent.apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-        )
-    }
-
     private suspend fun queryAppVersionName(): String {
         return withContext(Dispatchers.IO) {
             packageManager.getPackageInfo(packageName, 0).versionName ?: "1.0"
