@@ -16,108 +16,96 @@
         <import type="com.github.kr328.clash.design.MainDesign.Request" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/bg_gradient_main"
-        android:paddingStart="@{self.surface.insets.start}"
-        android:paddingEnd="@{self.surface.insets.end}">
+        android:background="@drawable/bg_gradient_main">
 
-        <!-- 顶栏（所有 Tab 共用） -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingTop="@{self.surface.insets.top}"
-            android:paddingStart="20dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="12dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="@{self.surface.insets.start}"
+            android:paddingEnd="@{self.surface.insets.end}">
 
+            <!-- ── Header ──────────────────────────────────── -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="@{self.surface.insets.top}"
+                android:paddingStart="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:id="@+id/brand_name_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/xboard_brand_name"
-                    android:textSize="26sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="#1A237E"
+                    android:textColor="@color/color_text_primary"
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless" />
 
+                <TextView
+                    android:id="@+id/avatar_letter_header"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_avatar"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:text="U" />
 
             </LinearLayout>
 
-            <!-- 设置通过连续点击品牌名 5 次进入（隐藏入口） -->
-
-            <TextView
-                android:id="@+id/avatar_letter_header"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="4dp"
-                android:gravity="center"
-                android:background="@drawable/bg_avatar"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="U" />
-
-        </LinearLayout>
-
-        <!-- Tab 内容区 -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <!-- Tab 1: 首页 -->
-            <ScrollView
-                android:id="@+id/home_content"
+            <!-- ── Tab Content ─────────────────────────────── -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:fillViewport="false">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-                <LinearLayout
+                <!-- ═══ Tab 1: Home (Bento Grid) ═══ -->
+                <ScrollView
+                    android:id="@+id/home_content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="24dp">
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:clipToPadding="false"
+                    android:fillViewport="false">
 
-                    <!-- 用户信息卡 -->
-                    <com.google.android.material.card.MaterialCardView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
+                        android:orientation="vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="24dp">
 
+                        <!-- ── User Info Card (full width) ── -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/bg_card_surface"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:layout_marginTop="4dp">
 
                             <TextView
                                 android:id="@+id/avatar_letter_card"
-                                android:layout_width="52dp"
-                                android:layout_height="52dp"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
                                 android:gravity="center"
                                 android:background="@drawable/bg_avatar"
                                 android:textColor="@android:color/white"
-                                android:textSize="22sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:text="U" />
 
@@ -135,7 +123,7 @@
                                     android:text="@string/xboard_login_summary"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E"
+                                    android:textColor="@color/color_text_primary"
                                     android:maxLines="1"
                                     android:ellipsize="end" />
 
@@ -145,7 +133,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/expiry_unknown"
                                     android:textSize="12sp"
-                                    android:textColor="#5C7CAB"
+                                    android:textColor="@color/color_text_secondary"
                                     android:layout_marginTop="2dp" />
 
                                 <TextView
@@ -154,14 +142,14 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/traffic_usage_label"
                                     android:textSize="11sp"
-                                    android:textColor="#5C7CAB"
-                                    android:layout_marginTop="8dp" />
+                                    android:textColor="@color/color_text_tertiary"
+                                    android:layout_marginTop="6dp" />
 
                                 <ProgressBar
                                     android:id="@+id/traffic_progress"
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
-                                    android:layout_height="6dp"
+                                    android:layout_height="4dp"
                                     android:max="100"
                                     android:progress="0"
                                     android:progressDrawable="@drawable/bg_progress_bar"
@@ -171,48 +159,41 @@
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- VPN 连接卡 -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
+                        <!-- ── Connection Hero Card ── -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/bg_card_surface"
                             android:orientation="vertical"
                             android:gravity="center_horizontal"
                             android:paddingTop="32dp"
-                            android:paddingBottom="28dp">
+                            android:paddingBottom="28dp"
+                            android:layout_marginTop="12dp">
 
+                            <!-- Rings + Button -->
                             <FrameLayout
-                                android:layout_width="180dp"
-                                android:layout_height="180dp"
+                                android:layout_width="160dp"
+                                android:layout_height="160dp"
                                 android:layout_gravity="center_horizontal">
 
                                 <View
-                                    android:layout_width="180dp"
-                                    android:layout_height="180dp"
+                                    android:layout_width="160dp"
+                                    android:layout_height="160dp"
                                     android:background="@drawable/bg_connect_button_ring"
                                     android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
-                                    android:alpha="0.12" />
+                                    android:alpha="0.15" />
 
                                 <View
-                                    android:layout_width="152dp"
-                                    android:layout_height="152dp"
+                                    android:layout_width="130dp"
+                                    android:layout_height="130dp"
                                     android:layout_gravity="center"
                                     android:background="@drawable/bg_connect_button_ring"
                                     android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
-                                    android:alpha="0.22" />
+                                    android:alpha="0.3" />
 
                                 <FrameLayout
-                                    android:layout_width="128dp"
-                                    android:layout_height="128dp"
+                                    android:layout_width="104dp"
+                                    android:layout_height="104dp"
                                     android:layout_gravity="center"
                                     android:background="@drawable/bg_connect_button"
                                     android:backgroundTint="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}"
@@ -220,11 +201,11 @@
                                     android:focusable="true"
                                     android:foreground="?attr/selectableItemBackgroundBorderless"
                                     android:onClick="@{() -> self.request(Request.ToggleStatus)}"
-                                    android:elevation="6dp">
+                                    android:elevation="4dp">
 
                                     <ImageView
-                                        android:layout_width="52dp"
-                                        android:layout_height="52dp"
+                                        android:layout_width="44dp"
+                                        android:layout_height="44dp"
                                         android:layout_gravity="center"
                                         android:src="@drawable/ic_power_button"
                                         android:tint="@android:color/white" />
@@ -236,19 +217,19 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
+                                android:layout_marginTop="16dp"
                                 android:text="@{clashRunning ? @string/status_connected : @string/status_disconnected}"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@{ColorStateList.valueOf(clashRunning ? colorConnected : colorDisconnected)}" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@string/click_to_connect_hint"
                                 android:textSize="12sp"
-                                android:textColor="#8EAACB"
+                                android:textColor="@color/color_text_tertiary"
                                 android:visibility="@{clashRunning ? View.GONE : View.VISIBLE}" />
 
                             <TextView
@@ -258,145 +239,143 @@
                                 android:layout_marginTop="4dp"
                                 android:text="00:00:00"
                                 android:textSize="13sp"
-                                android:textColor="#5C7CAB"
+                                android:textColor="@color/color_text_secondary"
                                 android:fontFamily="monospace"
                                 android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}" />
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- 连接速度卡（连接时显示） -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
+                        <!-- ── Speed Cards (Bento 2-col) ── -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
+                            android:orientation="horizontal"
+                            android:layout_marginTop="12dp"
+                            android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@{forwarded}"
-                                android:textSize="12sp"
-                                android:textColor="#8EAACB"
-                                android:visibility="@{forwarded != null ? View.VISIBLE : View.GONE}" />
-
+                            <!-- Download -->
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="8dp">
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_card_surface_small"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:layout_marginEnd="6dp">
 
-                                <LinearLayout
-                                    android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical"
-                                    android:gravity="center_horizontal">
+                                    android:text="↓"
+                                    android:textSize="18sp"
+                                    android:textColor="@color/color_status_good" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/download_label"
-                                        android:textSize="12sp"
-                                        android:textColor="#5C7CAB" />
-
-                                    <TextView
-                                        android:id="@+id/download_speed_text"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="0 B/s"
-                                        android:textSize="15sp"
-                                        android:textStyle="bold"
-                                        android:textColor="#1A237E"
-                                        android:layout_marginTop="2dp" />
-
-                                </LinearLayout>
-
-                                <View
-                                    android:layout_width="1dp"
-                                    android:layout_height="36dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:background="#E0EAF8" />
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical"
-                                    android:gravity="center_horizontal">
+                                    android:text="@string/download_label"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/color_text_tertiary"
+                                    android:layout_marginTop="4dp" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/upload_label"
-                                        android:textSize="12sp"
-                                        android:textColor="#5C7CAB" />
+                                <TextView
+                                    android:id="@+id/download_speed_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0 B/s"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/color_text_primary"
+                                    android:fontFamily="monospace"
+                                    android:layout_marginTop="2dp" />
 
-                                    <TextView
-                                        android:id="@+id/upload_speed_text"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="0 B/s"
-                                        android:textSize="15sp"
-                                        android:textStyle="bold"
-                                        android:textColor="#1A237E"
-                                        android:layout_marginTop="2dp" />
+                            </LinearLayout>
 
-                                </LinearLayout>
+                            <!-- Upload -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_card_surface_small"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:layout_marginStart="6dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="↑"
+                                    android:textSize="18sp"
+                                    android:textColor="@color/color_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/upload_label"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/color_text_tertiary"
+                                    android:layout_marginTop="4dp" />
+
+                                <TextView
+                                    android:id="@+id/upload_speed_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0 B/s"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/color_text_primary"
+                                    android:fontFamily="monospace"
+                                    android:layout_marginTop="2dp" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
+                        <!-- Forwarded total -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@{forwarded}"
+                            android:textSize="11sp"
+                            android:textColor="@color/color_text_tertiary"
+                            android:visibility="@{forwarded != null &amp;&amp; clashRunning ? View.VISIBLE : View.GONE}" />
 
-                    <!-- 代理模式 + 节点选择（合并卡） -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:onClick="@{() -> self.request(Request.OpenProxy)}"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
+                        <!-- ── Server Selector Bar ── -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:background="@drawable/bg_card_surface"
+                            android:orientation="vertical"
+                            android:layout_marginTop="12dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> self.request(Request.OpenProxy)}">
 
-                            <!-- 代理模式行 -->
+                            <!-- Mode row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="56dp"
+                                android:layout_height="52dp"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:paddingStart="16dp"
-                                android:paddingEnd="12dp">
+                                android:paddingEnd="14dp">
 
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_baseline_apps"
-                                    android:tint="#3A6BBF"
+                                    android:tint="@color/color_primary"
                                     android:layout_marginEnd="10dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/proxy"
-                                    android:textSize="13sp"
-                                    android:textColor="#8EAACB"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/color_text_tertiary"
                                     android:layout_marginEnd="8dp" />
 
                                 <TextView
@@ -406,46 +385,46 @@
                                     android:text="@{mode != null ? mode : @string/rule_mode}"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E" />
+                                    android:textColor="@color/color_text_primary" />
 
                                 <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
                                     android:src="@drawable/ic_chevron_right"
-                                    android:tint="#8EAACB" />
+                                    android:tint="@color/color_text_tertiary" />
 
                             </LinearLayout>
 
-                            <!-- 分隔线 -->
+                            <!-- Divider -->
                             <View
                                 android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:background="#E0EAF8"
+                                android:layout_height="1dp"
+                                android:background="@color/color_divider"
                                 android:layout_marginStart="16dp"
                                 android:layout_marginEnd="16dp" />
 
-                            <!-- 节点选择行 -->
+                            <!-- Node row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="52dp"
+                                android:layout_height="48dp"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:paddingStart="16dp"
-                                android:paddingEnd="12dp">
+                                android:paddingEnd="14dp">
 
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_notification"
-                                    android:tint="#3A6BBF"
+                                    android:tint="@color/color_primary_variant"
                                     android:layout_marginEnd="10dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/node_selection_title"
-                                    android:textSize="13sp"
-                                    android:textColor="#8EAACB"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/color_text_tertiary"
                                     android:layout_marginEnd="8dp" />
 
                                 <TextView
@@ -455,87 +434,79 @@
                                     android:text="@{profileName != null ? profileName : @string/not_selected}"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E"
+                                    android:textColor="@color/color_text_primary"
                                     android:maxLines="1"
                                     android:ellipsize="end" />
 
                                 <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
                                     android:src="@drawable/ic_chevron_right"
-                                    android:tint="#8EAACB" />
+                                    android:tint="@color/color_text_tertiary" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
 
-                </LinearLayout>
+                </ScrollView>
 
-            </ScrollView>
-
-            <!-- Tab 2: 商店 (immediately navigates to StoreActivity) -->
-            <LinearLayout
-                android:id="@+id/store_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:visibility="gone">
-            </LinearLayout>
-
-            <!-- Tab 3: 我的 -->
-            <ScrollView
-                android:id="@+id/profile_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:visibility="gone">
-
+                <!-- ═══ Tab 2: Store (stub) ═══ -->
                 <LinearLayout
+                    android:id="@+id/store_content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="24dp">
+                    android:gravity="center"
+                    android:visibility="gone" />
 
-                    <!-- 页面标题 -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/nav_profile"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A237E"
-                        android:layout_marginBottom="12dp" />
+                <!-- ═══ Tab 3: Profile ═══ -->
+                <ScrollView
+                    android:id="@+id/profile_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:clipToPadding="false"
+                    android:visibility="gone">
 
-                    <!-- 用户头部卡片 -->
-                    <com.google.android.material.card.MaterialCardView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
+                        android:orientation="vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="24dp">
 
+                        <!-- Section title -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nav_profile"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_text_primary"
+                            android:layout_marginBottom="12dp" />
+
+                        <!-- User header card -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/bg_card_surface"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:layout_marginBottom="12dp">
 
                             <TextView
                                 android:id="@+id/profile_avatar_letter"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
                                 android:gravity="center"
                                 android:background="@drawable/bg_avatar"
                                 android:textColor="@android:color/white"
-                                android:textSize="24sp"
+                                android:textSize="22sp"
                                 android:textStyle="bold"
                                 android:text="U" />
 
@@ -553,7 +524,7 @@
                                     android:text="@string/xboard_login_summary"
                                     android:textSize="15sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E"
+                                    android:textColor="@color/color_text_primary"
                                     android:maxLines="1"
                                     android:ellipsize="end" />
 
@@ -563,30 +534,23 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/plan_unknown"
                                     android:textSize="12sp"
-                                    android:textColor="#3A6BBF"
+                                    android:textColor="@color/color_primary"
                                     android:layout_marginTop="4dp" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- 套餐信息卡 -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
+                        <!-- Plan info card -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/bg_card_surface"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:layout_marginBottom="12dp">
 
+                            <!-- Plan name row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -595,10 +559,10 @@
                                 android:layout_marginBottom="8dp">
 
                                 <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
                                     android:src="@drawable/ic_person"
-                                    android:tint="#3A6BBF"
+                                    android:tint="@color/color_primary"
                                     android:layout_marginEnd="8dp" />
 
                                 <TextView
@@ -606,7 +570,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/plan_label"
                                     android:textSize="12sp"
-                                    android:textColor="#8EAACB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                                 <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
@@ -617,10 +581,11 @@
                                     android:text="@string/plan_unknown"
                                     android:textSize="13sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E" />
+                                    android:textColor="@color/color_text_primary" />
 
                             </LinearLayout>
 
+                            <!-- Expiry row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -629,10 +594,10 @@
                                 android:layout_marginBottom="10dp">
 
                                 <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
                                     android:src="@drawable/ic_baseline_replay"
-                                    android:tint="#3A6BBF"
+                                    android:tint="@color/color_primary"
                                     android:layout_marginEnd="8dp" />
 
                                 <TextView
@@ -640,7 +605,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/expiry_prefix"
                                     android:textSize="12sp"
-                                    android:textColor="#8EAACB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                                 <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
@@ -650,10 +615,11 @@
                                     android:layout_height="wrap_content"
                                     android:text="--"
                                     android:textSize="13sp"
-                                    android:textColor="#1A237E" />
+                                    android:textColor="@color/color_text_primary" />
 
                             </LinearLayout>
 
+                            <!-- Traffic -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -668,7 +634,7 @@
                                     android:layout_weight="1"
                                     android:text="@string/traffic_usage_label"
                                     android:textSize="11sp"
-                                    android:textColor="#5C7CAB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                                 <TextView
                                     android:id="@+id/profile_traffic_detail_text"
@@ -676,7 +642,7 @@
                                     android:layout_height="wrap_content"
                                     android:text=""
                                     android:textSize="11sp"
-                                    android:textColor="#5C7CAB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                             </LinearLayout>
 
@@ -684,43 +650,37 @@
                                 android:id="@+id/profile_traffic_progress"
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
-                                android:layout_height="6dp"
+                                android:layout_height="4dp"
                                 android:max="100"
                                 android:progress="0"
                                 android:progressDrawable="@drawable/bg_progress_bar" />
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- 余额卡 -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
+                        <!-- Balance cards (Bento 2-col) -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:padding="16dp">
+                            android:layout_marginBottom="12dp">
 
+                            <!-- Balance -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:background="@drawable/bg_card_surface_small"
                                 android:orientation="vertical"
-                                android:gravity="center_horizontal">
+                                android:gravity="center_horizontal"
+                                android:padding="16dp"
+                                android:layout_marginEnd="6dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/balance_label"
                                     android:textSize="11sp"
-                                    android:textColor="#8EAACB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                                 <TextView
                                     android:id="@+id/profile_balance_text"
@@ -729,30 +689,29 @@
                                     android:text="¥ --"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E"
+                                    android:textColor="@color/color_text_primary"
+                                    android:fontFamily="monospace"
                                     android:layout_marginTop="4dp" />
 
                             </LinearLayout>
 
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="#E0EAF8" />
-
+                            <!-- Commission -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:background="@drawable/bg_card_surface_small"
                                 android:orientation="vertical"
-                                android:gravity="center_horizontal">
+                                android:gravity="center_horizontal"
+                                android:padding="16dp"
+                                android:layout_marginStart="6dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/commission_label"
                                     android:textSize="11sp"
-                                    android:textColor="#8EAACB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                                 <TextView
                                     android:id="@+id/profile_commission_text"
@@ -761,30 +720,24 @@
                                     android:text="¥ --"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    android:textColor="#1A237E"
+                                    android:textColor="@color/color_text_primary"
+                                    android:fontFamily="monospace"
                                     android:layout_marginTop="4dp" />
 
                             </LinearLayout>
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- 邀请卡 -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/profile_invite_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@android:color/white">
-
+                        <!-- Invite card -->
                         <LinearLayout
+                            android:id="@+id/profile_invite_card"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/bg_card_surface"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -798,7 +751,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/invite_link_label"
                                     android:textSize="12sp"
-                                    android:textColor="#8EAACB" />
+                                    android:textColor="@color/color_text_tertiary" />
 
                                 <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
@@ -806,9 +759,9 @@
                                     android:id="@+id/profile_referral_count_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="已邀请 0 人"
+                                    android:text=""
                                     android:textSize="12sp"
-                                    android:textColor="#3A6BBF" />
+                                    android:textColor="@color/color_primary" />
 
                             </LinearLayout>
 
@@ -817,9 +770,8 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:background="#F5F8FF"
-                                android:padding="10dp"
-                                android:layout_marginTop="2dp">
+                                android:background="@drawable/bg_pill_toggle"
+                                android:padding="10dp">
 
                                 <TextView
                                     android:id="@+id/profile_invite_link_text"
@@ -828,7 +780,8 @@
                                     android:layout_weight="1"
                                     android:text="--"
                                     android:textSize="12sp"
-                                    android:textColor="#5C7CAB"
+                                    android:textColor="@color/color_text_secondary"
+                                    android:fontFamily="monospace"
                                     android:maxLines="1"
                                     android:ellipsize="end" />
 
@@ -838,7 +791,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/copy_text"
                                     android:textSize="12sp"
-                                    android:textColor="#3A6BBF"
+                                    android:textColor="@color/color_primary"
                                     android:background="?attr/selectableItemBackground"
                                     android:padding="6dp"
                                     android:layout_marginStart="8dp" />
@@ -847,65 +800,80 @@
 
                         </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
+                        <!-- Action buttons -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/profile_change_password_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/change_password"
+                            android:textColor="@color/color_text_secondary"
+                            app:strokeColor="@color/color_text_tertiary"
+                            app:cornerRadius="16dp" />
 
-                    <!-- 修改密码按钮 -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/profile_change_password_btn"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/change_password"
-                        app:cornerRadius="12dp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/profile_notices_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/notices_title"
+                            android:textColor="@color/color_text_secondary"
+                            app:strokeColor="@color/color_text_tertiary"
+                            app:cornerRadius="16dp" />
 
-                    <!-- 公告按钮 -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/profile_notices_btn"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/notices_title"
-                        app:cornerRadius="12dp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/profile_orders_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/orders_title"
+                            android:textColor="@color/color_text_secondary"
+                            app:strokeColor="@color/color_text_tertiary"
+                            app:cornerRadius="16dp" />
 
-                    <!-- 我的订单按钮 -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/profile_orders_btn"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/orders_title"
-                        app:cornerRadius="12dp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/profile_logout_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/logout"
+                            android:textColor="@color/color_status_bad"
+                            app:strokeColor="@color/color_status_bad"
+                            app:cornerRadius="16dp" />
 
-                    <!-- 退出登录按钮 -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/profile_logout_btn"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/logout"
-                        android:textColor="#D32F2F"
-                        app:strokeColor="#D32F2F"
-                        app:cornerRadius="12dp" />
+                    </LinearLayout>
 
-                </LinearLayout>
+                </ScrollView>
 
-            </ScrollView>
+            </FrameLayout>
 
-        </FrameLayout>
+            <!-- ── Bottom Navigation (Floating Glass) ─── -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="@{self.surface.insets.bottom + 8}">
 
-        <!-- 底部导航 -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:paddingBottom="@{self.surface.insets.bottom}"
-            app:menu="@menu/menu_main_nav"
-            app:labelVisibilityMode="labeled" />
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottom_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_bottom_nav"
+                    android:elevation="8dp"
+                    app:itemIconTint="@color/color_text_secondary"
+                    app:itemTextColor="@color/color_text_secondary"
+                    app:itemActiveIndicatorStyle="@null"
+                    app:menu="@menu/menu_main_nav"
+                    app:labelVisibilityMode="labeled" />
 
-    </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </layout>

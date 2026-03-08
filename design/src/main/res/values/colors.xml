@@ -1,18 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 悦通品牌主色（蓝紫 Indigo） -->
-    <color name="color_clash_light">#4F46E5</color>
-    <color name="color_clash_dark">#818CF8</color>
+    <!-- YueTong 2026 Cyberpunk Design System -->
 
+    <!-- Background -->
+    <color name="color_background">#FF0F172A</color>
+    <color name="color_surface">#FF1E293B</color>
+    <color name="color_surface_elevated">#FF334155</color>
+
+    <!-- Primary Accent (Electric Indigo → Violet gradient endpoints) -->
+    <color name="color_primary">#FF6366F1</color>
+    <color name="color_primary_variant">#FF8B5CF6</color>
+    <color name="color_on_primary">#FFFFFFFF</color>
+
+    <!-- Text -->
+    <color name="color_text_primary">#FFF1F5F9</color>
+    <color name="color_text_secondary">#FF94A3B8</color>
+    <color name="color_text_tertiary">#FF64748B</color>
+
+    <!-- Status -->
+    <color name="color_status_good">#FF10B981</color>
+    <color name="color_status_bad">#FFEF4444</color>
+    <color name="color_status_warn">#FFFBBF24</color>
+
+    <!-- Legacy aliases (keep builds happy) -->
+    <color name="color_clash_light">#FF6366F1</color>
+    <color name="color_clash_dark">#FF818CF8</color>
     <color name="color_system_ui_overlay">#50000000</color>
-    <color name="color_light_background">#FFF8F9FF</color>
-    <color name="color_dark_background">#FF0D0D1A</color>
-    <color name="color_dark_surface">#FF1A1A2E</color>
-    <color name="color_light_clash_stopped">#FF9CA3AF</color>
-    <color name="color_light_control_disabled">#FFD1D5DB</color>
-    <color name="color_dark_control_disabled">#FF6B7280</color>
-    <color name="color_error">#FFB00020</color>
+    <color name="color_light_background">#FF0F172A</color>
+    <color name="color_dark_background">#FF0F172A</color>
+    <color name="color_dark_surface">#FF1E293B</color>
+    <color name="color_light_clash_stopped">#FF64748B</color>
+    <color name="color_light_control_disabled">#FF475569</color>
+    <color name="color_dark_control_disabled">#FF475569</color>
+    <color name="color_error">#FFEF4444</color>
 
-    <!-- 启动图标背景色 -->
-    <color name="ic_launcher_background">#4F46E5</color>
+    <!-- Divider / Border -->
+    <color name="color_divider">#1AFFFFFF</color>
+
+    <!-- Card overlay (glass effect) -->
+    <color name="color_card_glass">#CC1E293B</color>
+
+    <!-- Launcher icon -->
+    <color name="ic_launcher_background">#FF6366F1</color>
 </resources>

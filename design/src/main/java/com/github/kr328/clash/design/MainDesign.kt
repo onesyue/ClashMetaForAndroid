@@ -90,7 +90,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             else
                 context.getString(R.string.expiry_unknown)
             binding.expiryText.setTextColor(
-                if (expired) 0xFFD32F2F.toInt() else 0xFF5C7CAB.toInt()
+                if (expired) 0xFFEF4444.toInt() else 0xFF94A3B8.toInt()
             )
         }
     }
@@ -129,7 +129,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         withContext(Dispatchers.Main) {
             binding.profileExpiryText.text = date ?: "--"
             binding.profileExpiryText.setTextColor(
-                if (expired) 0xFFD32F2F.toInt() else 0xFF1A237E.toInt()
+                if (expired) 0xFFEF4444.toInt() else 0xFFF1F5F9.toInt()
             )
         }
     }
@@ -192,7 +192,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.avatarLetterHeader.text = "U"
             binding.avatarLetterCard.text = "U"
             binding.expiryText.text = unknownExp
-            binding.expiryText.setTextColor(0xFF5C7CAB.toInt())
+            binding.expiryText.setTextColor(0xFF94A3B8.toInt())
             binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.trafficProgress.progress = 0
 
@@ -204,7 +204,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             // Profile tab cards
             binding.profilePlanNameText.text = unknownPlan
             binding.profileExpiryText.text = "--"
-            binding.profileExpiryText.setTextColor(0xFF1A237E.toInt())
+            binding.profileExpiryText.setTextColor(0xFFF1F5F9.toInt())
             binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.profileTrafficProgress.progress = 0
             binding.profileTrafficDetailText.text = ""
@@ -301,7 +301,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.xboard_brand_name))
                 .setMessage(
-                    context.getString(R.string.xboard_brand_subtitle) + "\n\n版本：$versionName"
+                    context.getString(R.string.xboard_brand_subtitle) + "\n\nv$versionName"
                 )
                 .setPositiveButton(R.string.ok, null)
                 .show()
