@@ -127,7 +127,11 @@ class UserSettingsDesign(
                 title = R.string.check_update,
                 summary = R.string.check_update_summary,
             ) {
-                summary = context.getString(R.string.check_update_summary, versionName)
+                val channelName = if (versionName.contains("Alpha", ignoreCase = true))
+                    context.getString(R.string.update_channel_alpha)
+                else
+                    context.getString(R.string.update_channel_release)
+                summary = context.getString(R.string.check_update_summary, versionName, channelName)
                 clicked { requests.trySend(Request.CheckUpdate) }
             }
         }

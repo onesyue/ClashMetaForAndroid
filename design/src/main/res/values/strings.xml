@@ -605,9 +605,11 @@
     <string name="interval_off">关闭</string>
     <string name="cat_app">应用</string>
     <string name="check_update">检查更新</string>
-    <string name="check_update_summary">当前版本：%s</string>
+    <string name="check_update_summary">当前版本：%1$s（%2$s渠道）</string>
     <string name="checking_update">正在检查更新…</string>
     <string name="update_available">发现新版本 %s，点击下载</string>
+    <string name="update_channel_alpha">测试</string>
+    <string name="update_channel_release">正式</string>
     <string name="already_latest">已是最新版本</string>
     <string name="check_update_failed">检查更新失败</string>
     <string name="language_setting">语言</string>

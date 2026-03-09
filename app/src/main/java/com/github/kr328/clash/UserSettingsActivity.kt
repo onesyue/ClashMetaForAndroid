@@ -178,8 +178,23 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
                     .build()
+
+                val isAlpha = currentVersion.contains("Alpha", ignoreCase = true)
+                val cleanCurrent = currentVersion
+                    .replace(".Alpha", "")
+                    .replace(".Meta", "")
+                    .replace(".debug", "")
+
+                val apiUrl = if (isAlpha) {
+                    // Alpha channel: check pre-release
+                    "https://api.github.com/repos/onesyue/ClashMetaForAndroid/releases/tags/Prerelease-alpha"
+                } else {
+                    // Release channel: check latest stable
+                    "https://api.github.com/repos/onesyue/ClashMetaForAndroid/releases/latest"
+                }
+
                 val request = Request.Builder()
-                    .url("https://api.github.com/repos/onesyue/ClashMetaForAndroid/releases/latest")
+                    .url(apiUrl)
                     .header("Accept", "application/vnd.github.v3+json")
                     .build()
 
@@ -190,18 +205,28 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                     }
                     val body = response.body?.string() ?: return@launch
                     val json = org.json.JSONObject(body)
-                    val latestTag = json.optString("tag_name", "").removePrefix("v")
-                    val htmlUrl = json.optString("html_url", "")
 
-                    if (latestTag.isNotEmpty() && latestTag != currentVersion &&
-                        isNewerVersion(latestTag, currentVersion)
-                    ) {
+                    val latestVersion: String
+                    val releaseUrl: String
+
+                    if (isAlpha) {
+                        // Extract version from release name "Pre-release v1.0.0"
+                        val name = json.optString("name", "")
+                        latestVersion = name.removePrefix("Pre-release v")
+                        releaseUrl = json.optString("html_url", "")
+                    } else {
+                        latestVersion = json.optString("tag_name", "").removePrefix("v")
+                        releaseUrl = json.optString("html_url", "")
+                    }
+
+                    if (latestVersion.isNotEmpty() && isNewerVersion(latestVersion, cleanCurrent)) {
+                        val displayVersion = if (isAlpha) "$latestVersion Alpha" else latestVersion
                         withContext(Dispatchers.Main) {
                             AlertDialog.Builder(this@UserSettingsActivity)
                                 .setTitle(R.string.check_update)
-                                .setMessage(getString(R.string.update_available, latestTag))
+                                .setMessage(getString(R.string.update_available, displayVersion))
                                 .setPositiveButton(R.string.update_download) { _, _ ->
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl))
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseUrl))
                                     startActivity(intent)
                                 }
                                 .setNegativeButton(R.string.cancel, null)
