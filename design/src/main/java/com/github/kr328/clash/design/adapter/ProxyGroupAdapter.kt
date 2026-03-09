@@ -41,7 +41,6 @@ class ProxyGroupAdapter(
 
     private val groups = groupNames.mapIndexed { i, name -> GroupData(i, name) }.toMutableList()
     private val flatList = mutableListOf<ListItem>()
-    private var filterQuery: String = ""
     private var sortByDelay: Boolean = false
 
     init {
@@ -68,12 +67,6 @@ class ProxyGroupAdapter(
         notifyDataSetChanged()
     }
 
-    /** Filter nodes by name query */
-    fun filter(query: String) {
-        filterQuery = query.trim().lowercase()
-        rebuildFlatList()
-    }
-
     /** Toggle sort-by-delay mode */
     fun setSortByDelay(enabled: Boolean) {
         sortByDelay = enabled
@@ -97,15 +90,6 @@ class ProxyGroupAdapter(
             flatList.add(ListItem.Header(group))
             if (group.expanded && group.proxies.isNotEmpty()) {
                 var nodes = group.proxies.toList()
-
-                // Filter
-                if (filterQuery.isNotEmpty()) {
-                    nodes = nodes.filter {
-                        it.name.lowercase().contains(filterQuery) ||
-                        it.title.lowercase().contains(filterQuery) ||
-                        it.subtitle.lowercase().contains(filterQuery)
-                    }
-                }
 
                 // Sort by delay
                 if (sortByDelay) {

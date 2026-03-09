@@ -17,7 +17,6 @@ class ProxyActivity : BaseActivity<ProxyDesign>() {
         val mode = withClash { queryOverride(Clash.OverrideSlot.Session).mode }
         val names = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
         val states = List(names.size) { ProxyState("?") }
-        val unorderedStates = names.indices.map { names[it] to states[it] }.toMap()
         val reloadLock = Semaphore(10)
 
         val design = ProxyDesign(
@@ -76,8 +75,7 @@ class ProxyActivity : BaseActivity<ProxyDesign>() {
                                     it.index,
                                     group.proxies,
                                     group.type == Proxy.Type.Selector,
-                                    state,
-                                    unorderedStates
+                                    state
                                 )
                             }
                         }

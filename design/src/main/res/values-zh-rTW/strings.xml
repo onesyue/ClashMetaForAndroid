@@ -191,11 +191,7 @@
     <string name="more">更多</string>
     <string name="save">儲存</string>
     <string name="delay_test">延遲測試</string>
-    <string name="search_nodes_hint">搜尋節點…</string>
     <string name="sort_by_delay">按延遲排序</string>
-    <string name="auto_select_fastest">智慧選節點</string>
-    <string name="auto_selected_node">已選擇最快節點: %s</string>
-    <string name="no_available_node">沒有可用節點</string>
     <string name="format_provider_type">%1$s(%2$s)</string>
     <string name="rule">規則</string>
     <string name="http">HTTP</string>

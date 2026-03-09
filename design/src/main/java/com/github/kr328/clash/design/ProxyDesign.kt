@@ -3,9 +3,7 @@ package com.github.kr328.clash.design
 import android.content.Context
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.TunnelState
@@ -56,7 +54,6 @@ class ProxyDesign(
         proxies: List<Proxy>,
         selectable: Boolean,
         parent: ProxyState,
-        links: Map<String, ProxyState>
     ) {
         withContext(Dispatchers.Main) {
             proxyAdapter.updateGroup(position, proxies, selectable, parent)
