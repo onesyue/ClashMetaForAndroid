@@ -33,6 +33,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         ChangePassword,
         OpenNotices,
         OpenOrders,
+        OpenUserSettings,
     }
 
     private val binding = DesignMainBinding
@@ -395,6 +396,11 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
+        }
+
+        // 设置
+        binding.profileSettingsBtn.setOnClickListener {
+            requests.trySend(Request.OpenUserSettings)
         }
 
         // 退出登录（带确认）

@@ -130,6 +130,8 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(SettingsActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             startActivity(AboutActivity::class.intent)
+                        MainDesign.Request.OpenUserSettings ->
+                            startActivity(UserSettingsActivity::class.intent)
                         MainDesign.Request.OpenNotices ->
                             startActivity(NoticesActivity::class.intent)
                         MainDesign.Request.OpenOrders ->

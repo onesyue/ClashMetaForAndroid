@@ -70,6 +70,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
             if (info != null) {
                 SubscriptionChecker.check(context, info.expiredAt)
+                SubscriptionChecker.checkTraffic(
+                    context, info.usedUpload, info.usedDownload, info.transferEnable
+                )
             }
         }
     }

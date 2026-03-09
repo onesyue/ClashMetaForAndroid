@@ -530,4 +530,48 @@
 
     <!-- Tun stack -->
     <string name="tun_stack_mode">Stack mode</string>
+
+    <!-- User Settings -->
+    <string name="user_settings">Settings</string>
+    <string name="cat_subscription">Subscription</string>
+    <string name="current_subscription">Current subscription</string>
+    <string name="update_subscription">Update subscription</string>
+    <string name="update_subscription_summary">Fetch latest nodes from server</string>
+    <string name="add_subscription">Add/Replace subscription</string>
+    <string name="add_subscription_summary">Enter URL or scan QR code</string>
+    <string name="subscription_updating">Updating subscription…</string>
+    <string name="subscription_update_success">Subscription updated</string>
+    <string name="subscription_update_failed">Update failed: %s</string>
+    <string name="no_active_subscription">No subscription</string>
+    <string name="last_update_time">Last update: %s</string>
+    <string name="cat_update_settings">Update settings</string>
+    <string name="auto_update_interval">Auto-update interval</string>
+    <string name="interval_12h">12 hours</string>
+    <string name="interval_24h">24 hours</string>
+    <string name="interval_48h">48 hours</string>
+    <string name="interval_off">Off</string>
+    <string name="cat_app">App</string>
+    <string name="check_update">Check for updates</string>
+    <string name="check_update_summary">Current version: %s</string>
+    <string name="checking_update">Checking for updates…</string>
+    <string name="update_available">New version %s available. Tap to download.</string>
+    <string name="already_latest">Already up to date</string>
+    <string name="check_update_failed">Failed to check updates</string>
+    <string name="language_setting">Language</string>
+    <string name="enter_subscription_url">Enter subscription URL</string>
+    <string name="subscription_url_hint">https://example.com/subscribe/xxx</string>
+    <string name="subscription_added">Subscription added. Tap power button to download.</string>
+    <string name="invalid_subscription_url">Please enter a valid subscription URL</string>
+
+    <!-- Traffic alerts -->
+    <string name="traffic_alert_title">Traffic Alert</string>
+    <string name="traffic_alert_80">You have used 80%% of your traffic. Please be mindful of usage.</string>
+    <string name="traffic_alert_95">You have used 95%% of your traffic. Running out soon.</string>
+    <string name="traffic_alert_100">Your traffic has been fully consumed.</string>
+
+    <!-- Dark mode -->
+    <string name="dark_mode_setting">Dark Mode</string>
+
+    <!-- Check update -->
+    <string name="update_download">Download Update</string>
 </resources>

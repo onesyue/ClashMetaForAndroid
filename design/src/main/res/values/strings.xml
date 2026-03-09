@@ -567,4 +567,48 @@
     <string name="error_no_network">网络未连接，请检查网络设置</string>
     <string name="error_server">服务器暂时无法响应，请稍后重试</string>
     <string name="error_timeout">请求超时，请检查网络后重试</string>
+
+    <!-- 用户设置 -->
+    <string name="user_settings">设置</string>
+    <string name="cat_subscription">订阅管理</string>
+    <string name="current_subscription">当前订阅</string>
+    <string name="update_subscription">手动更新订阅</string>
+    <string name="update_subscription_summary">立即从服务器获取最新节点</string>
+    <string name="add_subscription">添加/替换订阅</string>
+    <string name="add_subscription_summary">输入订阅地址或扫码导入</string>
+    <string name="subscription_updating">正在更新订阅…</string>
+    <string name="subscription_update_success">订阅更新成功</string>
+    <string name="subscription_update_failed">订阅更新失败：%s</string>
+    <string name="no_active_subscription">暂无订阅</string>
+    <string name="last_update_time">上次更新：%s</string>
+    <string name="cat_update_settings">更新设置</string>
+    <string name="auto_update_interval">订阅自动更新</string>
+    <string name="interval_12h">12 小时</string>
+    <string name="interval_24h">24 小时</string>
+    <string name="interval_48h">48 小时</string>
+    <string name="interval_off">关闭</string>
+    <string name="cat_app">应用</string>
+    <string name="check_update">检查更新</string>
+    <string name="check_update_summary">当前版本：%s</string>
+    <string name="checking_update">正在检查更新…</string>
+    <string name="update_available">发现新版本 %s，点击下载</string>
+    <string name="already_latest">已是最新版本</string>
+    <string name="check_update_failed">检查更新失败</string>
+    <string name="language_setting">语言</string>
+    <string name="enter_subscription_url">请输入订阅地址</string>
+    <string name="subscription_url_hint">https://example.com/subscribe/xxx</string>
+    <string name="subscription_added">订阅已添加，请点击电源按钮下载</string>
+    <string name="invalid_subscription_url">请输入有效的订阅地址</string>
+
+    <!-- 流量提醒 -->
+    <string name="traffic_alert_title">流量提醒</string>
+    <string name="traffic_alert_80">您的流量已使用 80%%，请注意用量</string>
+    <string name="traffic_alert_95">您的流量已使用 95%%，即将用尽</string>
+    <string name="traffic_alert_100">您的流量已全部用完</string>
+
+    <!-- 深色模式 -->
+    <string name="dark_mode_setting">深色模式</string>
+
+    <!-- 检查更新 -->
+    <string name="update_download">下载更新</string>
 </resources>

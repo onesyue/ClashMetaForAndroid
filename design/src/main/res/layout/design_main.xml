@@ -913,6 +913,16 @@
                             app:cornerRadius="16dp" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/profile_settings_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/user_settings"
+                            android:textColor="@color/color_text_secondary"
+                            app:strokeColor="@color/color_text_tertiary"
+                            app:cornerRadius="16dp" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/profile_logout_btn"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"

@@ -236,6 +236,12 @@
             android:exported="false"
             android:label="@string/orders_title" />
 
+        <activity
+            android:name=".UserSettingsActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/user_settings" />
+
         <service
             android:name=".LogcatService"
             android:exported="false"
