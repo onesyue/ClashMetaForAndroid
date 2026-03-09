@@ -1,8 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
@@ -122,16 +120,7 @@ class ProxyDesign(
             applyMode(TunnelState.Mode.Direct)
         }
 
-        // Search field
-        binding.searchField.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                proxyAdapter.filter(s?.toString() ?: "")
-            }
-        })
-
-        // Sort by delay toggle
+// Sort by delay toggle
         var sortByDelay = false
         binding.sortButton.setOnClickListener {
             sortByDelay = !sortByDelay
