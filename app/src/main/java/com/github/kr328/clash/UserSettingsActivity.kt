@@ -179,10 +179,10 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                     .readTimeout(10, TimeUnit.SECONDS)
                     .build()
 
-                val isAlpha = currentVersion.contains("Alpha", ignoreCase = true)
+                val isAlpha = currentVersion.contains("-alpha", ignoreCase = true)
                 val cleanCurrent = currentVersion
-                    .replace(".Alpha", "")
-                    .replace(".Meta", "")
+                    .replace("-alpha", "", ignoreCase = true)
+                    .replace("-meta", "", ignoreCase = true)
                     .replace(".debug", "")
 
                 val apiUrl = if (isAlpha) {

@@ -102,7 +102,7 @@ subprojects {
                 isDefault = true
                 dimension = flavorDimensionList[0]
                 if (!removeSuffix) {
-                    versionNameSuffix = ".Alpha"
+                    versionNameSuffix = "-alpha"
                 }
 
 
@@ -120,7 +120,7 @@ subprojects {
 
                 dimension = flavorDimensionList[0]
                 if (!removeSuffix) {
-                    versionNameSuffix = ".Meta"
+                    versionNameSuffix = "-meta"
                 }
 
                 buildConfigField("boolean", "PREMIUM", "Boolean.parseBoolean(\"false\")")
