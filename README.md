@@ -1,4 +1,4 @@
-## YueTong (悦通)
+## YueTong
 
 A premium VPN client for Android — built on [Clash Meta](https://github.com/MetaCubeX/ClashMetaForAndroid) with native [XBoard](https://github.com/cedar2025/Xboard) panel integration. Designed for AI tools, streaming, and global acceleration.
 
