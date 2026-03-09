@@ -1,8 +1,11 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.TunnelState
@@ -30,6 +33,7 @@ class ProxyDesign(
         data class Reload(val index: Int) : Request()
         data class Select(val index: Int, val name: String) : Request()
         data class UrlTest(val index: Int) : Request()
+        data class AutoSelect(val index: Int) : Request()
     }
 
     private val binding = DesignProxyBinding
@@ -114,5 +118,28 @@ class ProxyDesign(
             requests.trySend(Request.PatchMode(TunnelState.Mode.Direct))
             applyMode(TunnelState.Mode.Direct)
         }
+
+        // Search field
+        binding.searchField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                proxyAdapter.filter(s?.toString() ?: "")
+            }
+        })
+
+        // Sort by delay toggle
+        var sortByDelay = false
+        binding.sortButton.setOnClickListener {
+            sortByDelay = !sortByDelay
+            proxyAdapter.setSortByDelay(sortByDelay)
+            binding.sortButton.alpha = if (sortByDelay) 1.0f else 0.5f
+        }
+        binding.sortButton.alpha = 0.5f
+    }
+
+    /** Auto-select fastest node in the given group */
+    fun autoSelectFastest(groupIndex: Int): String? {
+        return proxyAdapter.autoSelectFastest(groupIndex)
     }
 }

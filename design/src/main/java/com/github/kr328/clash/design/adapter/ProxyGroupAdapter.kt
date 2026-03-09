@@ -41,6 +41,8 @@ class ProxyGroupAdapter(
 
     private val groups = groupNames.mapIndexed { i, name -> GroupData(i, name) }.toMutableList()
     private val flatList = mutableListOf<ListItem>()
+    private var filterQuery: String = ""
+    private var sortByDelay: Boolean = false
 
     init {
         rebuildFlatList()
@@ -66,12 +68,57 @@ class ProxyGroupAdapter(
         notifyDataSetChanged()
     }
 
+    /** Filter nodes by name query */
+    fun filter(query: String) {
+        filterQuery = query.trim().lowercase()
+        rebuildFlatList()
+    }
+
+    /** Toggle sort-by-delay mode */
+    fun setSortByDelay(enabled: Boolean) {
+        sortByDelay = enabled
+        rebuildFlatList()
+    }
+
+    /** Auto-select the fastest node in the given group, returns the node name or null */
+    fun autoSelectFastest(groupIndex: Int): String? {
+        if (groupIndex >= groups.size) return null
+        val group = groups[groupIndex]
+        if (!group.selectable) return null
+        val fastest = group.proxies
+            .filter { it.delay > 0 && it.delay <= Short.MAX_VALUE }
+            .minByOrNull { it.delay }
+        return fastest?.name
+    }
+
     private fun rebuildFlatList() {
         flatList.clear()
         for (group in groups) {
             flatList.add(ListItem.Header(group))
             if (group.expanded && group.proxies.isNotEmpty()) {
-                for (proxy in group.proxies) {
+                var nodes = group.proxies.toList()
+
+                // Filter
+                if (filterQuery.isNotEmpty()) {
+                    nodes = nodes.filter {
+                        it.name.lowercase().contains(filterQuery) ||
+                        it.title.lowercase().contains(filterQuery) ||
+                        it.subtitle.lowercase().contains(filterQuery)
+                    }
+                }
+
+                // Sort by delay
+                if (sortByDelay) {
+                    nodes = nodes.sortedWith(compareBy {
+                        when {
+                            it.delay <= 0 -> Int.MAX_VALUE      // untested → bottom
+                            it.delay > Short.MAX_VALUE -> Int.MAX_VALUE - 1  // timeout → near bottom
+                            else -> it.delay
+                        }
+                    })
+                }
+
+                for (proxy in nodes) {
                     flatList.add(ListItem.Node(group.index, proxy, group.state))
                 }
             }

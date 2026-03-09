@@ -243,6 +243,12 @@
 
     <string name="google_play_url" translatable="false">https://my.yue.to</string>
 
+    <!-- 安全仪表盘 -->
+    <string name="security_encrypted">连接已加密</string>
+    <string name="security_dns_label">DNS</string>
+    <string name="security_dns_protected">加密 DNS (DoH)</string>
+    <string name="security_no_leak">无泄漏</string>
+
     <string name="app">应用</string>
     <string name="service">服务</string>
 
@@ -300,6 +306,11 @@
     <string name="more">更多</string>
     <string name="save">保存</string>
     <string name="delay_test">测速</string>
+    <string name="search_nodes_hint">搜索节点…</string>
+    <string name="sort_by_delay">按延迟排序</string>
+    <string name="auto_select_fastest">智能选节点</string>
+    <string name="auto_selected_node">已选择最快节点: %s</string>
+    <string name="no_available_node">没有可用节点</string>
 
     <string name="format_provider_type">%1$s（%2$s）</string>
     <string name="rule">规则</string>
@@ -384,6 +395,8 @@
 
     <!-- 悦通账号中心 -->
     <string name="nav_home">首页</string>
+    <string name="nav_nodes">节点</string>
+    <string name="nav_subscriptions">订阅</string>
     <string name="nav_account">账号中心</string>
     <string name="nav_store">商店</string>
     <string name="nav_profile">我的</string>
@@ -556,6 +569,11 @@
     <string name="onboarding_skip">跳过</string>
     <string name="onboarding_next">下一步</string>
     <string name="onboarding_start">开始使用</string>
+
+    <!-- 开发者模式 -->
+    <string name="developer_mode_on">开发者模式已启用</string>
+    <string name="developer_mode_off">开发者模式已关闭</string>
+    <string name="advanced_settings">高级选项</string>
 
     <!-- 关于页 -->
     <string name="about_title">关于</string>

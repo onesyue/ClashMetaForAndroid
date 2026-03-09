@@ -5,7 +5,11 @@
         <variable
             name="self"
             type="com.github.kr328.clash.design.SettingsDesign" />
+        <variable
+            name="developerMode"
+            type="boolean" />
 
+        <import type="android.view.View" />
         <import type="com.github.kr328.clash.design.SettingsDesign.Request" />
     </data>
 
@@ -28,6 +32,7 @@
                 android:paddingTop="@{(float) self.surface.insets.top + @dimen/toolbar_height}"
                 android:paddingBottom="@{self.surface.insets.bottom}">
 
+                <!-- Basic Settings -->
                 <com.github.kr328.clash.design.view.ActionLabel
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,6 +53,58 @@
                     android:onClick="@{() -> self.request(Request.StartAbout)}"
                     app:icon="@drawable/ic_baseline_info"
                     app:text="@string/about_title" />
+
+                <!-- Advanced / Developer Settings -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/advanced_settings"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_text_tertiary"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="4dp"
+                    android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
+
+                <com.github.kr328.clash.design.view.ActionLabel
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> self.request(Request.StartOverride)}"
+                    app:icon="@drawable/ic_baseline_edit"
+                    app:text="@string/override"
+                    android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
+
+                <com.github.kr328.clash.design.view.ActionLabel
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> self.request(Request.StartMetaFeature)}"
+                    app:icon="@drawable/ic_baseline_meta"
+                    app:text="@string/meta_features"
+                    android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
+
+                <com.github.kr328.clash.design.view.ActionLabel
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> self.request(Request.StartProviders)}"
+                    app:icon="@drawable/ic_baseline_cloud_download"
+                    app:text="@string/providers"
+                    android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
+
+                <com.github.kr328.clash.design.view.ActionLabel
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> self.request(Request.StartFiles)}"
+                    app:icon="@drawable/ic_outline_folder"
+                    app:text="@string/file"
+                    android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
+
+                <com.github.kr328.clash.design.view.ActionLabel
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> self.request(Request.StartLogs)}"
+                    app:icon="@drawable/ic_outline_article"
+                    app:text="@string/log"
+                    android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
 
             </LinearLayout>
         </com.github.kr328.clash.design.view.ObservableScrollView>

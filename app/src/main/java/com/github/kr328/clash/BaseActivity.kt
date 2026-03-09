@@ -104,6 +104,18 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         }
     }
 
+    override fun startActivity(intent: android.content.Intent?) {
+        super.startActivity(intent)
+        @Suppress("DEPRECATION")
+        overridePendingTransition(R.anim.slide_up_in, R.anim.fade_out)
+    }
+
+    override fun startActivity(intent: android.content.Intent?, options: Bundle?) {
+        super.startActivity(intent, options)
+        @Suppress("DEPRECATION")
+        overridePendingTransition(R.anim.slide_up_in, R.anim.fade_out)
+    }
+
     override fun onStart() {
         super.onStart()
         activityStarted = true
@@ -134,6 +146,8 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
             } finally {
                 withContext(NonCancellable) {
                     super.finish()
+                    @Suppress("DEPRECATION")
+                    overridePendingTransition(R.anim.fade_in, R.anim.slide_down_out)
                 }
             }
         }

@@ -83,6 +83,13 @@
     <string name="tips_properties"><![CDATA[僅接受 <strong>悅通設定檔</strong> (包含<strong>Proxy</strong> /<strong>規則</strong>)]]></string>
     <string name="loading">載入中</string>
     <string name="tips_help"><![CDATA[悅通 — 專為 AI 與串流媒體打造的全球加速網路]]></string>
+
+    <!-- 安全儀表盤 -->
+    <string name="security_encrypted">連線已加密</string>
+    <string name="security_dns_label">DNS</string>
+    <string name="security_dns_protected">加密 DNS (DoH)</string>
+    <string name="security_no_leak">無洩漏</string>
+
     <string name="donate">捐助</string>
     <string name="allow_all_apps">允許所有應用</string>
     <string name="allow_selected_apps">僅允許已選擇的應用</string>
@@ -184,6 +191,11 @@
     <string name="more">更多</string>
     <string name="save">儲存</string>
     <string name="delay_test">延遲測試</string>
+    <string name="search_nodes_hint">搜尋節點…</string>
+    <string name="sort_by_delay">按延遲排序</string>
+    <string name="auto_select_fastest">智慧選節點</string>
+    <string name="auto_selected_node">已選擇最快節點: %s</string>
+    <string name="no_available_node">沒有可用節點</string>
     <string name="format_provider_type">%1$s(%2$s)</string>
     <string name="rule">規則</string>
     <string name="http">HTTP</string>
@@ -270,6 +282,8 @@
 
     <!-- Account -->
     <string name="nav_home">首頁</string>
+    <string name="nav_nodes">節點</string>
+    <string name="nav_subscriptions">訂閱</string>
     <string name="nav_account">帳號中心</string>
     <string name="nav_store">商店</string>
     <string name="nav_profile">我的</string>
@@ -356,6 +370,10 @@
     <string name="onboarding_skip">跳過</string>
     <string name="onboarding_next">下一步</string>
     <string name="onboarding_start">開始使用</string>
+
+    <string name="developer_mode_on">開發者模式已啟用</string>
+    <string name="developer_mode_off">開發者模式已關閉</string>
+    <string name="advanced_settings">進階選項</string>
 
     <string name="about_title">關於</string>
     <string name="about_version">版本 %s</string>

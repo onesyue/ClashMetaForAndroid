@@ -232,6 +232,12 @@
     <string name="tips_properties"><![CDATA[Profile URL must be a valid proxy configuration file]]></string>
     <string name="tips_help"><![CDATA[YueTong — Global acceleration for AI and streaming]]></string>
 
+    <!-- Security dashboard -->
+    <string name="security_encrypted">Connection encrypted</string>
+    <string name="security_dns_label">DNS</string>
+    <string name="security_dns_protected">Encrypted DNS (DoH)</string>
+    <string name="security_no_leak">No leak</string>
+
     <string name="app">App</string>
     <string name="service">Service</string>
 
@@ -276,6 +282,11 @@
     <string name="more">More</string>
     <string name="save">Save</string>
     <string name="delay_test">Speed test</string>
+    <string name="search_nodes_hint">Search nodes…</string>
+    <string name="sort_by_delay">Sort by delay</string>
+    <string name="auto_select_fastest">Smart select</string>
+    <string name="auto_selected_node">Selected fastest: %s</string>
+    <string name="no_available_node">No available nodes</string>
 
     <string name="format_provider_type">%1$s (%2$s)</string>
     <string name="rule">Rule</string>
@@ -352,6 +363,8 @@
 
     <!-- Account -->
     <string name="nav_home">Home</string>
+    <string name="nav_nodes">Nodes</string>
+    <string name="nav_subscriptions">Subs</string>
     <string name="nav_account">Account</string>
     <string name="nav_store">Store</string>
     <string name="nav_profile">Profile</string>
@@ -516,6 +529,11 @@
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_start">Get Started</string>
+
+    <!-- Developer mode -->
+    <string name="developer_mode_on">Developer mode enabled</string>
+    <string name="developer_mode_off">Developer mode disabled</string>
+    <string name="advanced_settings">Advanced</string>
 
     <!-- About -->
     <string name="about_title">About</string>

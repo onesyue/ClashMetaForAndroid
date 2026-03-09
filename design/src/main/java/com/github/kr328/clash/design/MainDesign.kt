@@ -94,6 +94,8 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.expiryText.setTextColor(
                 if (expired) ContextCompat.getColor(context, R.color.color_status_bad) else ContextCompat.getColor(context, R.color.color_text_secondary)
             )
+            // Update TrafficRing sub text
+            binding.trafficRing.subText = date ?: ""
         }
     }
 
@@ -102,11 +104,26 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             val label = formatPercent(percent)
             binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, label)
             binding.trafficProgress.progress = percent.toInt().coerceIn(0, 100)
+            // Update TrafficRingView
+            binding.trafficRing.percent = percent
+            binding.trafficRing.centerText = label
         }
     }
 
     suspend fun setConnectionTime(time: String) {
         withContext(Dispatchers.Main) { binding.connectionTimeText.text = time }
+    }
+
+    suspend fun addSpeedDataPoint(downloadBytes: Long, uploadBytes: Long) {
+        withContext(Dispatchers.Main) {
+            binding.speedChart.addDataPoint(downloadBytes, uploadBytes)
+        }
+    }
+
+    suspend fun resetSpeedChart() {
+        withContext(Dispatchers.Main) {
+            binding.speedChart.reset()
+        }
     }
 
     suspend fun setDownloadSpeed(speed: String) {
@@ -331,14 +348,23 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         binding.colorDisconnected =
             context.resolveThemedColor(R.attr.colorClashStopped)
 
-        // 连续点击品牌名 5 次（3 秒内）→ 隐藏设置入口
+        // 连续点击品牌名 5 次（3 秒内）→ 启用开发者模式
         var clickCount = 0
         var lastClickMs = 0L
+        val uiStore = com.github.kr328.clash.design.store.UiStore(context)
         binding.brandNameText.setOnClickListener {
             val now = System.currentTimeMillis()
             if (now - lastClickMs > 3_000) clickCount = 0
             lastClickMs = now
-            if (++clickCount >= 5) { clickCount = 0; requests.trySend(Request.OpenSettings) }
+            if (++clickCount >= 5) {
+                clickCount = 0
+                uiStore.developerMode = !uiStore.developerMode
+                val msg = if (uiStore.developerMode)
+                    context.getString(R.string.developer_mode_on)
+                else
+                    context.getString(R.string.developer_mode_off)
+                android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+            }
         }
 
         // 邀请链接复制
@@ -414,7 +440,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                 .show()
         }
 
-        // 底部导航
+        // 底部导航 (5 tabs)
         var currentTabId = R.id.nav_home
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -424,6 +450,16 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                     binding.profileContent.visibility = View.GONE
                     currentTabId = R.id.nav_home
                     true
+                }
+                R.id.nav_nodes -> {
+                    requests.trySend(Request.OpenProxy)
+                    binding.bottomNav.post { binding.bottomNav.selectedItemId = currentTabId }
+                    false
+                }
+                R.id.nav_subscriptions -> {
+                    requests.trySend(Request.OpenProfiles)
+                    binding.bottomNav.post { binding.bottomNav.selectedItemId = currentTabId }
+                    false
                 }
                 R.id.nav_store -> {
                     requests.trySend(Request.OpenStore)

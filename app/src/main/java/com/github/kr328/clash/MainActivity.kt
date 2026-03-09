@@ -90,7 +90,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                         Event.ProfileLoaded,
                         Event.ProfileChanged -> {
                             if (it == Event.ClashStart) connectStartMs = System.currentTimeMillis()
-                            if (it == Event.ClashStop) { connectStartMs = 0L; lastTrafficRaw = -1L }
+                            if (it == Event.ClashStop) { connectStartMs = 0L; lastTrafficRaw = -1L; design.resetSpeedChart() }
                             design.fetch()
                         }
                         else -> Unit
@@ -216,6 +216,7 @@ class MainActivity : BaseActivity<MainDesign>() {
             val dlSpeed = (curDlBytes - prevDlBytes).coerceAtLeast(0)
             setUploadSpeed(formatSpeed(upSpeed))
             setDownloadSpeed(formatSpeed(dlSpeed))
+            addSpeedDataPoint(dlSpeed, upSpeed)
         }
         lastTrafficRaw = current
 

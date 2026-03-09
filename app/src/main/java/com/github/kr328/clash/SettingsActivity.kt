@@ -2,12 +2,13 @@ package com.github.kr328.clash
 
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.SettingsDesign
+import com.github.kr328.clash.design.store.UiStore
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
 class SettingsActivity : BaseActivity<SettingsDesign>() {
     override suspend fun main() {
-        val design = SettingsDesign(this)
+        val design = SettingsDesign(this, UiStore(this))
 
         setContentDesign(design)
 
@@ -24,6 +25,21 @@ class SettingsActivity : BaseActivity<SettingsDesign>() {
                             startActivity(NetworkSettingsActivity::class.intent)
                         SettingsDesign.Request.StartAbout ->
                             startActivity(AboutActivity::class.intent)
+                        SettingsDesign.Request.StartOverride ->
+                            startActivity(OverrideSettingsActivity::class.intent)
+                        SettingsDesign.Request.StartMetaFeature ->
+                            startActivity(MetaFeatureSettingsActivity::class.intent)
+                        SettingsDesign.Request.StartProviders ->
+                            startActivity(ProvidersActivity::class.intent)
+                        SettingsDesign.Request.StartFiles ->
+                            startActivity(FilesActivity::class.intent)
+                        SettingsDesign.Request.StartLogs -> {
+                            if (LogcatService.running) {
+                                startActivity(LogcatActivity::class.intent)
+                            } else {
+                                startActivity(LogsActivity::class.intent)
+                            }
+                        }
                     }
                 }
             }
