@@ -55,8 +55,8 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         binding.ordersSwipeRefresh.setOnRefreshListener {
             requests.trySend(Request.Refresh)
         }
-        binding.ordersSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
-        binding.ordersSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
+        binding.ordersSwipeRefresh.setColorSchemeColors(0xFF6E72FC.toInt())
+        binding.ordersSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A2332.toInt())
 
         binding.ordersRecycler.layoutManager = LinearLayoutManager(context)
         binding.ordersRecycler.adapter = adapter
@@ -102,10 +102,10 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
 
     private fun statusLabel(status: Int): Pair<String, Int> = when (status) {
         0    -> context.getString(R.string.order_status_pending) to 0xFFFBBF24.toInt()
-        1    -> context.getString(R.string.order_status_processing) to 0xFF6366F1.toInt()
+        1    -> context.getString(R.string.order_status_processing) to 0xFF6E72FC.toInt()
         2    -> context.getString(R.string.order_status_cancelled) to 0xFF8494A7.toInt()
-        3    -> context.getString(R.string.order_status_completed) to 0xFF10B981.toInt()
-        4    -> context.getString(R.string.order_status_discounted) to 0xFF8B5CF6.toInt()
+        3    -> context.getString(R.string.order_status_completed) to 0xFF34D399.toInt()
+        4    -> context.getString(R.string.order_status_discounted) to 0xFF9B8AFB.toInt()
         else -> context.getString(R.string.order_status_unknown) to 0xFF8494A7.toInt()
     }
 

@@ -101,7 +101,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
                     text = method.name
                     textSize = 14f
                     setTextColor(0xFFF1F5F9.toInt())
-                    buttonTintList = ColorStateList.valueOf(0xFF6366F1.toInt())
+                    buttonTintList = ColorStateList.valueOf(0xFF6E72FC.toInt())
                 }
                 radioGroup.addView(rb)
             }
@@ -144,7 +144,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
         val discountStr = "-¥%.2f".format(discountCents / 100.0)
         discountRow = createSummaryRow(
             context.getString(R.string.checkout_discount_label), discountStr,
-            valueColor = 0xFF10B981.toInt()
+            valueColor = 0xFF34D399.toInt()
         )
         container.addView(discountRow)
 

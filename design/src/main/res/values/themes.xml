@@ -79,8 +79,8 @@
 
     <style name="AppThemeDarkBase" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowBackground">@color/color_background</item>
-        <item name="android:ambientShadowAlpha">0.08</item>
-        <item name="android:spotShadowAlpha">0.08</item>
+        <item name="android:ambientShadowAlpha">0.05</item>
+        <item name="android:spotShadowAlpha">0.05</item>
 
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorOnPrimary">@color/color_on_primary</item>

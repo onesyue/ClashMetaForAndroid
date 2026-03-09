@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- YueTong 2026 Cyberpunk Design System -->
+    <!-- YueTong 2026 Liquid Glass Design System -->
 
     <!-- Background -->
-    <color name="color_background">#FF0F172A</color>
-    <color name="color_surface">#FF1E293B</color>
-    <color name="color_surface_elevated">#FF334155</color>
+    <color name="color_background">#FF0C1220</color>
+    <color name="color_surface">#FF1A2332</color>
+    <color name="color_surface_elevated">#FF253342</color>
 
-    <!-- Primary Accent (Electric Indigo → Violet gradient endpoints) -->
-    <color name="color_primary">#FF6366F1</color>
-    <color name="color_primary_variant">#FF8B5CF6</color>
+    <!-- Primary Accent (Refined Indigo → Soft Violet) -->
+    <color name="color_primary">#FF6E72FC</color>
+    <color name="color_primary_variant">#FF9B8AFB</color>
     <color name="color_on_primary">#FFFFFFFF</color>
 
     <!-- Text -->
-    <color name="color_text_primary">#FFF1F5F9</color>
-    <color name="color_text_secondary">#FF94A3B8</color>
-    <!-- Raised from #64748B to meet WCAG AA 4.5:1 contrast on #0F172A -->
+    <color name="color_text_primary">#F0F1F5F9</color>
+    <color name="color_text_secondary">#B094A3B8</color>
+    <!-- Raised from #64748B to meet WCAG AA 4.5:1 contrast on #0C1220 -->
     <color name="color_text_tertiary">#FF8494A7</color>
 
     <!-- Status -->
-    <color name="color_status_good">#FF10B981</color>
+    <color name="color_status_good">#FF34D399</color>
     <color name="color_status_bad">#FFEF4444</color>
     <color name="color_status_warn">#FFFBBF24</color>
 
     <!-- Legacy aliases (keep builds happy) -->
-    <color name="color_clash_light">#FF6366F1</color>
-    <color name="color_clash_dark">#FF818CF8</color>
+    <color name="color_clash_light">#FF6E72FC</color>
+    <color name="color_clash_dark">#FF9B8AFB</color>
     <color name="color_system_ui_overlay">#50000000</color>
-    <color name="color_light_background">#FF0F172A</color>
-    <color name="color_dark_background">#FF0F172A</color>
-    <color name="color_dark_surface">#FF1E293B</color>
+    <color name="color_light_background">#FF0C1220</color>
+    <color name="color_dark_background">#FF0C1220</color>
+    <color name="color_dark_surface">#FF1A2332</color>
     <color name="color_light_clash_stopped">#FF64748B</color>
     <color name="color_light_control_disabled">#FF475569</color>
     <color name="color_dark_control_disabled">#FF475569</color>
     <color name="color_error">#FFEF4444</color>
 
     <!-- Divider / Border -->
-    <color name="color_divider">#26FFFFFF</color>
+    <color name="color_divider">#20FFFFFF</color>
 
-    <!-- Card overlay (glass effect) -->
-    <color name="color_card_glass">#CC1E293B</color>
+    <!-- Glass effect colors -->
+    <color name="color_card_glass">#801A2332</color>
+    <color name="color_glass_border">#30FFFFFF</color>
+    <color name="color_glass_highlight">#18FFFFFF</color>
+    <color name="color_glass_inner_glow">#0CFFFFFF</color>
 
     <!-- Launcher icon -->
-    <color name="ic_launcher_background">#FF6366F1</color>
+    <color name="ic_launcher_background">#FF6E72FC</color>
 </resources>

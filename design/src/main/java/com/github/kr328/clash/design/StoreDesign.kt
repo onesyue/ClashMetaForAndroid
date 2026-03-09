@@ -55,8 +55,8 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         binding.storeSwipeRefresh.setOnRefreshListener {
             requests.trySend(Request.Retry)
         }
-        binding.storeSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
-        binding.storeSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
+        binding.storeSwipeRefresh.setColorSchemeColors(0xFF6E72FC.toInt())
+        binding.storeSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A2332.toInt())
     }
 
     fun showLoading() {
@@ -142,7 +142,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0x26FFFFFF)
+            setBackgroundColor(0x20FFFFFF)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (12 * dp).toInt(); bottomMargin = (8 * dp).toInt() }

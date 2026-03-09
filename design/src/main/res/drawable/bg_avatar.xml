@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <gradient
-        android:startColor="#6366F1"
-        android:endColor="#8B5CF6"
-        android:angle="135"
-        android:type="linear" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Gradient base -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#FF6E72FC"
+                android:endColor="#FF9B8AFB"
+                android:angle="135"
+                android:type="linear" />
+        </shape>
+    </item>
+    <!-- Glass shine overlay -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#30FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:angle="270"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

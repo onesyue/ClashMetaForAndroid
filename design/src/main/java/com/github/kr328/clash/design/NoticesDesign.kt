@@ -41,8 +41,8 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
         binding.noticesSwipeRefresh.setOnRefreshListener {
             requests.trySend(Request.Refresh)
         }
-        binding.noticesSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
-        binding.noticesSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
+        binding.noticesSwipeRefresh.setColorSchemeColors(0xFF6E72FC.toInt())
+        binding.noticesSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A2332.toInt())
     }
 
     fun showLoading() {
@@ -102,7 +102,7 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
 
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0x26FFFFFF)
+            setBackgroundColor(0x20FFFFFF)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (10 * dp).toInt(); bottomMargin = (10 * dp).toInt() }

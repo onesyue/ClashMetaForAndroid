@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Glass background -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="#CC1A2332" />
             <corners
-                android:topLeftRadius="16dp"
-                android:topRightRadius="16dp" />
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp" />
+            <stroke android:width="0.5dp" android:color="#30FFFFFF" />
         </shape>
     </item>
+    <!-- Top highlight -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#14FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:angle="270"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp" />
+        </shape>
+    </item>
+    <!-- Drag handle -->
     <item
         android:gravity="top|center_horizontal"
         android:top="@dimen/bottom_sheet_background_padding_top">
@@ -15,7 +31,7 @@
             <size
                 android:width="40dp"
                 android:height="@dimen/bottom_sheet_header_height" />
-            <solid android:color="?attr/colorControlHighlight" />
+            <solid android:color="#40FFFFFF" />
             <corners android:radius="5dp" />
         </shape>
     </item>
