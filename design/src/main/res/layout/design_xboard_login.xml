@@ -34,33 +34,11 @@
                 android:paddingStart="@{self.surface.insets.start}"
                 android:paddingEnd="@{self.surface.insets.end}">
 
-                <!-- ── Logo + Brand ─────────────────────── -->
-                <FrameLayout
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_login_logo" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/brand_logo_letter"
-                        android:textColor="@android:color/white"
-                        android:textSize="36sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium" />
-
-                </FrameLayout>
-
+                <!-- ── Brand ─────────────────────── -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="60dp"
                     android:text="@string/xboard_brand_name"
                     android:textColor="@color/color_text_primary"
                     android:textSize="28sp"
