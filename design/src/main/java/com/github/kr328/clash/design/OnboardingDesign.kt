@@ -17,7 +17,7 @@ import com.github.kr328.clash.design.util.root
 
 class OnboardingDesign(context: Context) : Design<OnboardingDesign.Request>(context) {
 
-    enum class Request { Skip, Next, Start }
+    enum class Request { Skip, Start }
 
     data class Page(val iconRes: Int, val title: String, val description: String)
 

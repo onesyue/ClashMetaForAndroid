@@ -618,16 +618,7 @@
 
                 </ScrollView>
 
-                <!-- ═══ Tab 2: Store (stub) ═══ -->
-                <LinearLayout
-                    android:id="@+id/store_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:visibility="gone" />
-
-                <!-- ═══ Tab 3: Profile ═══ -->
+<!-- ═══ Tab 3: Profile ═══ -->
                 <ScrollView
                     android:id="@+id/profile_content"
                     android:layout_width="match_parent"

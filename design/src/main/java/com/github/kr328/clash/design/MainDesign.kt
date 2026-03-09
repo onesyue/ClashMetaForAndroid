@@ -24,12 +24,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     enum class Request {
         ToggleStatus,
         OpenProxy,
-        OpenAccount,
-        OpenProfiles,
         OpenStore,
-        OpenLogs,
-        OpenSettings,
-        OpenAbout,
         Logout,
         ChangePassword,
         OpenNotices,
@@ -329,19 +324,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
 
     // ── Dialogs ────────────────────────────────────────────────────────────
 
-    suspend fun showAbout(versionName: String) {
-        withContext(Dispatchers.Main) {
-            AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.xboard_brand_name))
-                .setMessage(
-                    context.getString(R.string.xboard_brand_subtitle) + "\n\nv$versionName"
-                )
-                .setPositiveButton(R.string.ok, null)
-                .show()
-        }
-    }
-
-    init {
+init {
         binding.self = this
         binding.colorConnected =
             context.resolveThemedColor(com.google.android.material.R.attr.colorPrimary)
@@ -446,19 +429,17 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             when (item.itemId) {
                 R.id.nav_home -> {
                     binding.homeContent.visibility = View.VISIBLE
-                    binding.storeContent.visibility = View.GONE
                     binding.profileContent.visibility = View.GONE
                     currentTabId = R.id.nav_home
                     true
                 }
-R.id.nav_store -> {
+                R.id.nav_store -> {
                     requests.trySend(Request.OpenStore)
                     binding.bottomNav.post { binding.bottomNav.selectedItemId = currentTabId }
                     false
                 }
                 R.id.nav_profile -> {
                     binding.homeContent.visibility = View.GONE
-                    binding.storeContent.visibility = View.GONE
                     binding.profileContent.visibility = View.VISIBLE
                     currentTabId = R.id.nav_profile
                     true

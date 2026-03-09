@@ -2,13 +2,12 @@ package com.github.kr328.clash
 
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.SettingsDesign
-import com.github.kr328.clash.design.store.UiStore
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
 class SettingsActivity : BaseActivity<SettingsDesign>() {
     override suspend fun main() {
-        val design = SettingsDesign(this, UiStore(this))
+        val design = SettingsDesign(this, uiStore)
 
         setContentDesign(design)
 

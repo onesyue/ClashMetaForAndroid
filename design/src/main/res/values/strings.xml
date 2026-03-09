@@ -399,8 +399,6 @@
 
     <!-- 悦通账号中心 -->
     <string name="nav_home">首页</string>
-    <string name="nav_nodes">节点</string>
-    <string name="nav_subscriptions">订阅</string>
     <string name="nav_account">账号中心</string>
     <string name="nav_store">商店</string>
     <string name="nav_profile">我的</string>
@@ -417,8 +415,7 @@
     <string name="xboard_login">账号登录</string>
     <string name="xboard_login_summary">点击登录以导入订阅</string>
     <string name="xboard_brand_name">悦通</string>
-    <string name="brand_logo_letter">悦</string>
-    <string name="xboard_brand_subtitle">专为 AI 与流媒体打造的全球加速网络</string>
+<string name="xboard_brand_subtitle">专为 AI 与流媒体打造的全球加速网络</string>
     <string name="xboard_site_url">网站地址</string>
     <string name="xboard_email">邮箱</string>
     <string name="xboard_password">密码</string>
