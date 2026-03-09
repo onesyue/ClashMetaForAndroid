@@ -13,6 +13,7 @@ import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.model.Language
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.service.model.Profile
+import com.github.kr328.clash.remote.RemoteConfig
 import com.github.kr328.clash.util.ApplicationObserver
 import com.github.kr328.clash.util.withProfile
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.json.JSONArray
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -185,17 +186,16 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                     .replace("-meta", "", ignoreCase = true)
                     .replace(".debug", "")
 
-                val apiUrl = if (isAlpha) {
-                    // Alpha channel: check pre-release
-                    "https://api.github.com/repos/onesyue/ClashMetaForAndroid/releases/tags/Prerelease-alpha"
+                val proxyBase = RemoteConfig.DEFAULT_XBOARD_URL
+                val apiPath = if (isAlpha) {
+                    "/gh/releases/tags/Prerelease-alpha"
                 } else {
-                    // Release channel: check latest stable
-                    "https://api.github.com/repos/onesyue/ClashMetaForAndroid/releases/latest"
+                    "/gh/releases/latest"
                 }
 
                 val request = Request.Builder()
-                    .url(apiUrl)
-                    .header("Accept", "application/vnd.github.v3+json")
+                    .url("$proxyBase$apiPath")
+                    .header("Accept", "application/json")
                     .build()
 
                 client.newCall(request).execute().use { response ->
@@ -207,17 +207,17 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                     val json = org.json.JSONObject(body)
 
                     val latestVersion: String
-                    val releaseUrl: String
+                    val downloadUrl: String
 
                     if (isAlpha) {
-                        // Extract version from release name "Pre-release v1.0.0"
                         val name = json.optString("name", "")
                         latestVersion = name.removePrefix("Pre-release v")
-                        releaseUrl = json.optString("html_url", "")
                     } else {
                         latestVersion = json.optString("tag_name", "").removePrefix("v")
-                        releaseUrl = json.optString("html_url", "")
                     }
+
+                    // Find universal APK download URL from assets
+                    downloadUrl = findApkDownloadUrl(json, proxyBase)
 
                     if (latestVersion.isNotEmpty() && isNewerVersion(latestVersion, cleanCurrent)) {
                         val displayVersion = if (isAlpha) "$latestVersion Alpha" else latestVersion
@@ -226,8 +226,10 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                                 .setTitle(R.string.check_update)
                                 .setMessage(getString(R.string.update_available, displayVersion))
                                 .setPositiveButton(R.string.update_download) { _, _ ->
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseUrl))
-                                    startActivity(intent)
+                                    if (downloadUrl.isNotEmpty()) {
+                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl))
+                                        startActivity(intent)
+                                    }
                                 }
                                 .setNegativeButton(R.string.cancel, null)
                                 .show()
@@ -240,6 +242,27 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                 design.showToast(getString(R.string.check_update_failed), ToastDuration.Long)
             }
         }
+    }
+
+    private fun findApkDownloadUrl(releaseJson: org.json.JSONObject, proxyBase: String): String {
+        val assets = releaseJson.optJSONArray("assets") ?: return ""
+        // Prefer architecture-specific, fallback to universal
+        val abi = android.os.Build.SUPPORTED_ABIS.firstOrNull() ?: ""
+        var universalUrl = ""
+        for (i in 0 until assets.length()) {
+            val asset = assets.getJSONObject(i)
+            val name = asset.optString("name", "")
+            if (!name.endsWith(".apk")) continue
+            val ghUrl = asset.optString("browser_download_url", "")
+            // Proxy the download URL through CloudFront
+            val proxiedUrl = ghUrl.replace(
+                Regex("https://github\\.com/[^/]+/[^/]+/releases/download/"),
+                "$proxyBase/gh/download/"
+            )
+            if (name.contains(abi)) return proxiedUrl
+            if (name.contains("universal")) universalUrl = proxiedUrl
+        }
+        return universalUrl
     }
 
     private fun isNewerVersion(remote: String, local: String): Boolean {
