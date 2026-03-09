@@ -171,7 +171,7 @@ class ProxyView(
             val x = width - state.config.layoutPadding - state.config.contentPadding - delayWidth
             val y = height / 2f - textOffset
 
-            paint.color = if (selected) state.controls else state.delayColor
+            paint.color = if (isSelected) state.controls else state.delayColor
             drawText(state.delayText, 0, delayCount, x, y, paint)
         }
 
