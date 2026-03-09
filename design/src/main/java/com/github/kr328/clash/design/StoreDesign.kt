@@ -2,6 +2,7 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
@@ -55,8 +56,8 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         binding.storeSwipeRefresh.setOnRefreshListener {
             requests.trySend(Request.Retry)
         }
-        binding.storeSwipeRefresh.setColorSchemeColors(0xFF6E72FC.toInt())
-        binding.storeSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A2332.toInt())
+        binding.storeSwipeRefresh.setColorSchemeColors(ContextCompat.getColor(context, R.color.color_primary))
+        binding.storeSwipeRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.color_surface))
     }
 
     fun showLoading() {
@@ -108,7 +109,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             text = plan.name
             textSize = 18f
             setTypeface(typeface, Typeface.BOLD)
-            setTextColor(0xFFF1F5F9.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_primary))
         })
 
         // Traffic
@@ -119,7 +120,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         inner.addView(TextView(context).apply {
             text = trafficText
             textSize = 14f
-            setTextColor(0xFF94A3B8.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_secondary))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -131,7 +132,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             inner.addView(TextView(context).apply {
                 text = MarkdownRenderer.render(plan.content)
                 textSize = 13f
-                setTextColor(0xFFCBD5E1.toInt())
+                setTextColor(ContextCompat.getColor(context, R.color.color_text_subtle))
                 setLineSpacing(0f, 1.3f)
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -142,7 +143,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
 
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0x20FFFFFF)
+            setBackgroundColor(ContextCompat.getColor(context, R.color.color_divider))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (12 * dp).toInt(); bottomMargin = (8 * dp).toInt() }
@@ -184,7 +185,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
         row.addView(TextView(context).apply {
             text = label
             textSize = 14f
-            setTextColor(0xFF94A3B8.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_secondary))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
 
@@ -193,7 +194,7 @@ class StoreDesign(context: Context) : Design<StoreDesign.Request>(context) {
             text = "¥%.2f".format(priceCents / 100.0)
             textSize = 15f
             setTypeface(typeface, Typeface.BOLD)
-            setTextColor(0xFFF1F5F9.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_primary))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT

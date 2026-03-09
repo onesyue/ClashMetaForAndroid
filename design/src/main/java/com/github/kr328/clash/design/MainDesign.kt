@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
 import com.github.kr328.clash.design.databinding.DesignMainBinding
@@ -91,7 +92,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             else
                 context.getString(R.string.expiry_unknown)
             binding.expiryText.setTextColor(
-                if (expired) 0xFFEF4444.toInt() else 0xFF94A3B8.toInt()
+                if (expired) ContextCompat.getColor(context, R.color.color_status_bad) else ContextCompat.getColor(context, R.color.color_text_secondary)
             )
         }
     }
@@ -145,7 +146,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         withContext(Dispatchers.Main) {
             binding.profileExpiryText.text = date ?: "--"
             binding.profileExpiryText.setTextColor(
-                if (expired) 0xFFEF4444.toInt() else 0xFFF1F5F9.toInt()
+                if (expired) ContextCompat.getColor(context, R.color.color_status_bad) else ContextCompat.getColor(context, R.color.color_text_primary)
             )
         }
     }
@@ -206,7 +207,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             binding.avatarLetterHeader.text = "U"
             binding.avatarLetterCard.text = "U"
             binding.expiryText.text = unknownExp
-            binding.expiryText.setTextColor(0xFF94A3B8.toInt())
+            binding.expiryText.setTextColor(ContextCompat.getColor(context, R.color.color_text_secondary))
             binding.trafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.trafficProgress.progress = 0
 
@@ -218,7 +219,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
             // Profile tab cards
             binding.profilePlanNameText.text = unknownPlan
             binding.profileExpiryText.text = "--"
-            binding.profileExpiryText.setTextColor(0xFFF1F5F9.toInt())
+            binding.profileExpiryText.setTextColor(ContextCompat.getColor(context, R.color.color_text_primary))
             binding.profileTrafficLabel.text = context.getString(R.string.traffic_usage_label, "0%")
             binding.profileTrafficProgress.progress = 0
             binding.profileTrafficDetailText.text = ""

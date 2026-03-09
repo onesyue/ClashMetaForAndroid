@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Glass card background -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#801A2332" />
+            <solid android:color="#C0FFFFFF" />
             <corners android:radius="12dp" />
-            <stroke android:width="0.5dp" android:color="#25FFFFFF" />
+            <stroke android:width="0.5dp" android:color="#14000000" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#10FFFFFF"
+                android:startColor="#30FFFFFF"
                 android:endColor="#00FFFFFF"
                 android:angle="270"
                 android:type="linear" />

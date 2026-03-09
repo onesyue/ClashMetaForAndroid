@@ -2,6 +2,7 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.graphics.Typeface
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -41,8 +42,8 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
         binding.noticesSwipeRefresh.setOnRefreshListener {
             requests.trySend(Request.Refresh)
         }
-        binding.noticesSwipeRefresh.setColorSchemeColors(0xFF6E72FC.toInt())
-        binding.noticesSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1A2332.toInt())
+        binding.noticesSwipeRefresh.setColorSchemeColors(ContextCompat.getColor(context, R.color.color_primary))
+        binding.noticesSwipeRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.color_surface))
     }
 
     fun showLoading() {
@@ -84,7 +85,7 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
             text = notice.title
             textSize = 16f
             setTypeface(Typeface.DEFAULT_BOLD)
-            setTextColor(0xFFF1F5F9.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_primary))
         })
 
         // Date
@@ -93,7 +94,7 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
         inner.addView(TextView(context).apply {
             text = dateStr
             textSize = 12f
-            setTextColor(0xFF8494A7.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_tertiary))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -102,7 +103,7 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
 
         // Divider
         inner.addView(View(context).apply {
-            setBackgroundColor(0x20FFFFFF)
+            setBackgroundColor(ContextCompat.getColor(context, R.color.color_divider))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, (1 * dp).toInt()
             ).apply { topMargin = (10 * dp).toInt(); bottomMargin = (10 * dp).toInt() }
@@ -113,7 +114,7 @@ class NoticesDesign(context: Context) : Design<NoticesDesign.Request>(context) {
             inner.addView(TextView(context).apply {
                 text = MarkdownRenderer.render(notice.content)
                 textSize = 14f
-                setTextColor(0xFFCBD5E1.toInt())
+                setTextColor(ContextCompat.getColor(context, R.color.color_text_subtle))
                 setLineSpacing(0f, 1.5f)
             })
         }

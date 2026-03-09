@@ -18,6 +18,7 @@ import com.github.kr328.clash.design.Design
 import com.github.kr328.clash.design.model.DarkMode
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.DayNight
+import androidx.appcompat.app.AppCompatDelegate
 import com.github.kr328.clash.design.util.resolveThemedBoolean
 import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.showExceptionToast
@@ -200,6 +201,14 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     }
 
     private fun applyDayNight(config: Configuration = resources.configuration) {
+        // Set system night mode so -night resource qualifiers resolve correctly
+        val nightMode = when (uiStore.darkMode) {
+            DarkMode.Auto -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            DarkMode.ForceLight -> AppCompatDelegate.MODE_NIGHT_NO
+            DarkMode.ForceDark -> AppCompatDelegate.MODE_NIGHT_YES
+        }
+        AppCompatDelegate.setDefaultNightMode(nightMode)
+
         val dayNight = queryDayNight(config)
         when (dayNight) {
             DayNight.Night -> theme.applyStyle(R.style.AppThemeDark, true)

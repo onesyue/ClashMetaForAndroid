@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- YueTong 2026 Liquid Glass Design System -->
+    <!-- YueTong 2026 Liquid Glass — Light Mode (default) -->
 
     <!-- Background -->
-    <color name="color_background">#FF0C1220</color>
-    <color name="color_surface">#FF1A2332</color>
-    <color name="color_surface_elevated">#FF253342</color>
+    <color name="color_background">#FFF0F2F7</color>
+    <color name="color_surface">#FFFFFFFF</color>
+    <color name="color_surface_elevated">#FFF8F9FC</color>
 
-    <!-- Primary Accent (Refined Indigo → Soft Violet) -->
-    <color name="color_primary">#FF6E72FC</color>
-    <color name="color_primary_variant">#FF9B8AFB</color>
+    <!-- Primary Accent -->
+    <color name="color_primary">#FF5B5FE6</color>
+    <color name="color_primary_variant">#FF7C6FE0</color>
     <color name="color_on_primary">#FFFFFFFF</color>
 
     <!-- Text -->
-    <color name="color_text_primary">#F0F1F5F9</color>
-    <color name="color_text_secondary">#B094A3B8</color>
-    <!-- Raised from #64748B to meet WCAG AA 4.5:1 contrast on #0C1220 -->
+    <color name="color_text_primary">#F01A1A2E</color>
+    <color name="color_text_secondary">#B064748B</color>
     <color name="color_text_tertiary">#FF8494A7</color>
 
     <!-- Status -->
-    <color name="color_status_good">#FF34D399</color>
-    <color name="color_status_bad">#FFEF4444</color>
-    <color name="color_status_warn">#FFFBBF24</color>
+    <color name="color_status_good">#FF059669</color>
+    <color name="color_status_bad">#FFDC2626</color>
+    <color name="color_status_warn">#FFD97706</color>
 
-    <!-- Legacy aliases (keep builds happy) -->
-    <color name="color_clash_light">#FF6E72FC</color>
-    <color name="color_clash_dark">#FF9B8AFB</color>
-    <color name="color_system_ui_overlay">#50000000</color>
-    <color name="color_light_background">#FF0C1220</color>
-    <color name="color_dark_background">#FF0C1220</color>
-    <color name="color_dark_surface">#FF1A2332</color>
-    <color name="color_light_clash_stopped">#FF64748B</color>
-    <color name="color_light_control_disabled">#FF475569</color>
-    <color name="color_dark_control_disabled">#FF475569</color>
-    <color name="color_error">#FFEF4444</color>
+    <!-- Legacy aliases -->
+    <color name="color_clash_light">#FF5B5FE6</color>
+    <color name="color_clash_dark">#FF7C6FE0</color>
+    <color name="color_system_ui_overlay">#20000000</color>
+    <color name="color_light_background">#FFF0F2F7</color>
+    <color name="color_dark_background">#FFF0F2F7</color>
+    <color name="color_dark_surface">#FFFFFFFF</color>
+    <color name="color_light_clash_stopped">#FF94A3B8</color>
+    <color name="color_light_control_disabled">#FFCBD5E1</color>
+    <color name="color_dark_control_disabled">#FFCBD5E1</color>
+    <color name="color_error">#FFDC2626</color>
 
     <!-- Divider / Border -->
-    <color name="color_divider">#20FFFFFF</color>
+    <color name="color_divider">#14000000</color>
 
     <!-- Glass effect colors -->
-    <color name="color_card_glass">#801A2332</color>
-    <color name="color_glass_border">#30FFFFFF</color>
-    <color name="color_glass_highlight">#18FFFFFF</color>
-    <color name="color_glass_inner_glow">#0CFFFFFF</color>
+    <color name="color_card_glass">#C0FFFFFF</color>
+    <color name="color_glass_border">#18000000</color>
+    <color name="color_glass_highlight">#40FFFFFF</color>
+    <color name="color_glass_inner_glow">#20FFFFFF</color>
+
+    <!-- Subtle text (used in descriptions) -->
+    <color name="color_text_subtle">#FF475569</color>
 
     <!-- Launcher icon -->
-    <color name="ic_launcher_background">#FF6E72FC</color>
+    <color name="ic_launcher_background">#FF5B5FE6</color>
 </resources>

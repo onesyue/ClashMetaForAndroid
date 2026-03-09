@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Glass pill background -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#60253342" />
+            <solid android:color="#80E2E8F0" />
             <corners android:radius="28dp" />
-            <stroke android:width="0.5dp" android:color="#25FFFFFF" />
+            <stroke android:width="0.5dp" android:color="#14000000" />
         </shape>
     </item>
-    <!-- Top highlight -->
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#10FFFFFF"
+                android:startColor="#30FFFFFF"
                 android:endColor="#00FFFFFF"
                 android:angle="270"
                 android:type="linear" />
