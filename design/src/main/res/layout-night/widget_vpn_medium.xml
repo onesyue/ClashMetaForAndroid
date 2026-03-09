@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/status_disconnected"
-                android:textColor="#F1F5F9"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tap_to_start"
-                android:textColor="#94A3B8"
+                android:textColor="#98989D"
                 android:textSize="11sp"
                 android:singleLine="true"
                 android:ellipsize="end" />
@@ -63,7 +63,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#20FFFFFF"
+        android:background="#18FFFFFF"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
 
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:text="↓"
                 android:textSize="14sp"
-                android:textColor="#34D399" />
+                android:textColor="#30D158" />
 
             <TextView
                 android:id="@+id/widget_download_speed"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:text="0 B/s"
                 android:textSize="12sp"
-                android:textColor="#F1F5F9"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:layout_marginStart="4dp" />
 
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:text="↑"
                 android:textSize="14sp"
-                android:textColor="#6E72FC" />
+                android:textColor="#0A84FF" />
 
             <TextView
                 android:id="@+id/widget_upload_speed"
@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:text="0 B/s"
                 android:textSize="12sp"
-                android:textColor="#F1F5F9"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:layout_marginStart="4dp" />
 
@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:text="0%"
             android:textSize="10sp"
-            android:textColor="#94A3B8" />
+            android:textColor="#98989D" />
 
         <ProgressBar
             android:id="@+id/widget_traffic_progress"

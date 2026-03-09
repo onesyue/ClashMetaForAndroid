@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Base gradient -->
+    <!-- Base -->
     <item>
         <shape android:shape="rectangle">
             <gradient
@@ -10,25 +10,25 @@
                 android:angle="270" />
         </shape>
     </item>
-    <!-- Top-center radial glow (primary color ambient) -->
+    <!-- Top-center radial glow (Apple Blue ambient) -->
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#185B5FE6"
+                android:startColor="#14007AFF"
                 android:endColor="#00000000"
-                android:gradientRadius="450dp"
+                android:gradientRadius="500dp"
                 android:centerX="0.5"
-                android:centerY="0.2"
+                android:centerY="0.18"
                 android:type="radial" />
         </shape>
     </item>
-    <!-- Bottom-right subtle secondary glow -->
+    <!-- Bottom-right subtle cyan glow -->
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#107C6FE0"
+                android:startColor="#0C5AC8FA"
                 android:endColor="#00000000"
-                android:gradientRadius="350dp"
+                android:gradientRadius="380dp"
                 android:centerX="0.8"
                 android:centerY="0.85"
                 android:type="radial" />
