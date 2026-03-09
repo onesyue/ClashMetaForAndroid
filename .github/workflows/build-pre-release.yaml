@@ -8,12 +8,40 @@ on:
 jobs:
   BuildPreRelease:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'Bump version to')"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-increment patch version
+        id: version
+        run: |
+          # Read current version from build.gradle.kts
+          CURRENT=$(grep 'versionName = ' build.gradle.kts | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          NEW_CODE=$(printf "%1d%02d%03d" "$MAJOR" "$MINOR" "$PATCH")
+
+          # Update build.gradle.kts
+          sed -i "s/versionName = \"$CURRENT\"/versionName = \"$NEW_VERSION\"/" build.gradle.kts
+          sed -i "s/versionCode = [0-9]*/versionCode = $NEW_CODE/" build.gradle.kts
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "code=$NEW_CODE" >> $GITHUB_OUTPUT
+          echo "Auto-incremented: $CURRENT -> $NEW_VERSION ($NEW_CODE)"
+
+      - name: Commit version bump
+        run: |
+          git config user.name 'GitHub Action'
+          git config user.email 'action@github.com'
+          git add build.gradle.kts
+          git commit -m "Bump version to ${{ steps.version.outputs.version }} (${{ steps.version.outputs.code }})"
+          git push
 
       - name: Checkout submodules
         run: git submodule update --init --recursive --force
@@ -34,7 +62,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: "1.26"
-          check-latest: true # Always check for the latest patch release
+          check-latest: true
 
       - name: Apply Patches
         run: |
@@ -99,6 +127,7 @@ jobs:
         if: ${{ success() }}
         with:
           tag_name: Prerelease-alpha
+          name: "Pre-release v${{ steps.version.outputs.version }}"
           files: app/build/outputs/apk/alpha/release/*
           prerelease: true
         env:
