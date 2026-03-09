@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> self.request(Request.StartLogs)}"
                     app:icon="@drawable/ic_outline_article"
-                    app:text="@string/log"
+                    app:text="@string/logs"
                     android:visibility="@{developerMode ? View.VISIBLE : View.GONE}" />
 
             </LinearLayout>
