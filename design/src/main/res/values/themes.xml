@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ── Login Glass Input ───────────────────────────────── -->
+
+    <style name="LoginGlassInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxCornerRadiusTopStart">14dp</item>
+        <item name="boxCornerRadiusTopEnd">14dp</item>
+        <item name="boxCornerRadiusBottomStart">14dp</item>
+        <item name="boxCornerRadiusBottomEnd">14dp</item>
+        <item name="boxStrokeWidth">0.5dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxStrokeColor">@color/color_glass_border</item>
+        <item name="boxBackgroundColor">@color/color_card_glass</item>
+        <item name="hintTextColor">@color/color_primary</item>
+    </style>
+
+    <!-- ── Login Glass Tab ─────────────────────────────────── -->
+
+    <style name="LoginGlassTab" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabBackground">@android:color/transparent</item>
+        <item name="tabIndicator">@drawable/bg_tab_indicator</item>
+        <item name="tabIndicatorColor">@color/color_primary</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabSelectedTextColor">@color/color_primary</item>
+        <item name="tabTextColor">@color/color_text_secondary</item>
+        <item name="tabRippleColor">@android:color/transparent</item>
+        <item name="tabTextAppearance">@style/LoginTabText</item>
+    </style>
+
+    <style name="LoginTabText" parent="TextAppearance.MaterialComponents.Tab">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
     <!-- ── Bottom Sheet ──────────────────────────────────── -->
 
     <style name="AppBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
