@@ -4,15 +4,7 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_nav_home"
         android:title="@string/nav_home" />
-    <item
-        android:id="@+id/nav_nodes"
-        android:icon="@drawable/ic_nav_nodes"
-        android:title="@string/nav_nodes" />
-    <item
-        android:id="@+id/nav_subscriptions"
-        android:icon="@drawable/ic_nav_subscriptions"
-        android:title="@string/nav_subscriptions" />
-    <item
+<item
         android:id="@+id/nav_store"
         android:icon="@drawable/ic_nav_store"
         android:title="@string/nav_store" />

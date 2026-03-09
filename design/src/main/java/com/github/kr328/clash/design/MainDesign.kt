@@ -451,17 +451,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
                     currentTabId = R.id.nav_home
                     true
                 }
-                R.id.nav_nodes -> {
-                    requests.trySend(Request.OpenProxy)
-                    binding.bottomNav.post { binding.bottomNav.selectedItemId = currentTabId }
-                    false
-                }
-                R.id.nav_subscriptions -> {
-                    requests.trySend(Request.OpenProfiles)
-                    binding.bottomNav.post { binding.bottomNav.selectedItemId = currentTabId }
-                    false
-                }
-                R.id.nav_store -> {
+R.id.nav_store -> {
                     requests.trySend(Request.OpenStore)
                     binding.bottomNav.post { binding.bottomNav.selectedItemId = currentTabId }
                     false
