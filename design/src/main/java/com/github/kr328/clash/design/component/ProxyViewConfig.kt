@@ -2,6 +2,7 @@ package com.github.kr328.clash.design.component
 
 import android.content.Context
 import android.graphics.Color
+import androidx.core.content.ContextCompat
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.util.getPixels
 import com.github.kr328.clash.design.util.resolveThemedColor
@@ -37,4 +38,17 @@ class ProxyViewConfig(val context: Context, var proxyLine: Int) {
 
     val cardRadius = context.getPixels(R.dimen.proxy_card_radius).toFloat()
     var cardOffset = context.getPixels(R.dimen.proxy_card_offset).toFloat()
+
+    // Delay color thresholds
+    val delayColorGood = ContextCompat.getColor(context, R.color.color_status_good)
+    val delayColorMedium = ContextCompat.getColor(context, R.color.color_status_warn)
+    val delayColorBad = ContextCompat.getColor(context, R.color.color_status_bad)
+    val delayColorTimeout = ContextCompat.getColor(context, R.color.color_text_tertiary)
+
+    fun delayColor(delay: Int): Int = when {
+        delay <= 0 || delay > Short.MAX_VALUE -> delayColorTimeout
+        delay < 200 -> delayColorGood
+        delay < 500 -> delayColorMedium
+        else -> delayColorBad
+    }
 }

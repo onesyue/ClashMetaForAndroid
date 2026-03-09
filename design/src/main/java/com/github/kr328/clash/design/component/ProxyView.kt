@@ -166,13 +166,17 @@ class ProxyView(
         paint.isAntiAlias = true
         paint.color = state.controls
 
-        // draw delay
+        // draw delay (colored by latency)
         canvas.apply {
             val x = width - state.config.layoutPadding - state.config.contentPadding - delayWidth
             val y = height / 2f - textOffset
 
+            paint.color = if (selected) state.controls else state.delayColor
             drawText(state.delayText, 0, delayCount, x, y, paint)
         }
+
+        // restore color for title/subtitle
+        paint.color = state.controls
 
         // draw title
         canvas.apply {
