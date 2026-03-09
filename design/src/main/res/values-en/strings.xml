@@ -568,7 +568,9 @@
     <string name="interval_off">Off</string>
     <string name="cat_app">App</string>
     <string name="check_update">Check for updates</string>
-    <string name="check_update_summary">Current version: %s</string>
+    <string name="check_update_summary">Current version: %1$s (%2$s)</string>
+    <string name="update_channel_alpha">Alpha</string>
+    <string name="update_channel_release">Release</string>
     <string name="checking_update">Checking for updates…</string>
     <string name="update_available">New version %s available. Tap to download.</string>
     <string name="already_latest">Already up to date</string>
