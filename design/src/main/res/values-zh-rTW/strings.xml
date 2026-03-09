@@ -266,6 +266,10 @@
     <!-- Widget -->
     <string name="widget_label">VPN 狀態</string>
     <string name="widget_description">顯示 VPN 連線狀態，點擊快速切換</string>
+    <string name="widget_medium_label">VPN 速度</string>
+    <string name="widget_medium_description">顯示 VPN 連線狀態、即時速度和流量</string>
+    <string name="widget_large_label">VPN 詳情</string>
+    <string name="widget_large_description">顯示 VPN 連線狀態、速度、流量和安全資訊</string>
 
     <!-- Subscription alerts -->
     <string name="subscription_alert_title">訂閱提醒</string>

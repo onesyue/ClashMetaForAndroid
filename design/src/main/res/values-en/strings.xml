@@ -3,6 +3,10 @@
     <!-- Widget -->
     <string name="widget_label">VPN Status</string>
     <string name="widget_description">Shows VPN connection status with quick toggle</string>
+    <string name="widget_medium_label">VPN Speed</string>
+    <string name="widget_medium_description">Shows VPN status, real-time speed and traffic</string>
+    <string name="widget_large_label">VPN Details</string>
+    <string name="widget_large_description">Shows VPN status, speed, traffic and security info</string>
 
     <!-- Subscription alerts -->
     <string name="subscription_alert_title">Subscription Reminder</string>

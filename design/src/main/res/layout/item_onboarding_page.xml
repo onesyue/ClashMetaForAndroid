@@ -4,32 +4,49 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="48dp">
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp"
+    android:paddingBottom="180dp">
 
-    <ImageView
-        android:id="@+id/page_icon"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:contentDescription="@null"
-        android:tint="@color/color_primary" />
+    <!-- Glass icon container -->
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_login_logo" />
+
+        <ImageView
+            android:id="@+id/page_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:tint="@android:color/white" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/page_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:textColor="@color/color_text_primary"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.01" />
 
     <TextView
         android:id="@+id/page_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:gravity="center"
-        android:lineSpacingMultiplier="1.5"
+        android:lineSpacingMultiplier="1.6"
         android:textColor="@color/color_text_secondary"
-        android:textSize="16sp" />
+        android:textSize="15sp" />
 
 </LinearLayout>

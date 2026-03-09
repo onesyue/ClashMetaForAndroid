@@ -2,6 +2,10 @@
     <!-- Widget -->
     <string name="widget_label">VPN 状态</string>
     <string name="widget_description">显示 VPN 连接状态，点击快速切换</string>
+    <string name="widget_medium_label">VPN 速度</string>
+    <string name="widget_medium_description">显示 VPN 连接状态、实时速度和流量</string>
+    <string name="widget_large_label">VPN 详情</string>
+    <string name="widget_large_description">显示 VPN 连接状态、速度、流量和安全信息</string>
 
     <!-- Subscription alerts -->
     <string name="subscription_alert_title">订阅提醒</string>

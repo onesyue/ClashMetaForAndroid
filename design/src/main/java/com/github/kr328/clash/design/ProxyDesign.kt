@@ -4,6 +4,8 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -98,6 +100,7 @@ class ProxyDesign(
             layoutManager = LinearLayoutManager(context)
             adapter = proxyAdapter
             setHasFixedSize(false)
+            layoutAnimation = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_stagger_fall)
         }
 
         if (groupNames.isEmpty()) {

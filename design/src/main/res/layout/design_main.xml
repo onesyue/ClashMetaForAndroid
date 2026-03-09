@@ -94,6 +94,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_card_surface"
+                            android:stateListAnimator="@animator/card_press"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
                             android:padding="16dp"
