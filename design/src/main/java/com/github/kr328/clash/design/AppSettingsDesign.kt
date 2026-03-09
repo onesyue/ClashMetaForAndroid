@@ -75,12 +75,6 @@ class AppSettingsDesign(
                     R.string.lang_system,
                     R.string.lang_english,
                     R.string.lang_chinese_simplified,
-                    R.string.lang_chinese_traditional,
-                    R.string.lang_chinese_hk,
-                    R.string.lang_japanese,
-                    R.string.lang_korean,
-                    R.string.lang_vietnamese,
-                    R.string.lang_russian,
                 ),
                 icon = R.drawable.ic_baseline_language,
                 title = R.string.language

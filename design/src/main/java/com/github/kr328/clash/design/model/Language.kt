@@ -4,10 +4,4 @@ enum class Language {
     System,
     English,
     ChineseSimplified,
-    ChineseTraditional,
-    ChineseHK,
-    Japanese,
-    Korean,
-    Vietnamese,
-    Russian,
 }

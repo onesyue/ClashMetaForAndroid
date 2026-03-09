@@ -79,12 +79,6 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
             Language.System -> ""
             Language.English -> "en"
             Language.ChineseSimplified -> "zh"
-            Language.ChineseTraditional -> "zh-TW"
-            Language.ChineseHK -> "zh-HK"
-            Language.Japanese -> "ja-JP"
-            Language.Korean -> "ko-KR"
-            Language.Vietnamese -> "vi"
-            Language.Russian -> "ru"
         }
         val locales = if (tag.isEmpty()) {
             LocaleListCompat.getEmptyLocaleList()
