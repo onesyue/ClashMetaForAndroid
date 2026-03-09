@@ -367,6 +367,7 @@
     <string name="xboard_login">Login</string>
     <string name="xboard_login_summary">Login to import subscription</string>
     <string name="xboard_brand_name">YueTong</string>
+    <string name="brand_logo_letter">Y</string>
     <string name="xboard_brand_subtitle">Global acceleration for AI and streaming</string>
     <string name="xboard_site_url">Server URL</string>
     <string name="xboard_email">Email</string>

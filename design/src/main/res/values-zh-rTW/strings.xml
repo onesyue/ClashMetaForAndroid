@@ -283,6 +283,7 @@
     <string name="xboard_login">帳號登入</string>
     <string name="xboard_login_summary">點擊登入以匯入訂閱</string>
     <string name="xboard_brand_name">悅通</string>
+    <string name="brand_logo_letter">悅</string>
     <string name="xboard_brand_subtitle">專為 AI 與串流媒體打造的全球加速網路</string>
     <string name="xboard_site_url">網站地址</string>
     <string name="xboard_email">電子郵件</string>
