@@ -179,10 +179,10 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
                     .readTimeout(10, TimeUnit.SECONDS)
                     .build()
 
-                val isAlpha = currentVersion.contains("Alpha", ignoreCase = true)
+                val isAlpha = currentVersion.contains("-alpha", ignoreCase = true)
                 val cleanCurrent = currentVersion
-                    .replace(".Alpha", "")
-                    .replace(".Meta", "")
+                    .replace("-alpha", "", ignoreCase = true)
+                    .replace("-meta", "", ignoreCase = true)
                     .replace(".debug", "")
 
                 val apiUrl = if (isAlpha) {
@@ -260,12 +260,6 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
             getString(R.string.lang_system),
             getString(R.string.lang_english),
             getString(R.string.lang_chinese_simplified),
-            getString(R.string.lang_chinese_traditional),
-            getString(R.string.lang_chinese_hk),
-            getString(R.string.lang_japanese),
-            getString(R.string.lang_korean),
-            getString(R.string.lang_vietnamese),
-            getString(R.string.lang_russian),
         )
         val currentIdx = languages.indexOf(uiStore.language).coerceAtLeast(0)
 
@@ -285,12 +279,6 @@ class UserSettingsActivity : BaseActivity<UserSettingsDesign>() {
             Language.System -> ""
             Language.English -> "en"
             Language.ChineseSimplified -> "zh"
-            Language.ChineseTraditional -> "zh-TW"
-            Language.ChineseHK -> "zh-HK"
-            Language.Japanese -> "ja-JP"
-            Language.Korean -> "ko-KR"
-            Language.Vietnamese -> "vi"
-            Language.Russian -> "ru"
         }
         val locales = if (tag.isEmpty()) {
             LocaleListCompat.getEmptyLocaleList()
