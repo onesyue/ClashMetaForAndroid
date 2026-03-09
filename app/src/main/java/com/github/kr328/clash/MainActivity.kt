@@ -90,7 +90,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                         Event.ProfileLoaded,
                         Event.ProfileChanged -> {
                             if (it == Event.ClashStart) connectStartMs = System.currentTimeMillis()
-                            if (it == Event.ClashStop) { connectStartMs = 0L; lastTrafficRaw = -1L }
+                            if (it == Event.ClashStop) { connectStartMs = 0L; lastTrafficRaw = -1L; design.resetSpeedChart() }
                             design.fetch()
                         }
                         else -> Unit
@@ -107,29 +107,10 @@ class MainActivity : BaseActivity<MainDesign>() {
                         }
                         MainDesign.Request.OpenProxy ->
                             startActivity(ProxyActivity::class.intent)
-                        MainDesign.Request.OpenAccount -> {
-                            startActivityForResult(
-                                ActivityResultContracts.StartActivityForResult(),
-                                AccountActivity::class.intent
-                            )
-                            design.fetch()
-                            viewModel.fetchUserData()
-                        }
-                        MainDesign.Request.OpenProfiles ->
-                            startActivity(ProfilesActivity::class.intent)
                         MainDesign.Request.OpenStore ->
                             startActivity(StoreActivity::class.intent)
-                        MainDesign.Request.OpenLogs -> {
-                            if (LogcatService.running) {
-                                startActivity(LogcatActivity::class.intent)
-                            } else {
-                                startActivity(LogsActivity::class.intent)
-                            }
-                        }
-                        MainDesign.Request.OpenSettings ->
-                            startActivity(SettingsActivity::class.intent)
-                        MainDesign.Request.OpenAbout ->
-                            startActivity(AboutActivity::class.intent)
+                        MainDesign.Request.OpenUserSettings ->
+                            startActivity(UserSettingsActivity::class.intent)
                         MainDesign.Request.OpenNotices ->
                             startActivity(NoticesActivity::class.intent)
                         MainDesign.Request.OpenOrders ->
@@ -214,6 +195,7 @@ class MainActivity : BaseActivity<MainDesign>() {
             val dlSpeed = (curDlBytes - prevDlBytes).coerceAtLeast(0)
             setUploadSpeed(formatSpeed(upSpeed))
             setDownloadSpeed(formatSpeed(dlSpeed))
+            addSpeedDataPoint(dlSpeed, upSpeed)
         }
         lastTrafficRaw = current
 

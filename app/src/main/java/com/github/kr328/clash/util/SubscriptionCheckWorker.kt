@@ -27,8 +27,11 @@ class SubscriptionCheckWorker(
                 applicationContext, OfflineCache.KEY_USER_INFO, info.toJson()
             )
 
-            // Check expiry and notify
+            // Check expiry and traffic, notify if needed
             SubscriptionChecker.check(applicationContext, info.expiredAt)
+            SubscriptionChecker.checkTraffic(
+                applicationContext, info.usedUpload, info.usedDownload, info.transferEnable
+            )
 
             Result.success()
         } catch (_: XBoardApi.AuthExpiredException) {

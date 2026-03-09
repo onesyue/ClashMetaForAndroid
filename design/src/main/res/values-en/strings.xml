@@ -3,6 +3,10 @@
     <!-- Widget -->
     <string name="widget_label">VPN Status</string>
     <string name="widget_description">Shows VPN connection status with quick toggle</string>
+    <string name="widget_medium_label">VPN Speed</string>
+    <string name="widget_medium_description">Shows VPN status, real-time speed and traffic</string>
+    <string name="widget_large_label">VPN Details</string>
+    <string name="widget_large_description">Shows VPN status, speed, traffic and security info</string>
 
     <!-- Subscription alerts -->
     <string name="subscription_alert_title">Subscription Reminder</string>
@@ -232,6 +236,12 @@
     <string name="tips_properties"><![CDATA[Profile URL must be a valid proxy configuration file]]></string>
     <string name="tips_help"><![CDATA[YueTong — Global acceleration for AI and streaming]]></string>
 
+    <!-- Security dashboard -->
+    <string name="security_encrypted">Connection encrypted</string>
+    <string name="security_dns_label">DNS</string>
+    <string name="security_dns_protected">Encrypted DNS (DoH)</string>
+    <string name="security_no_leak">No leak</string>
+
     <string name="app">App</string>
     <string name="service">Service</string>
 
@@ -276,6 +286,11 @@
     <string name="more">More</string>
     <string name="save">Save</string>
     <string name="delay_test">Speed test</string>
+    <string name="search_nodes_hint">Search nodes…</string>
+    <string name="sort_by_delay">Sort by delay</string>
+    <string name="auto_select_fastest">Smart select</string>
+    <string name="auto_selected_node">Selected fastest: %s</string>
+    <string name="no_available_node">No available nodes</string>
 
     <string name="format_provider_type">%1$s (%2$s)</string>
     <string name="rule">Rule</string>
@@ -352,7 +367,7 @@
 
     <!-- Account -->
     <string name="nav_home">Home</string>
-    <string name="nav_account">Account</string>
+<string name="nav_account">Account</string>
     <string name="nav_store">Store</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
@@ -367,7 +382,7 @@
     <string name="xboard_login">Login</string>
     <string name="xboard_login_summary">Login to import subscription</string>
     <string name="xboard_brand_name">YueTong</string>
-    <string name="xboard_brand_subtitle">Global acceleration for AI and streaming</string>
+<string name="xboard_brand_subtitle">Global acceleration for AI and streaming</string>
     <string name="xboard_site_url">Server URL</string>
     <string name="xboard_email">Email</string>
     <string name="xboard_password">Password</string>
@@ -516,6 +531,11 @@
     <string name="onboarding_next">Next</string>
     <string name="onboarding_start">Get Started</string>
 
+    <!-- Developer mode -->
+    <string name="developer_mode_on">Developer mode enabled</string>
+    <string name="developer_mode_off">Developer mode disabled</string>
+    <string name="advanced_settings">Advanced</string>
+
     <!-- About -->
     <string name="about_title">About</string>
     <string name="about_version">Version %s</string>
@@ -530,4 +550,48 @@
 
     <!-- Tun stack -->
     <string name="tun_stack_mode">Stack mode</string>
+
+    <!-- User Settings -->
+    <string name="user_settings">Settings</string>
+    <string name="cat_subscription">Subscription</string>
+    <string name="current_subscription">Current subscription</string>
+    <string name="update_subscription">Update subscription</string>
+    <string name="update_subscription_summary">Fetch latest nodes from server</string>
+    <string name="add_subscription">Add/Replace subscription</string>
+    <string name="add_subscription_summary">Enter URL or scan QR code</string>
+    <string name="subscription_updating">Updating subscription…</string>
+    <string name="subscription_update_success">Subscription updated</string>
+    <string name="subscription_update_failed">Update failed: %s</string>
+    <string name="no_active_subscription">No subscription</string>
+    <string name="last_update_time">Last update: %s</string>
+    <string name="cat_update_settings">Update settings</string>
+    <string name="auto_update_interval">Auto-update interval</string>
+    <string name="interval_12h">12 hours</string>
+    <string name="interval_24h">24 hours</string>
+    <string name="interval_48h">48 hours</string>
+    <string name="interval_off">Off</string>
+    <string name="cat_app">App</string>
+    <string name="check_update">Check for updates</string>
+    <string name="check_update_summary">Current version: %s</string>
+    <string name="checking_update">Checking for updates…</string>
+    <string name="update_available">New version %s available. Tap to download.</string>
+    <string name="already_latest">Already up to date</string>
+    <string name="check_update_failed">Failed to check updates</string>
+    <string name="language_setting">Language</string>
+    <string name="enter_subscription_url">Enter subscription URL</string>
+    <string name="subscription_url_hint">https://example.com/subscribe/xxx</string>
+    <string name="subscription_added">Subscription added. Tap power button to download.</string>
+    <string name="invalid_subscription_url">Please enter a valid subscription URL</string>
+
+    <!-- Traffic alerts -->
+    <string name="traffic_alert_title">Traffic Alert</string>
+    <string name="traffic_alert_80">You have used 80%% of your traffic. Please be mindful of usage.</string>
+    <string name="traffic_alert_95">You have used 95%% of your traffic. Running out soon.</string>
+    <string name="traffic_alert_100">Your traffic has been fully consumed.</string>
+
+    <!-- Dark mode -->
+    <string name="dark_mode_setting">Dark Mode</string>
+
+    <!-- Check update -->
+    <string name="update_download">Download Update</string>
 </resources>

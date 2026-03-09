@@ -21,7 +21,6 @@ class OnboardingActivity : BaseActivity<OnboardingDesign>() {
                             setResult(RESULT_OK)
                             finish()
                         }
-                        OnboardingDesign.Request.Next -> { /* handled by Design */ }
                     }
                 }
             }

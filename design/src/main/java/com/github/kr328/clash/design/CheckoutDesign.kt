@@ -2,6 +2,7 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.InputType
@@ -100,8 +101,8 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
                     id = viewId
                     text = method.name
                     textSize = 14f
-                    setTextColor(0xFFF1F5F9.toInt())
-                    buttonTintList = ColorStateList.valueOf(0xFF6366F1.toInt())
+                    setTextColor(ContextCompat.getColor(context, R.color.color_text_primary))
+                    buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.color_primary))
                 }
                 radioGroup.addView(rb)
             }
@@ -144,7 +145,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
         val discountStr = "-¥%.2f".format(discountCents / 100.0)
         discountRow = createSummaryRow(
             context.getString(R.string.checkout_discount_label), discountStr,
-            valueColor = 0xFF10B981.toInt()
+            valueColor = ContextCompat.getColor(context, R.color.color_status_good)
         )
         container.addView(discountRow)
 
@@ -152,7 +153,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
         val actualStr = "¥%.2f".format(actualCents / 100.0)
         actualRow = createSummaryRow(
             context.getString(R.string.checkout_actual_label), actualStr,
-            valueColor = 0xFFF1F5F9.toInt(), bold = true
+            valueColor = ContextCompat.getColor(context, R.color.color_text_primary), bold = true
         )
         container.addView(actualRow)
     }
@@ -178,8 +179,8 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
         val edit = EditText(context).apply {
             hint = context.getString(R.string.coupon_hint)
             textSize = 13f
-            setTextColor(0xFFF1F5F9.toInt())
-            setHintTextColor(0xFF8494A7.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_primary))
+            setHintTextColor(ContextCompat.getColor(context, R.color.color_text_tertiary))
             inputType = InputType.TYPE_CLASS_TEXT
             background = null
             setPadding((8 * dp).toInt(), (8 * dp).toInt(), (8 * dp).toInt(), (8 * dp).toInt())
@@ -213,7 +214,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
     private fun createSummaryRow(
         label: String,
         value: String,
-        valueColor: Int = 0xFFF1F5F9.toInt(),
+        valueColor: Int = ContextCompat.getColor(context, R.color.color_text_primary),
         bold: Boolean = false
     ): View {
         val row = LinearLayout(context).apply {
@@ -226,7 +227,7 @@ class CheckoutDesign(context: Context) : Design<CheckoutDesign.Request>(context)
         row.addView(TextView(context).apply {
             text = label
             textSize = 13f
-            setTextColor(0xFF94A3B8.toInt())
+            setTextColor(ContextCompat.getColor(context, R.color.color_text_secondary))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
         row.addView(TextView(context).apply {

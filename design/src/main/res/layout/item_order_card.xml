@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="#CC1E293B"
+    app:cardBackgroundColor="@color/color_card_glass"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeColor="#26FFFFFF"
-    app:strokeWidth="1dp">
+    app:strokeColor="@color/color_glass_border"
+    app:strokeWidth="0.5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#F1F5F9"
+                android:textColor="@color/color_text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#94A3B8"
+            android:textColor="@color/color_text_secondary"
             android:textSize="13sp" />
 
         <!-- Coupon -->
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="#8B5CF6"
+            android:textColor="@color/color_primary_variant"
             android:textSize="12sp"
             android:visibility="gone" />
 
@@ -66,7 +66,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="#26FFFFFF" />
+            android:background="@color/color_divider" />
 
         <!-- Discount -->
         <TextView
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:textColor="#10B981"
+            android:textColor="@color/color_status_good"
             android:textSize="12sp"
             android:visibility="gone" />
 
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:textColor="#6366F1"
+            android:textColor="@color/color_primary"
             android:textSize="12sp"
             android:visibility="gone" />
 
@@ -100,14 +100,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#8494A7"
+                android:textColor="@color/color_text_tertiary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/order_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#F1F5F9"
+                android:textColor="@color/color_text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -121,10 +121,10 @@
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:text="@string/order_cancel_btn"
-            android:textColor="#EF4444"
+            android:textColor="@color/color_status_bad"
             android:textSize="13sp"
             android:visibility="gone"
-            app:strokeColor="#EF4444" />
+            app:strokeColor="@color/color_status_bad" />
 
     </LinearLayout>
 

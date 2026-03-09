@@ -110,6 +110,18 @@ class ProxyActivity : BaseActivity<ProxyDesign>() {
                                 patchOverride(Clash.OverrideSlot.Session, o)
                             }
                         }
+                        is ProxyDesign.Request.AutoSelect -> {
+                            launch {
+                                val fastest = design.autoSelectFastest(it.index)
+                                if (fastest != null) {
+                                    withClash {
+                                        patchSelector(names[it.index], fastest)
+                                        states[it.index].now = fastest
+                                    }
+                                    design.requestRedrawVisible()
+                                }
+                            }
+                        }
                     }
                 }
             }

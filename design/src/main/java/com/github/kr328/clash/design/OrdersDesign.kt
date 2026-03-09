@@ -3,6 +3,7 @@ package com.github.kr328.clash.design
 import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.kr328.clash.design.adapter.OrderAdapter
 import com.github.kr328.clash.design.databinding.DesignOrdersBinding
@@ -55,8 +56,8 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
         binding.ordersSwipeRefresh.setOnRefreshListener {
             requests.trySend(Request.Refresh)
         }
-        binding.ordersSwipeRefresh.setColorSchemeColors(0xFF6366F1.toInt())
-        binding.ordersSwipeRefresh.setProgressBackgroundColorSchemeColor(0xFF1E293B.toInt())
+        binding.ordersSwipeRefresh.setColorSchemeColors(ContextCompat.getColor(context, R.color.color_primary))
+        binding.ordersSwipeRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.color_surface))
 
         binding.ordersRecycler.layoutManager = LinearLayoutManager(context)
         binding.ordersRecycler.adapter = adapter
@@ -101,12 +102,12 @@ class OrdersDesign(context: Context) : Design<OrdersDesign.Request>(context) {
     }
 
     private fun statusLabel(status: Int): Pair<String, Int> = when (status) {
-        0    -> context.getString(R.string.order_status_pending) to 0xFFFBBF24.toInt()
-        1    -> context.getString(R.string.order_status_processing) to 0xFF6366F1.toInt()
-        2    -> context.getString(R.string.order_status_cancelled) to 0xFF8494A7.toInt()
-        3    -> context.getString(R.string.order_status_completed) to 0xFF10B981.toInt()
-        4    -> context.getString(R.string.order_status_discounted) to 0xFF8B5CF6.toInt()
-        else -> context.getString(R.string.order_status_unknown) to 0xFF8494A7.toInt()
+        0    -> context.getString(R.string.order_status_pending) to ContextCompat.getColor(context, R.color.color_status_warn)
+        1    -> context.getString(R.string.order_status_processing) to ContextCompat.getColor(context, R.color.color_primary)
+        2    -> context.getString(R.string.order_status_cancelled) to ContextCompat.getColor(context, R.color.color_text_tertiary)
+        3    -> context.getString(R.string.order_status_completed) to ContextCompat.getColor(context, R.color.color_status_good)
+        4    -> context.getString(R.string.order_status_discounted) to ContextCompat.getColor(context, R.color.color_primary_variant)
+        else -> context.getString(R.string.order_status_unknown) to ContextCompat.getColor(context, R.color.color_text_tertiary)
     }
 
     private fun periodLabel(period: String): String = when (period) {

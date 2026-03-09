@@ -236,6 +236,12 @@
             android:exported="false"
             android:label="@string/orders_title" />
 
+        <activity
+            android:name=".UserSettingsActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/user_settings" />
+
         <service
             android:name=".LogcatService"
             android:exported="false"
@@ -275,6 +281,30 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".VpnMediumWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_medium_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_medium_info" />
+        </receiver>
+
+        <receiver
+            android:name=".VpnLargeWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_large_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_large_info" />
         </receiver>
 
         <receiver android:name=".DialerReceiver"

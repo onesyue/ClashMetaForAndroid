@@ -2,21 +2,22 @@ package com.github.kr328.clash.design.util
 
 import android.content.Context
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import com.github.kr328.clash.design.R
 import com.google.android.material.card.MaterialCardView
 
 /**
- * Create a MaterialCardView styled for the dark glass-effect theme.
- *
- * Background: #CC1E293B, Stroke: #26FFFFFF 1dp, Corner: 16dp, Elevation: 0
+ * Create a MaterialCardView styled with the Liquid Glass effect.
+ * Automatically adapts to light/dark mode via color resources.
  */
 fun Context.createGlassCard(bottomMarginDp: Int = 12): MaterialCardView {
     val dp = resources.displayMetrics.density
     return MaterialCardView(this).apply {
         radius = 16 * dp
         cardElevation = 0f
-        setCardBackgroundColor(0xCC1E293B.toInt())
-        strokeWidth = (1 * dp).toInt()
-        strokeColor = 0x26FFFFFF
+        setCardBackgroundColor(ContextCompat.getColor(context, R.color.color_card_glass))
+        strokeWidth = (0.5f * dp).toInt().coerceAtLeast(1)
+        strokeColor = ContextCompat.getColor(context, R.color.color_glass_border)
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT

@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- YueTong 2026 Cyberpunk Design System -->
+    <!-- YueTong — iOS 26 Liquid Glass — Light Mode -->
 
-    <!-- Background -->
-    <color name="color_background">#FF0F172A</color>
-    <color name="color_surface">#FF1E293B</color>
-    <color name="color_surface_elevated">#FF334155</color>
+    <!-- Background (Apple system grouped background) -->
+    <color name="color_background">#FFF2F2F7</color>
+    <color name="color_surface">#FFFFFFFF</color>
+    <color name="color_surface_elevated">#FFF9F9FB</color>
 
-    <!-- Primary Accent (Electric Indigo → Violet gradient endpoints) -->
-    <color name="color_primary">#FF6366F1</color>
-    <color name="color_primary_variant">#FF8B5CF6</color>
+    <!-- Primary Accent (Apple Blue) -->
+    <color name="color_primary">#FF007AFF</color>
+    <color name="color_primary_variant">#FF5AC8FA</color>
     <color name="color_on_primary">#FFFFFFFF</color>
 
-    <!-- Text -->
-    <color name="color_text_primary">#FFF1F5F9</color>
-    <color name="color_text_secondary">#FF94A3B8</color>
-    <!-- Raised from #64748B to meet WCAG AA 4.5:1 contrast on #0F172A -->
-    <color name="color_text_tertiary">#FF8494A7</color>
+    <!-- Text (Apple HIG label hierarchy) -->
+    <color name="color_text_primary">#FF1C1C1E</color>
+    <color name="color_text_secondary">#993C3C43</color>
+    <color name="color_text_tertiary">#4D3C3C43</color>
 
-    <!-- Status -->
-    <color name="color_status_good">#FF10B981</color>
-    <color name="color_status_bad">#FFEF4444</color>
-    <color name="color_status_warn">#FFFBBF24</color>
+    <!-- Status (Apple system colors) -->
+    <color name="color_status_good">#FF34C759</color>
+    <color name="color_status_bad">#FFFF3B30</color>
+    <color name="color_status_warn">#FFFF9500</color>
 
-    <!-- Legacy aliases (keep builds happy) -->
-    <color name="color_clash_light">#FF6366F1</color>
-    <color name="color_clash_dark">#FF818CF8</color>
-    <color name="color_system_ui_overlay">#50000000</color>
-    <color name="color_light_background">#FF0F172A</color>
-    <color name="color_dark_background">#FF0F172A</color>
-    <color name="color_dark_surface">#FF1E293B</color>
-    <color name="color_light_clash_stopped">#FF64748B</color>
-    <color name="color_light_control_disabled">#FF475569</color>
-    <color name="color_dark_control_disabled">#FF475569</color>
-    <color name="color_error">#FFEF4444</color>
+    <!-- Legacy aliases -->
+    <color name="color_clash_light">#FF007AFF</color>
+    <color name="color_clash_dark">#FF5AC8FA</color>
+    <color name="color_system_ui_overlay">#18000000</color>
+    <color name="color_light_background">#FFF2F2F7</color>
+    <color name="color_dark_background">#FFF2F2F7</color>
+    <color name="color_dark_surface">#FFFFFFFF</color>
+    <color name="color_light_clash_stopped">#FF8E8E93</color>
+    <color name="color_light_control_disabled">#FFC7C7CC</color>
+    <color name="color_dark_control_disabled">#FFC7C7CC</color>
+    <color name="color_error">#FFFF3B30</color>
 
-    <!-- Divider / Border -->
-    <color name="color_divider">#26FFFFFF</color>
+    <!-- Divider / Border (Apple separator) -->
+    <color name="color_divider">#1A3C3C43</color>
 
-    <!-- Card overlay (glass effect) -->
-    <color name="color_card_glass">#CC1E293B</color>
+    <!-- Glass effect colors -->
+    <color name="color_card_glass">#B8FFFFFF</color>
+    <color name="color_glass_border">#123C3C43</color>
+    <color name="color_glass_highlight">#33FFFFFF</color>
+    <color name="color_glass_inner_glow">#1AFFFFFF</color>
+
+    <!-- Subtle text -->
+    <color name="color_text_subtle">#FF48484A</color>
 
     <!-- Launcher icon -->
-    <color name="ic_launcher_background">#FF6366F1</color>
+    <color name="ic_launcher_background">#FF007AFF</color>
 </resources>

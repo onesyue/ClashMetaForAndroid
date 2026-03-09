@@ -79,6 +79,11 @@ class UiStore(context: Context) {
         defaultValue = false,
     )
 
+    var developerMode: Boolean by store.boolean(
+        key = "developer_mode",
+        defaultValue = false,
+    )
+
     companion object {
         private const val PREFERENCE_NAME = "ui"
     }

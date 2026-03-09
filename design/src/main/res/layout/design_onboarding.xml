@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View" />
     </data>
@@ -7,7 +8,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_background">
+        android:background="@drawable/bg_login_gradient">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/onboarding_pager"
@@ -20,9 +21,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:padding="32dp">
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingBottom="48dp">
 
-            <!-- Page indicators -->
+            <!-- Page indicators (pill style) -->
             <LinearLayout
                 android:id="@+id/indicator_container"
                 android:layout_width="wrap_content"
@@ -34,7 +37,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="28dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -46,15 +49,23 @@
                     android:gravity="center"
                     android:text="@string/onboarding_skip"
                     android:textColor="@color/color_text_secondary"
-                    android:textSize="16sp" />
+                    android:textSize="15sp"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/next_btn"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="52dp"
                     android:layout_weight="1"
+                    android:layout_marginStart="16dp"
                     android:text="@string/onboarding_next"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_login_button"
+                    android:textColor="@android:color/white"
+                    android:stateListAnimator="@animator/card_press"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="16dp" />
 
             </LinearLayout>
 

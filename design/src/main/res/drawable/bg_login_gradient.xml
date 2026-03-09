@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="@color/color_background"
+                android:endColor="@color/color_background"
+                android:type="linear"
+                android:angle="270" />
+        </shape>
+    </item>
+    <!-- Top-center radial glow (Apple Blue ambient) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#14007AFF"
+                android:endColor="#00000000"
+                android:gradientRadius="500dp"
+                android:centerX="0.5"
+                android:centerY="0.18"
+                android:type="radial" />
+        </shape>
+    </item>
+    <!-- Bottom-right subtle cyan glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#0C5AC8FA"
+                android:endColor="#00000000"
+                android:gradientRadius="380dp"
+                android:centerX="0.8"
+                android:centerY="0.85"
+                android:type="radial" />
+        </shape>
+    </item>
+</layer-list>

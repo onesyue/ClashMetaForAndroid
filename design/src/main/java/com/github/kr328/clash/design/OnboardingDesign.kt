@@ -1,6 +1,8 @@
 package com.github.kr328.clash.design
 
+import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +17,7 @@ import com.github.kr328.clash.design.util.root
 
 class OnboardingDesign(context: Context) : Design<OnboardingDesign.Request>(context) {
 
-    enum class Request { Skip, Next, Start }
+    enum class Request { Skip, Start }
 
     data class Page(val iconRes: Int, val title: String, val description: String)
 
@@ -27,17 +29,17 @@ class OnboardingDesign(context: Context) : Design<OnboardingDesign.Request>(cont
 
     private val pages = listOf(
         Page(
-            android.R.drawable.ic_menu_compass,
+            R.drawable.ic_baseline_flash_on,
             context.getString(R.string.onboarding_title_1),
             context.getString(R.string.onboarding_desc_1)
         ),
         Page(
-            android.R.drawable.ic_menu_agenda,
+            R.drawable.ic_baseline_cloud_download,
             context.getString(R.string.onboarding_title_2),
             context.getString(R.string.onboarding_desc_2)
         ),
         Page(
-            android.R.drawable.ic_lock_idle_lock,
+            R.drawable.ic_baseline_vpn_lock,
             context.getString(R.string.onboarding_title_3),
             context.getString(R.string.onboarding_desc_3)
         )
@@ -45,30 +47,37 @@ class OnboardingDesign(context: Context) : Design<OnboardingDesign.Request>(cont
 
     private val dp = context.resources.displayMetrics.density
     private val indicators = mutableListOf<View>()
+    private val pillActiveWidth = (24 * dp).toInt()
+    private val pillInactiveWidth = (8 * dp).toInt()
+    private val pillHeight = (8 * dp).toInt()
+    private val pillRadius = (4 * dp)
+    private val pillMargin = (4 * dp).toInt()
+
+    private val activeColor = 0xFFFFFFFF.toInt()
+    private val inactiveColor = 0x4DFFFFFF.toInt()
 
     init {
-        // Setup ViewPager
         binding.onboardingPager.adapter = OnboardingAdapter(pages)
 
-        // Create indicators
+        // Create pill indicators
         pages.forEachIndexed { i, _ ->
-            val dot = View(context).apply {
-                val size = (8 * dp).toInt()
-                val margin = (4 * dp).toInt()
-                layoutParams = LinearLayout.LayoutParams(size, size).apply {
-                    setMargins(margin, 0, margin, 0)
+            val pill = View(context).apply {
+                val w = if (i == 0) pillActiveWidth else pillInactiveWidth
+                layoutParams = LinearLayout.LayoutParams(w, pillHeight).apply {
+                    setMargins(pillMargin, 0, pillMargin, 0)
                 }
-                setBackgroundResource(android.R.drawable.presence_invisible)
-                alpha = if (i == 0) 1f else 0.3f
+                background = GradientDrawable().apply {
+                    cornerRadius = pillRadius
+                    setColor(if (i == 0) activeColor else inactiveColor)
+                }
             }
-            indicators.add(dot)
-            binding.indicatorContainer.addView(dot)
+            indicators.add(pill)
+            binding.indicatorContainer.addView(pill)
         }
 
-        // Page change callback
         binding.onboardingPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                indicators.forEachIndexed { i, dot -> dot.alpha = if (i == position) 1f else 0.3f }
+                animateIndicators(position)
                 if (position == pages.size - 1) {
                     binding.nextBtn.text = context.getString(R.string.onboarding_start)
                     binding.skipBtn.visibility = View.INVISIBLE
@@ -87,6 +96,27 @@ class OnboardingDesign(context: Context) : Design<OnboardingDesign.Request>(cont
             } else {
                 requests.trySend(Request.Start)
             }
+        }
+    }
+
+    private fun animateIndicators(activeIndex: Int) {
+        indicators.forEachIndexed { i, pill ->
+            val targetWidth = if (i == activeIndex) pillActiveWidth else pillInactiveWidth
+            val targetColor = if (i == activeIndex) activeColor else inactiveColor
+            val params = pill.layoutParams
+            val startWidth = params.width
+
+            if (startWidth != targetWidth) {
+                ValueAnimator.ofInt(startWidth, targetWidth).apply {
+                    duration = 250
+                    addUpdateListener { anim ->
+                        params.width = anim.animatedValue as Int
+                        pill.layoutParams = params
+                    }
+                    start()
+                }
+            }
+            (pill.background as? GradientDrawable)?.setColor(targetColor)
         }
     }
 

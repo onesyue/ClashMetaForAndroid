@@ -1,6 +1,5 @@
 package com.github.kr328.clash.design.adapter
 
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.design.R
@@ -37,15 +37,12 @@ class ProxyGroupAdapter(
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_NODE = 1
-
-        private val COLOR_GOOD = Color.parseColor("#FF4CAF50")
-        private val COLOR_MEDIUM = Color.parseColor("#FFFFC107")
-        private val COLOR_BAD = Color.parseColor("#FFF44336")
-        private val COLOR_NONE = Color.parseColor("#FF9E9E9E")
     }
 
     private val groups = groupNames.mapIndexed { i, name -> GroupData(i, name) }.toMutableList()
     private val flatList = mutableListOf<ListItem>()
+    private var filterQuery: String = ""
+    private var sortByDelay: Boolean = false
 
     init {
         rebuildFlatList()
@@ -71,12 +68,57 @@ class ProxyGroupAdapter(
         notifyDataSetChanged()
     }
 
+    /** Filter nodes by name query */
+    fun filter(query: String) {
+        filterQuery = query.trim().lowercase()
+        rebuildFlatList()
+    }
+
+    /** Toggle sort-by-delay mode */
+    fun setSortByDelay(enabled: Boolean) {
+        sortByDelay = enabled
+        rebuildFlatList()
+    }
+
+    /** Auto-select the fastest node in the given group, returns the node name or null */
+    fun autoSelectFastest(groupIndex: Int): String? {
+        if (groupIndex >= groups.size) return null
+        val group = groups[groupIndex]
+        if (!group.selectable) return null
+        val fastest = group.proxies
+            .filter { it.delay > 0 && it.delay <= Short.MAX_VALUE }
+            .minByOrNull { it.delay }
+        return fastest?.name
+    }
+
     private fun rebuildFlatList() {
         flatList.clear()
         for (group in groups) {
             flatList.add(ListItem.Header(group))
             if (group.expanded && group.proxies.isNotEmpty()) {
-                for (proxy in group.proxies) {
+                var nodes = group.proxies.toList()
+
+                // Filter
+                if (filterQuery.isNotEmpty()) {
+                    nodes = nodes.filter {
+                        it.name.lowercase().contains(filterQuery) ||
+                        it.title.lowercase().contains(filterQuery) ||
+                        it.subtitle.lowercase().contains(filterQuery)
+                    }
+                }
+
+                // Sort by delay
+                if (sortByDelay) {
+                    nodes = nodes.sortedWith(compareBy {
+                        when {
+                            it.delay <= 0 -> Int.MAX_VALUE      // untested → bottom
+                            it.delay > Short.MAX_VALUE -> Int.MAX_VALUE - 1  // timeout → near bottom
+                            else -> it.delay
+                        }
+                    })
+                }
+
+                for (proxy in nodes) {
                     flatList.add(ListItem.Node(group.index, proxy, group.state))
                 }
             }
@@ -86,24 +128,25 @@ class ProxyGroupAdapter(
 
     private fun formatDelay(delay: Int): String = when {
         delay <= 0 -> "●"
-        delay > Short.MAX_VALUE -> "超时"
+        delay > Short.MAX_VALUE -> "●"
         else -> "${delay}ms"
     }
 
-    private fun delayColor(delay: Int): Int = when {
-        delay <= 0 -> COLOR_GOOD          // 未测速默认绿色（正常可用状态）
-        delay > Short.MAX_VALUE -> COLOR_BAD
-        delay <= 150 -> COLOR_GOOD
-        delay <= 300 -> COLOR_MEDIUM
-        else -> COLOR_BAD
+    private fun delayColor(ctx: android.content.Context, delay: Int): Int = when {
+        delay <= 0 -> ContextCompat.getColor(ctx, R.color.color_status_good)
+        delay > Short.MAX_VALUE -> ContextCompat.getColor(ctx, R.color.color_text_tertiary)
+        delay < 200 -> ContextCompat.getColor(ctx, R.color.color_status_good)
+        delay < 500 -> ContextCompat.getColor(ctx, R.color.color_status_warn)
+        else -> ContextCompat.getColor(ctx, R.color.color_status_bad)
     }
 
     private fun setBadge(badge: TextView, delay: Int) {
         badge.text = formatDelay(delay)
         val dp = badge.context.resources.displayMetrics.density
+        val color = delayColor(badge.context, delay)
         val bg = GradientDrawable().apply {
             cornerRadius = dp * 10
-            setColor(delayColor(delay))
+            setColor(color)
         }
         badge.background = bg
     }
