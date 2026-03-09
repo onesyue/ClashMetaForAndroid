@@ -152,34 +152,7 @@
 
             </LinearLayout>
 
-            <!-- Search bar -->
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="8dp">
-
-                <EditText
-                    android:id="@+id/search_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:hint="@string/search_nodes_hint"
-                    android:textSize="13sp"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:background="@drawable/bg_card_surface_small"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:imeOptions="actionSearch"
-                    android:drawableStart="@drawable/ic_baseline_search"
-                    android:drawablePadding="8dp"
-                    android:textColor="@color/color_text_primary"
-                    android:textColorHint="@color/color_text_tertiary" />
-
-            </FrameLayout>
-
-            <!-- Divider -->
+<!-- Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_size"

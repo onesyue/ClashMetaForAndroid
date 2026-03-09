@@ -286,11 +286,7 @@
     <string name="more">More</string>
     <string name="save">Save</string>
     <string name="delay_test">Speed test</string>
-    <string name="search_nodes_hint">Search nodes…</string>
     <string name="sort_by_delay">Sort by delay</string>
-    <string name="auto_select_fastest">Smart select</string>
-    <string name="auto_selected_node">Selected fastest: %s</string>
-    <string name="no_available_node">No available nodes</string>
 
     <string name="format_provider_type">%1$s (%2$s)</string>
     <string name="rule">Rule</string>

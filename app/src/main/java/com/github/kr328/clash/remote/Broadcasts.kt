@@ -9,6 +9,8 @@ import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.VpnWidgetProvider
+import com.github.kr328.clash.VpnMediumWidgetProvider
+import com.github.kr328.clash.VpnLargeWidgetProvider
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -41,6 +43,8 @@ class Broadcasts(private val context: Application) {
                         it.onServiceRecreated()
                     }
                     VpnWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnMediumWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnLargeWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
                 }
                 Intents.ACTION_CLASH_STARTED -> {
                     clashRunning = true
@@ -49,6 +53,8 @@ class Broadcasts(private val context: Application) {
                         it.onStarted()
                     }
                     VpnWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnMediumWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnLargeWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
                 }
                 Intents.ACTION_CLASH_STOPPED -> {
                     clashRunning = false
@@ -57,6 +63,8 @@ class Broadcasts(private val context: Application) {
                         it.onStopped(intent.getStringExtra(Intents.EXTRA_STOP_REASON))
                     }
                     VpnWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnMediumWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnLargeWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
                 }
                 Intents.ACTION_PROFILE_CHANGED ->
                     receivers.forEach {
@@ -79,6 +87,8 @@ class Broadcasts(private val context: Application) {
                         it.onProfileLoaded()
                     }
                     VpnWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnMediumWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
+                    VpnLargeWidgetProvider.refreshAllWidgets(this@Broadcasts.context)
                 }
             }
         }

@@ -310,11 +310,7 @@
     <string name="more">更多</string>
     <string name="save">保存</string>
     <string name="delay_test">测速</string>
-    <string name="search_nodes_hint">搜索节点…</string>
     <string name="sort_by_delay">按延迟排序</string>
-    <string name="auto_select_fastest">智能选节点</string>
-    <string name="auto_selected_node">已选择最快节点: %s</string>
-    <string name="no_available_node">没有可用节点</string>
 
     <string name="format_provider_type">%1$s（%2$s）</string>
     <string name="rule">规则</string>
